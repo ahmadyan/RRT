@@ -1,0 +1,12 @@
+%% PPLANE file %%
+
+H.name = 'tunnel diode';
+H.xvar = 'x';
+H.yvar = 'y';
+H.xder = '0.5*(y-(17.76*x-103.79*(x^2)+229.62*(x^3)-226.31*(x^4)+83.72*(x^5)))';
+H.yder = '0.2*(-x-1.5*y+1.2)';
+H.pname = {'','','','','',''};
+H.pval = {'','','','','',''};
+H.fieldtype = 'arrows';
+H.npts = 20;
+H.wind = [-0.4  1.6 -0.4  1.6];
