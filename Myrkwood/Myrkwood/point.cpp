@@ -22,7 +22,6 @@
 #include "point.h"
 using namespace std;
 
-namespace System {
     int Point::pointCount = 0 ;
     
     Point::Point(int dim):dim(dim){
@@ -62,4 +61,3 @@ namespace System {
         }
         return str.str();
     }
-}

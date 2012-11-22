@@ -1,9 +1,3 @@
-/*
- * sampling.h
- *
- *  Created on: Sep 19, 2012
- *      Author: adel
- */
 #pragma once
 
 #include "config.h"
@@ -17,6 +11,6 @@ class sampling {
 	//samplingType type;
 public:
 	sampling(Configuration* config);
-	System::Point* sample();
+	Point* sample();
 	virtual ~sampling();
 };

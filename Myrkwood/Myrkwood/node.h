@@ -18,26 +18,35 @@
  */
 
 #pragma once
-#include <string>
-using namespace std;
+#include <vector>
+#include "Circuit.h"
 
-        class Point{
-
-            static int pointCount ;
-            
-            static int generateID();
-
-        public:
-            int id;
-            int dim ;
-            double* data ;
-
-            Point(int);
-            ~Point();
-            int getDimension();
-            double getData(int);
-            double* getData();
-            void setData(int, double);
-            string toString();
-        };
-
+    class Node{
+    public:
+        int id;
+        static int nodeCount ;
+        int dim;       
+     //   Node* parent ;
+     //   bool isReachable ;
+     //   bool containInitialState ;
+     //   bool isInitialState ;
+     //   bool divided;
+        
+        Node();
+        
+        static int generateID();
+        int getID();
+       // void setAsInitialState();
+      //  bool isDivided();
+      ////  
+      //  virtual std::vector<Node*> getNeighbors(Node*)=0;
+      //  virtual bool contain(Node*)=0;
+      //  virtual void divide(Circuit*)=0;
+      //  virtual std::string toString()=0;
+      //  virtual bool isAdjacent(Node*)=0;        
+      //  virtual std::vector<Node*> getChildren()=0;
+      //  Node* getNodeByID(int _id);
+      //  virtual std::string draw(int)=0;
+      //  virtual std::string draw()=0;
+     //   virtual std::string dump()=0;
+    };

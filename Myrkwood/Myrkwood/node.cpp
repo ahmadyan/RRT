@@ -17,27 +17,44 @@
  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE CONTRIBUTORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS WITH THE SOFTWARE.
  */
 
-#pragma once
-#include <string>
-using namespace std;
+#include <iostream>
+#include "node.h"
 
-        class Point{
-
-            static int pointCount ;
-            
-            static int generateID();
-
-        public:
-            int id;
-            int dim ;
-            double* data ;
-
-            Point(int);
-            ~Point();
-            int getDimension();
-            double getData(int);
-            double* getData();
-            void setData(int, double);
-            string toString();
-        };
-
+    int Node::nodeCount = 0 ;
+    
+    Node::Node(){
+        id = generateID() ;
+   //     isReachable = true;
+   //     containInitialState = false ;
+   //     isInitialState = false ;
+   //     divided=false;
+    }
+    
+   // void Node::setAsInitialState(){
+   //     isInitialState = true ;
+   // }
+    
+    int Node::generateID(){
+        return nodeCount++;
+    }
+    
+    int Node::getID(){
+        return id;
+    }
+    /*
+    bool Node::isDivided(){
+        return divided ;
+    }
+    
+    Node* Node::getNodeByID(int _id){
+        if(id==_id) return this;
+        else{
+            std::vector<Node*> v = getChildren();
+            for(int i=0;i<v.size();i++){
+                Node* node = v[i]->getNodeByID(_id);
+                if(node!=NULL) return node; 
+            }
+        }
+        return NULL;
+    }
+	*/

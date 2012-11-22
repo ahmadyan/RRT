@@ -44,7 +44,7 @@ Plotter::Plotter(string path, Configuration* config){
     config->getParameter("edu.uiuc.crhc.core.system.y.min", &ymin);
     config->getParameter("edu.uiuc.crhc.core.system.y.max", &ymax);
 
-    gnuplotPipe = popen(gnuPlotPath.c_str(),"w");
+    gnuplotPipe = _popen(gnuPlotPath.c_str(),"w");
     string buffer ;
     fflush(gnuplotPipe);
     if(dim==2)
@@ -64,7 +64,7 @@ void Plotter::close(){
     
     waitForKey();
     
-    pclose(gnuplotPipe);
+    _pclose(gnuplotPipe);
     closed=true;
 }
 

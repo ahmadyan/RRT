@@ -18,26 +18,49 @@
  */
 
 #pragma once
-#include <string>
+#include <vector>
+#include "node.h"
+#include "point.h"
+#include "circuit.h"
 using namespace std;
 
-        class Point{
+	//enum PointType {PolyOriginalPoint, PolyExtensionPoint};
+    class Polytope : public Node{
+    public:
+        vector<Point*> points ;
+       // vector<Node*> neighbors ;
+        
+      //  double volume ;
 
-            static int pointCount ;
-            
-            static int generateID();
+      //  vector<Polytope*> nodes ;
 
-        public:
-            int id;
-            int dim ;
-            double* data ;
-
-            Point(int);
-            ~Point();
-            int getDimension();
-            double getData(int);
-            double* getData();
-            void setData(int, double);
-            string toString();
-        };
-
+        Polytope(int);
+        Polytope(int _dim, vector<Point*> v);
+        ~Polytope();
+        void push_back(Point*);
+        int getSize();
+        Point* getPoint(int);
+       // double getVolume();
+       // Point* getCentroid();
+        int getDimension();
+        
+    //    bool pointInPoly(Point* p);
+    //    virtual std::vector<Node*> getNeighbors(Node*);
+     //   virtual bool contain(Node*);
+     //   virtual void divide(Circuit*);
+    //    virtual std::string toString();
+     //   virtual bool isAdjacent(Node*);        
+     //   virtual std::string draw();
+     //   virtual std::string dump();
+     //   virtual std::string draw(int);
+     //   std::vector<Node*> getChildren();
+     //   vector<Point*> findIntersectionWithBorders(double* u2, Circuit* system, Point* center);
+     //   void test();
+     //   pair<bool, vector<Point*> > findCommonEdge(Polytope* p1, Polytope* p2);
+     //   vector<Point*> getSharedPoints(Polytope* p1, Polytope* p2);
+      //  bool IsSharingAnEdge(Polytope* p1, Polytope* p2);
+      //  void removeNeighbor(Polytope* p);
+     //   void addNeighbor(Polytope* p);
+     //   void updateNeighbors();
+     //   std::string dumpNeighbors();
+    };

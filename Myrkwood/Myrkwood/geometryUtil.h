@@ -18,26 +18,24 @@
  */
 
 #pragma once
-#include <string>
-using namespace std;
+#include "point.h"
+#include <cmath>
 
-        class Point{
-
-            static int pointCount ;
-            
-            static int generateID();
-
-        public:
-            int id;
-            int dim ;
-            double* data ;
-
-            Point(int);
-            ~Point();
-            int getDimension();
-            double getData(int);
-            double* getData();
-            void setData(int, double);
-            string toString();
-        };
-
+namespace geometry{
+    double crossProduct(Point* p1, Point* p2);
+    bool onSegment(Point* pi, Point* pj, Point* pk);
+    double direction(Point* pi, Point* pj, Point* pk);
+    bool intersection(Point* p1, Point* p2, Point* p3, Point* p4);
+    Point* intersectionPoint(Point* p1, Point* p2, Point* p3, Point* p4);
+    pair<double, double> solveLine(Point* , Point* );
+    double* GramSchmidt(int dim, double* v1);
+    double euclideanDistance(Point* a, Point* b);
+    bool eq(double, double);
+    void unit_test();
+    bool lineSegmentsOverlap(Point* a, Point* b, Point* c, Point* d);
+    pair<double,double> rotate(double x, double y, double theta);
+    int position(Point* p1, Point* p2, Point* M);
+    double rad2deg(double rad);
+    double deg2rad(double deg);
+    bool comparePoint(Point* a, Point* b, Point* o);
+}

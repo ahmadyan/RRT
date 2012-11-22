@@ -18,26 +18,30 @@
  */
 
 #pragma once
-#include <string>
-using namespace std;
+#include <vector>
+#include <gsl/gsl_errno.h>
+#include <gsl/gsl_math.h>
+#include <gsl/gsl_roots.h>
 
-        class Point{
+struct Solution{
+    bool existance;
+    double root ;
+};
 
-            static int pointCount ;
-            
-            static int generateID();
+struct PolyParams{
+    std::vector<double> coeff ;
+};
 
-        public:
-            int id;
-            int dim ;
-            double* data ;
+double polynomial (double x, void *params);
+double polynomial (double x, struct PolyParams *params);
+double polynomial (double x, std::vector<double> coeff);
 
-            Point(int);
-            ~Point();
-            int getDimension();
-            double getData(int);
-            double* getData();
-            void setData(int, double);
-            string toString();
-        };
+double polynomial_derivative(double x, void *params);
+double polynomial_derivative(double x, struct PolyParams *params);
+double polynomial_derivative(double x, std::vector<double> coeff);
 
+void polynomial_fdf (double x, void *params, double *y, double *dy);
+
+void gsl_handler (const char * reason, const char * file, int line,  int gsl_errno);
+Solution findRoot(std::vector<double> coeff, double min, double max);
+Solution findRoot_fdf(std::vector<double> coeff, double min, double max);
