@@ -43,6 +43,25 @@ VoronoiDiagramGenerator::VoronoiDiagramGenerator()
 	minDistanceBetweenSites = 0;
 }
 
+
+bool VoronoiDiagramGenerator::constructCellDictionary(){
+    return true;
+//        Halfedge* he = ELhash[i];
+  //      if(he->vertex!=NULL)
+    //        cout << i << " \t "  << he->vertex->coord.x << " " << he->vertex->coord.y << endl ;
+    
+    /*
+    iteratorEdges = allEdges;
+    while(iteratorEdges != 0){
+        float x1 = iteratorEdges->x1;
+		float x2 = iteratorEdges->x2;
+		float y1 = iteratorEdges->y1;
+		float y2 = iteratorEdges->y2;
+        
+		iteratorEdges = iteratorEdges->next;
+    }*/
+}
+
 VoronoiDiagramGenerator::~VoronoiDiagramGenerator()
 {
 	cleanup();
@@ -123,12 +142,16 @@ bool VoronoiDiagramGenerator::generateVoronoi(float *xValues, float *yValues, in
 	
 	siteidx = 0;
 	voronoi(triangulate);
-
+    for(int i=0; i<ELhashsize; i++){
+        Halfedge* he = ELgethash(i);
+        if(he!=NULL){
+            cout << "1" << endl ;
+        }
+    }
 	return true;
 }
 
-bool VoronoiDiagramGenerator::ELinitialize()
-{
+bool VoronoiDiagramGenerator::ELinitialize(){
 	int i;
 	freeinit(&hfl, sizeof **ELhash);
 	ELhashsize = 2 * sqrt_nsites;
@@ -180,7 +203,7 @@ struct Halfedge * VoronoiDiagramGenerator::ELgethash(int b)
 	if(b<0 || b>=ELhashsize) 
 		return((struct Halfedge *) NULL);
 	he = ELhash[b]; 
-	if (he == (struct Halfedge *) NULL || he->ELedge != (struct Edge *) DELETED ) 
+	if (he == (struct Halfedge *) NULL || he->ELedge != (struct Edge *) DELETED )
 		return (he);
 	
 	/* Hash table points to deleted half edge.  Patch as necessary. */
@@ -878,7 +901,6 @@ bool VoronoiDiagramGenerator::voronoi(int triangulate)
 	newsite = nextone();
 	while(1)
 	{
-		std::cout << "I'm a strange loop!" << std::endl ;
 		if(!PQempty()) 
 			newintstar = PQ_min();
 		
@@ -895,7 +917,6 @@ bool VoronoiDiagramGenerator::voronoi(int triangulate)
 			e = bisect(bot, newsite);					//create a new edge that bisects 
 			bisector = HEcreate(e, le);					//create a new HalfEdge, setting its ELpm field to 0			
 			ELinsert(lbnd, bisector);					//insert this new bisector edge between the left and right vectors in a linked list	
-
 			if ((p = intersect(lbnd, bisector)) != (struct Site *) NULL) 	//if the new bisector intersects with the left edge, remove the left edge's vertex, and put in the new one
 			{	
 				PQdelete(lbnd);
@@ -972,7 +993,8 @@ bool VoronoiDiagramGenerator::voronoi(int triangulate)
 
 		clip_line(e);
 	};
-
+    
+    
 	cleanup();
 
 	return true;

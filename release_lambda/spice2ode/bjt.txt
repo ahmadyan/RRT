@@ -1,0 +1,20 @@
+
+vcc supply 0 5
+isrc cbias 0 1e-3
+qsrc1 cbias cbias supply pnp
+qsrc2 out cbias supply pnp
+qamp out b 0 npn
+
+rs b input2 1e4
+
+vin2 input2 input1 ac=0.0001
+vin input1 0 0.9
+
+.nodeset v(supply)=5 v(cbias)=4.28 v(out)=0.092 v(b)=0.716 v(input1)=0.9
+
+.op
+
+.plot ac VM(out) VP(out)
+.ac DEC 100 10K 100MEG
+
+.end

@@ -21,9 +21,28 @@
 #include <sstream>
 #include "point.h"
 using namespace std;
-
+namespace geometry{
     int Point::pointCount = 0 ;
     
+    Point::Point(int dim, double* d):dim(dim){
+        id = generateID();
+        data = d;
+    }
+
+    Point::Point(Point* p){
+        id = generateID();
+        dim = p->getDimension();
+        data = new double[dim];
+        for(int i=0;i<dim;i++) data[i]=p->getData(i);
+    }
+    
+    Point::Point(vector<double> v){
+        id = generateID();
+        dim=(int)(v.size());
+        data=new double[dim];
+        for(int i=0;i<dim;i++) data[i]=v[i];
+    }
+   
     Point::Point(int dim):dim(dim){
         id = generateID();
         data = new double[dim];
@@ -45,6 +64,12 @@ using namespace std;
     double* Point::getData(){
         return data ;
     }
+    
+    void Point::setData(double* x){
+        for(int i=0;i<dim;i++){
+            data[i] = x[i];
+        }
+    }
     void Point::setData(int i, double x){
         data[i] = x;
     }
@@ -61,3 +86,4 @@ using namespace std;
         }
         return str.str();
     }
+}

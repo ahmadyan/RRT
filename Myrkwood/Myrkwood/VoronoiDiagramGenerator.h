@@ -34,6 +34,9 @@
 #include <stdlib.h>
 #include <string.h>
 #include <iostream>
+#include <vector>
+
+using namespace std;
 
 #ifndef NULL
 #define NULL 0
@@ -108,11 +111,18 @@ struct Halfedge
 };
 
 
-
+struct Cell{
+    int id;
+    struct  Site    *vertex;
+    vector<Edge*>   edges  ;
+    vector<Halfedge*>   halfEdges ;
+    vector<Cell*> neighbors ;
+};
 
 class VoronoiDiagramGenerator
 {
 public:
+    bool constructCellDictionary();
 	VoronoiDiagramGenerator();
 	~VoronoiDiagramGenerator();
 

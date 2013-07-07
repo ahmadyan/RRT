@@ -9,6 +9,15 @@
 #include <boost/graph/graph_traits.hpp>
 #include <boost/graph/adjacency_list.hpp>
 #include <boost/lexical_cast.hpp>
+#include <stdio.h>  /* defines FILENAME_MAX */
+#ifdef WINDOWS
+    #include <direct.h>
+    #define GetCurrentDir _getcwd
+#else
+    #include <unistd.h>
+    #define GetCurrentDir getcwd
+#endif
+
 using namespace std;
 
 Configuration::Configuration(string inputFile){
@@ -33,7 +42,11 @@ Configuration::Configuration(string inputFile){
         }
         myfile.close();
     }else{ //  if (myfile.is_open())
-    	cout << "[Configuration] Configuration file " <<  inputFile << " not found." << endl ;
+        
+        char cCurrentPath[FILENAME_MAX];
+        GetCurrentDir(cCurrentPath, sizeof(cCurrentPath));
+        cCurrentPath[sizeof(cCurrentPath) - 1] = '\0';
+    	cout << "[Configuration] Configuration file " <<  cCurrentPath << "\\"  << inputFile << " not found." << endl ;
     }
 }
 

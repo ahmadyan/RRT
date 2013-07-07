@@ -1,0 +1,18 @@
+
+VS 1 0 SIN 0 0.01 10000
+
+VCC 11 0 15
+VEE 12 0 -15
+
+Q1 out1 1 5 NPN
+Q2 out2 0 5 NPN
+RC1 11 out1 1000
+RC2 11 out2 1000
+RE 5 12	7200
+
+.nodeset v(1)=0 v(5)=-0.72 v(out1)=14.5 v(out2)=14.5
+.print tran v(out1) v(out2)
+
+.TRAN 0.1US 200US
+
+.end

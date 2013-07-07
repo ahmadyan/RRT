@@ -23,6 +23,7 @@
 #include <string>
 #include <iostream>
 #include <vector>
+#include "trace.h"
 #include "config.h"
 using namespace std;
 
@@ -57,7 +58,9 @@ public:
     ~Plotter();
     void execute(string str);
     
-    void drawArray(vector<pair<double, double> > trace);
+    void drawArray(vector< vector<double> > trace, int, int);
+    void drawTrace(Trace* trace, int, int);
+    void drawTrace(Trace* trace, double t_max, int index);
     void drawLine(double iFromX, double iFromY, double iToX, double iToY);
     void drawLine(double iFromX, double iFromY, double iFromZ, double iToX, double iToY, double iToZ);
     void saveToPdf(string path);

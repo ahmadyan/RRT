@@ -1,16 +1,15 @@
 #pragma once
 
-#include "config.h"
+#include "circuit.h"
 #include "point.h"
 
-class sampling {
-	//enum samplingType {uniform, gaussian, goalOriented};
-	//int d;
-	//double* min;
-	//double* max;
-	//samplingType type;
+//Random Point Generator
+class RPG {
+	enum samplingType {uniform, gaussian, goalOriented};
+    Circuit* circuit;
 public:
-	sampling(Configuration* config);
-	Point* sample();
-	virtual ~sampling();
+	RPG(Circuit* config);
+    geometry::Point* sample();
+	~RPG();
+    double random(double a, double b);
 };

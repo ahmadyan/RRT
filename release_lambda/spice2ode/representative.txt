@@ -1,0 +1,19 @@
+
+r1 a b 2
+r2 b 0 3
+e1 c 0 a b 4
+i1 0 d 5
+r3 c d 6
+r4 d 0 7
+f1 0 e v1 8
+r5 e f 9
+r6 f 0 10
+h1 g 0 v1 11
+r7 g h 11
+r8 h 0 12
+g9 g h e f 13
+v1 a 0 1
+
+.op
+
+.end

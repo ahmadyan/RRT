@@ -28,6 +28,9 @@
 #include "utility.h"
 #include "polytope.h"
 using namespace std;
+namespace geometry {
+    
+
     Polytope::Polytope(int _dim){
         dim=_dim;
     }
@@ -481,5 +484,7 @@ using namespace std;
         }else{
             str << toString()  << endl ;
         }
-        return str.str();    
+        return str.str();
     }*/
+
+}

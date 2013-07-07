@@ -19,15 +19,17 @@
 
 #pragma once
 #include <vector>
-#include "node.h"
+#include "Object.h"
 #include "point.h"
 #include "circuit.h"
 using namespace std;
+namespace geometry {
+    
 
 	//enum PointType {PolyOriginalPoint, PolyExtensionPoint};
-    class Polytope : public Node{
+    class Polytope : public MyrkObject{
     public:
-        vector<Point*> points ;
+        vector<geometry::Point*> points ;
        // vector<Node*> neighbors ;
         
       //  double volume ;
@@ -37,9 +39,9 @@ using namespace std;
         Polytope(int);
         Polytope(int _dim, vector<Point*> v);
         ~Polytope();
-        void push_back(Point*);
+        void push_back(geometry::Point*);
         int getSize();
-        Point* getPoint(int);
+        geometry::Point* getPoint(int);
        // double getVolume();
        // Point* getCentroid();
         int getDimension();
@@ -64,3 +66,5 @@ using namespace std;
      //   void updateNeighbors();
      //   std::string dumpNeighbors();
     };
+    
+    }

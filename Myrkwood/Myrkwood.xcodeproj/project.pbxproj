@@ -7,8 +7,32 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		F501837D1700DC8E0087338B /* Venice.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F501837B1700DC8E0087338B /* Venice.cpp */; };
+		F51DD7DA166AB7C80097E06E /* cgal_adapter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F51DD7D8166AB7C80097E06E /* cgal_adapter.cpp */; };
+		F51DD7DD166AB9D20097E06E /* Voronoi.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F51DD7DB166AB9D20097E06E /* Voronoi.cpp */; };
+		F59C609D165E9DE7007F4AEC /* Algorithm.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F59C608E165E9DE7007F4AEC /* Algorithm.cpp */; };
+		F59C609E165E9DE7007F4AEC /* circuit.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F59C6090165E9DE7007F4AEC /* circuit.cpp */; };
+		F59C609F165E9DE7007F4AEC /* geometryUtil.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F59C6092165E9DE7007F4AEC /* geometryUtil.cpp */; };
+		F59C60A0165E9DE7007F4AEC /* Object.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F59C6094165E9DE7007F4AEC /* Object.cpp */; };
+		F59C60A1165E9DE7007F4AEC /* polytope.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F59C6095165E9DE7007F4AEC /* polytope.cpp */; };
+		F59C60A2165E9DE7007F4AEC /* rootFinding.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F59C6097165E9DE7007F4AEC /* rootFinding.cpp */; };
+		F59C60A3165E9DE7007F4AEC /* set.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F59C6099165E9DE7007F4AEC /* set.cpp */; };
+		F59C60A4165E9DE7007F4AEC /* trace.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F59C609B165E9DE7007F4AEC /* trace.cpp */; };
+		F59C60AC16616D37007F4AEC /* Forest.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F59C60AA16616D37007F4AEC /* Forest.cpp */; };
+		F59C60B41661C5BB007F4AEC /* node.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F59C60B21661C5BB007F4AEC /* node.cpp */; };
+		F5D4393D1706409500558F09 /* kdtree.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F5D4393B1706409500558F09 /* kdtree.cpp */; };
+		F5F8C4E01710BB70006C9DA7 /* decsol.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F5F8C4DA1710BB70006C9DA7 /* decsol.cpp */; };
+		F5F8C4E11710BB70006C9DA7 /* IntegratorT.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F5F8C4DC1710BB70006C9DA7 /* IntegratorT.cpp */; };
+		F5F8C4E21710BB70006C9DA7 /* StiffIntegratorT.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F5F8C4DE1710BB70006C9DA7 /* StiffIntegratorT.cpp */; };
 		F5FED59B163C67C000A5E0D2 /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F5FED59A163C67C000A5E0D2 /* main.cpp */; };
 		F5FED59D163C67C000A5E0D2 /* Myrkwood.1 in CopyFiles */ = {isa = PBXBuildFile; fileRef = F5FED59C163C67C000A5E0D2 /* Myrkwood.1 */; };
+		F5FED5B1163C685E00A5E0D2 /* config.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F5FED5A3163C685E00A5E0D2 /* config.cpp */; };
+		F5FED5B2163C685E00A5E0D2 /* Makefile in Sources */ = {isa = PBXBuildFile; fileRef = F5FED5A5163C685E00A5E0D2 /* Makefile */; };
+		F5FED5B3163C685E00A5E0D2 /* plot.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F5FED5A6163C685E00A5E0D2 /* plot.cpp */; };
+		F5FED5B4163C685E00A5E0D2 /* point.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F5FED5A8163C685E00A5E0D2 /* point.cpp */; };
+		F5FED5B5163C685E00A5E0D2 /* sampling.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F5FED5AB163C685E00A5E0D2 /* sampling.cpp */; };
+		F5FED5B6163C685E00A5E0D2 /* utility.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F5FED5AD163C685E00A5E0D2 /* utility.cpp */; };
+		F5FED5B7163C685E00A5E0D2 /* VoronoiDiagramGenerator.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F5FED5AF163C685E00A5E0D2 /* VoronoiDiagramGenerator.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -25,9 +49,58 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		F501837B1700DC8E0087338B /* Venice.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Venice.cpp; sourceTree = "<group>"; };
+		F501837C1700DC8E0087338B /* Venice.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Venice.h; sourceTree = "<group>"; };
+		F51DD7D8166AB7C80097E06E /* cgal_adapter.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = cgal_adapter.cpp; sourceTree = "<group>"; };
+		F51DD7D9166AB7C80097E06E /* cgal_adapter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = cgal_adapter.h; sourceTree = "<group>"; };
+		F51DD7DB166AB9D20097E06E /* Voronoi.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Voronoi.cpp; sourceTree = "<group>"; };
+		F51DD7DC166AB9D20097E06E /* Voronoi.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Voronoi.h; sourceTree = "<group>"; };
+		F59C608E165E9DE7007F4AEC /* Algorithm.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Algorithm.cpp; sourceTree = "<group>"; };
+		F59C608F165E9DE7007F4AEC /* Algorithm.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Algorithm.h; sourceTree = "<group>"; };
+		F59C6090165E9DE7007F4AEC /* circuit.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = circuit.cpp; sourceTree = "<group>"; };
+		F59C6091165E9DE7007F4AEC /* circuit.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = circuit.h; sourceTree = "<group>"; };
+		F59C6092165E9DE7007F4AEC /* geometryUtil.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = geometryUtil.cpp; sourceTree = "<group>"; };
+		F59C6093165E9DE7007F4AEC /* geometryUtil.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = geometryUtil.h; sourceTree = "<group>"; };
+		F59C6094165E9DE7007F4AEC /* Object.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Object.cpp; sourceTree = "<group>"; };
+		F59C6095165E9DE7007F4AEC /* polytope.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = polytope.cpp; sourceTree = "<group>"; };
+		F59C6096165E9DE7007F4AEC /* polytope.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = polytope.h; sourceTree = "<group>"; };
+		F59C6097165E9DE7007F4AEC /* rootFinding.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = rootFinding.cpp; sourceTree = "<group>"; };
+		F59C6098165E9DE7007F4AEC /* rootFinding.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = rootFinding.h; sourceTree = "<group>"; };
+		F59C6099165E9DE7007F4AEC /* set.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = set.cpp; sourceTree = "<group>"; };
+		F59C609A165E9DE7007F4AEC /* set.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = set.h; sourceTree = "<group>"; };
+		F59C609B165E9DE7007F4AEC /* trace.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = trace.cpp; sourceTree = "<group>"; };
+		F59C609C165E9DE7007F4AEC /* trace.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = trace.h; sourceTree = "<group>"; };
+		F59C60AA16616D37007F4AEC /* Forest.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Forest.cpp; sourceTree = "<group>"; };
+		F59C60AB16616D37007F4AEC /* Forest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Forest.h; sourceTree = "<group>"; };
+		F59C60B11661BEDA007F4AEC /* Object.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Object.h; sourceTree = "<group>"; };
+		F59C60B21661C5BB007F4AEC /* node.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = node.cpp; sourceTree = "<group>"; };
+		F59C60B31661C5BB007F4AEC /* node.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = node.h; sourceTree = "<group>"; };
+		F5D4393B1706409500558F09 /* kdtree.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = kdtree.cpp; sourceTree = "<group>"; };
+		F5D4393C1706409500558F09 /* kdtree.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = kdtree.h; sourceTree = "<group>"; };
+		F5F8C4DA1710BB70006C9DA7 /* decsol.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = decsol.cpp; sourceTree = "<group>"; };
+		F5F8C4DB1710BB70006C9DA7 /* decsol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = decsol.h; sourceTree = "<group>"; };
+		F5F8C4DC1710BB70006C9DA7 /* IntegratorT.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = IntegratorT.cpp; sourceTree = "<group>"; };
+		F5F8C4DD1710BB70006C9DA7 /* IntegratorT.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IntegratorT.h; sourceTree = "<group>"; };
+		F5F8C4DE1710BB70006C9DA7 /* StiffIntegratorT.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = StiffIntegratorT.cpp; sourceTree = "<group>"; };
+		F5F8C4DF1710BB70006C9DA7 /* StiffIntegratorT.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = StiffIntegratorT.h; sourceTree = "<group>"; };
+		F5F8C4E41710BD4C006C9DA7 /* Notes */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Notes; sourceTree = "<group>"; };
 		F5FED596163C67C000A5E0D2 /* Myrkwood */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = Myrkwood; sourceTree = BUILT_PRODUCTS_DIR; };
 		F5FED59A163C67C000A5E0D2 /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
 		F5FED59C163C67C000A5E0D2 /* Myrkwood.1 */ = {isa = PBXFileReference; lastKnownFileType = text.man; path = Myrkwood.1; sourceTree = "<group>"; };
+		F5FED5A3163C685E00A5E0D2 /* config.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = config.cpp; sourceTree = "<group>"; };
+		F5FED5A4163C685E00A5E0D2 /* config.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = config.h; sourceTree = "<group>"; };
+		F5FED5A5163C685E00A5E0D2 /* Makefile */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.make; path = Makefile; sourceTree = "<group>"; };
+		F5FED5A6163C685E00A5E0D2 /* plot.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = plot.cpp; sourceTree = "<group>"; };
+		F5FED5A7163C685E00A5E0D2 /* plot.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = plot.h; sourceTree = "<group>"; };
+		F5FED5A8163C685E00A5E0D2 /* point.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = point.cpp; sourceTree = "<group>"; };
+		F5FED5A9163C685E00A5E0D2 /* point.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = point.h; sourceTree = "<group>"; };
+		F5FED5AA163C685E00A5E0D2 /* reach.conf */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = reach.conf; sourceTree = "<group>"; };
+		F5FED5AB163C685E00A5E0D2 /* sampling.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = sampling.cpp; sourceTree = "<group>"; };
+		F5FED5AC163C685E00A5E0D2 /* sampling.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = sampling.h; sourceTree = "<group>"; };
+		F5FED5AD163C685E00A5E0D2 /* utility.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = utility.cpp; sourceTree = "<group>"; };
+		F5FED5AE163C685E00A5E0D2 /* utility.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = utility.h; sourceTree = "<group>"; };
+		F5FED5AF163C685E00A5E0D2 /* VoronoiDiagramGenerator.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = VoronoiDiagramGenerator.cpp; sourceTree = "<group>"; };
+		F5FED5B0163C685E00A5E0D2 /* VoronoiDiagramGenerator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VoronoiDiagramGenerator.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -41,6 +114,70 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		F59C60AE166184E9007F4AEC /* Forest */ = {
+			isa = PBXGroup;
+			children = (
+				F59C6099165E9DE7007F4AEC /* set.cpp */,
+				F59C609A165E9DE7007F4AEC /* set.h */,
+				F59C609B165E9DE7007F4AEC /* trace.cpp */,
+				F59C609C165E9DE7007F4AEC /* trace.h */,
+				F59C60B21661C5BB007F4AEC /* node.cpp */,
+				F59C60B31661C5BB007F4AEC /* node.h */,
+				F59C6090165E9DE7007F4AEC /* circuit.cpp */,
+				F59C6091165E9DE7007F4AEC /* circuit.h */,
+				F59C60AA16616D37007F4AEC /* Forest.cpp */,
+				F59C60AB16616D37007F4AEC /* Forest.h */,
+				F59C608E165E9DE7007F4AEC /* Algorithm.cpp */,
+				F59C608F165E9DE7007F4AEC /* Algorithm.h */,
+				F51DD7DB166AB9D20097E06E /* Voronoi.cpp */,
+				F51DD7DC166AB9D20097E06E /* Voronoi.h */,
+			);
+			name = Forest;
+			sourceTree = "<group>";
+		};
+		F59C60AF166184F0007F4AEC /* Utility */ = {
+			isa = PBXGroup;
+			children = (
+				F5F8C4DA1710BB70006C9DA7 /* decsol.cpp */,
+				F5F8C4DB1710BB70006C9DA7 /* decsol.h */,
+				F5F8C4DC1710BB70006C9DA7 /* IntegratorT.cpp */,
+				F5F8C4DD1710BB70006C9DA7 /* IntegratorT.h */,
+				F5F8C4DE1710BB70006C9DA7 /* StiffIntegratorT.cpp */,
+				F5F8C4DF1710BB70006C9DA7 /* StiffIntegratorT.h */,
+				F5FED5AD163C685E00A5E0D2 /* utility.cpp */,
+				F5FED5AE163C685E00A5E0D2 /* utility.h */,
+				F5FED5A3163C685E00A5E0D2 /* config.cpp */,
+				F5FED5A4163C685E00A5E0D2 /* config.h */,
+				F5FED5A5163C685E00A5E0D2 /* Makefile */,
+				F5FED5A6163C685E00A5E0D2 /* plot.cpp */,
+				F5FED5A7163C685E00A5E0D2 /* plot.h */,
+				F501837B1700DC8E0087338B /* Venice.cpp */,
+				F501837C1700DC8E0087338B /* Venice.h */,
+			);
+			name = Utility;
+			sourceTree = "<group>";
+		};
+		F59C60B016618500007F4AEC /* Geometry */ = {
+			isa = PBXGroup;
+			children = (
+				F5FED5AF163C685E00A5E0D2 /* VoronoiDiagramGenerator.cpp */,
+				F5FED5B0163C685E00A5E0D2 /* VoronoiDiagramGenerator.h */,
+				F5FED5A8163C685E00A5E0D2 /* point.cpp */,
+				F5FED5A9163C685E00A5E0D2 /* point.h */,
+				F59C60B11661BEDA007F4AEC /* Object.h */,
+				F59C6094165E9DE7007F4AEC /* Object.cpp */,
+				F59C6092165E9DE7007F4AEC /* geometryUtil.cpp */,
+				F59C6093165E9DE7007F4AEC /* geometryUtil.h */,
+				F59C6095165E9DE7007F4AEC /* polytope.cpp */,
+				F59C6096165E9DE7007F4AEC /* polytope.h */,
+				F51DD7D8166AB7C80097E06E /* cgal_adapter.cpp */,
+				F51DD7D9166AB7C80097E06E /* cgal_adapter.h */,
+				F5D4393B1706409500558F09 /* kdtree.cpp */,
+				F5D4393C1706409500558F09 /* kdtree.h */,
+			);
+			name = Geometry;
+			sourceTree = "<group>";
+		};
 		F5FED58B163C67C000A5E0D2 = {
 			isa = PBXGroup;
 			children = (
@@ -60,7 +197,16 @@
 		F5FED599163C67C000A5E0D2 /* Myrkwood */ = {
 			isa = PBXGroup;
 			children = (
+				F59C60B016618500007F4AEC /* Geometry */,
+				F59C60AF166184F0007F4AEC /* Utility */,
+				F59C60AE166184E9007F4AEC /* Forest */,
 				F5FED59A163C67C000A5E0D2 /* main.cpp */,
+				F59C6097165E9DE7007F4AEC /* rootFinding.cpp */,
+				F59C6098165E9DE7007F4AEC /* rootFinding.h */,
+				F5FED5AA163C685E00A5E0D2 /* reach.conf */,
+				F5F8C4E41710BD4C006C9DA7 /* Notes */,
+				F5FED5AB163C685E00A5E0D2 /* sampling.cpp */,
+				F5FED5AC163C685E00A5E0D2 /* sampling.h */,
 				F5FED59C163C67C000A5E0D2 /* Myrkwood.1 */,
 			);
 			path = Myrkwood;
@@ -118,6 +264,30 @@
 			buildActionMask = 2147483647;
 			files = (
 				F5FED59B163C67C000A5E0D2 /* main.cpp in Sources */,
+				F5FED5B1163C685E00A5E0D2 /* config.cpp in Sources */,
+				F5FED5B2163C685E00A5E0D2 /* Makefile in Sources */,
+				F5FED5B3163C685E00A5E0D2 /* plot.cpp in Sources */,
+				F5FED5B4163C685E00A5E0D2 /* point.cpp in Sources */,
+				F5FED5B5163C685E00A5E0D2 /* sampling.cpp in Sources */,
+				F5FED5B6163C685E00A5E0D2 /* utility.cpp in Sources */,
+				F5FED5B7163C685E00A5E0D2 /* VoronoiDiagramGenerator.cpp in Sources */,
+				F59C609D165E9DE7007F4AEC /* Algorithm.cpp in Sources */,
+				F59C609E165E9DE7007F4AEC /* circuit.cpp in Sources */,
+				F59C609F165E9DE7007F4AEC /* geometryUtil.cpp in Sources */,
+				F59C60A0165E9DE7007F4AEC /* Object.cpp in Sources */,
+				F59C60A1165E9DE7007F4AEC /* polytope.cpp in Sources */,
+				F59C60A2165E9DE7007F4AEC /* rootFinding.cpp in Sources */,
+				F59C60A3165E9DE7007F4AEC /* set.cpp in Sources */,
+				F59C60A4165E9DE7007F4AEC /* trace.cpp in Sources */,
+				F59C60AC16616D37007F4AEC /* Forest.cpp in Sources */,
+				F59C60B41661C5BB007F4AEC /* node.cpp in Sources */,
+				F51DD7DA166AB7C80097E06E /* cgal_adapter.cpp in Sources */,
+				F51DD7DD166AB9D20097E06E /* Voronoi.cpp in Sources */,
+				F501837D1700DC8E0087338B /* Venice.cpp in Sources */,
+				F5D4393D1706409500558F09 /* kdtree.cpp in Sources */,
+				F5F8C4E01710BB70006C9DA7 /* decsol.cpp in Sources */,
+				F5F8C4E11710BB70006C9DA7 /* IntegratorT.cpp in Sources */,
+				F5F8C4E21710BB70006C9DA7 /* StiffIntegratorT.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -127,7 +297,7 @@
 		F5FED59E163C67C000A5E0D2 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ALWAYS_SEARCH_USER_PATHS = NO;
+				ALWAYS_SEARCH_USER_PATHS = YES;
 				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
 				CLANG_ENABLE_OBJC_ARC = YES;
@@ -146,8 +316,30 @@
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNINITIALIZED_AUTOS = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
+				HEADER_SEARCH_PATHS = (
+					/usr/local/include,
+					/usr/include,
+					/usr/include/gsl,
+				);
+				LIBRARY_SEARCH_PATHS = (
+					/usr/lib,
+					/usr/local/lib,
+				);
 				MACOSX_DEPLOYMENT_TARGET = 10.8;
 				ONLY_ACTIVE_ARCH = YES;
+				OTHER_CFLAGS = "";
+				OTHER_LDFLAGS = (
+					"-lcblas",
+					"-lgsl",
+					"-dylib_file,/System/Library/Frameworks/OpenGL.framework/Versions/A/Libraries/libGL.dylib:/System/Library/Frameworks/OpenGL.framework/Versions/A/Libraries/libGL.dylib",
+					"-L/usr/local/lib",
+					/usr/local/lib/libmpfr.dylib,
+					/usr/local/lib/libgmp.dylib,
+					/usr/local/lib/libCGAL_Core.dylib,
+					/usr/local/lib/libCGAL.dylib,
+					/usr/local/lib/libboost_thread.dylib,
+					/usr/local/lib/libboost_system.dylib,
+				);
 				SDKROOT = macosx;
 			};
 			name = Debug;
@@ -155,7 +347,7 @@
 		F5FED59F163C67C000A5E0D2 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ALWAYS_SEARCH_USER_PATHS = NO;
+				ALWAYS_SEARCH_USER_PATHS = YES;
 				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
 				CLANG_ENABLE_OBJC_ARC = YES;
@@ -168,7 +360,29 @@
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNINITIALIZED_AUTOS = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
+				HEADER_SEARCH_PATHS = (
+					/usr/local/include,
+					/usr/include,
+					/usr/include/gsl,
+				);
+				LIBRARY_SEARCH_PATHS = (
+					/usr/lib,
+					/usr/local/lib,
+				);
 				MACOSX_DEPLOYMENT_TARGET = 10.8;
+				OTHER_CFLAGS = "";
+				OTHER_LDFLAGS = (
+					"-lcblas",
+					"-lgsl",
+					"-dylib_file,/System/Library/Frameworks/OpenGL.framework/Versions/A/Libraries/libGL.dylib:/System/Library/Frameworks/OpenGL.framework/Versions/A/Libraries/libGL.dylib",
+					"-L/usr/local/lib",
+					/usr/local/lib/libmpfr.dylib,
+					/usr/local/lib/libgmp.dylib,
+					/usr/local/lib/libCGAL_Core.dylib,
+					/usr/local/lib/libCGAL.dylib,
+					/usr/local/lib/libboost_thread.dylib,
+					/usr/local/lib/libboost_system.dylib,
+				);
 				SDKROOT = macosx;
 			};
 			name = Release;
@@ -206,6 +420,7 @@
 				F5FED5A2163C67C000A5E0D2 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};

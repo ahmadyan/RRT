@@ -1,0 +1,11 @@
+
+    Rapidly-exploring random tree algorithm - core
+    Seyed Nematollah (Adel) Ahmadyan,
+    University of Illinois at Urbana-Champaign
+    
+    
+    To compile this project, you need the following libraries:
+        Boost
+        CGAL
+        gnu-gsl
+        gnu-gplot

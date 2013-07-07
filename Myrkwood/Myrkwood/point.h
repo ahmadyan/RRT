@@ -19,8 +19,10 @@
 
 #pragma once
 #include <string>
+#include <vector>
 using namespace std;
-
+namespace geometry {
+    
         class Point{
 
             static int pointCount ;
@@ -33,11 +35,17 @@ using namespace std;
             double* data ;
 
             Point(int);
+            Point(vector<double>);
+            Point(int, double*);
+            Point(Point*);
             ~Point();
             int getDimension();
             double getData(int);
             double* getData();
             void setData(int, double);
+            void setData(double* x);
             string toString();
         };
+    
+    }
 

@@ -1,0 +1,14 @@
+* common-emitter bjt ac analysis
+
+vin	1	5	ac=0.01
+vbias	5	0	2.3
+r1	1	2	1e3
+q1	3	2	0	npn
+r	3	4	30	
+v1	4	0	15
+
+.model n npn
+.op
+.ac lin 1	1000	100e9
+.print ac v(1)	v(3)	v(2)	
+.end
