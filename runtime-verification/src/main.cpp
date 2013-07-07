@@ -1,5 +1,4 @@
 #define _USE_MATH_DEFINES
-#define NO_ALLOCA //The KDTree library might use the alloca function, which is not portable, nor good.
 #include <cmath>
 #include <iostream>
 #include <ctime>
@@ -175,15 +174,8 @@ void kernel_MC(){
 }
 
 
-<<<<<<< HEAD
 
 void date_2013_experiments(){
-=======
-int main (int argc, const char * argv[]){
-	srand((unsigned int)time(0));
-	//Plotter* plotter = new Plotter("/Applications/Gnuplot.app/Contents/Resources/bin");
-	//Plotter* plotter = new Plotter("C:\\Progra~1\\gnuplot\\bin\\gnuplot.exe -persist");
->>>>>>> origin/master
 	Plotter* plotter = new Plotter("C:\\opt\\gnuplot\\bin\\gnuplot.exe -persist");
 
 	int mode = NEW_RRT_PLL ; // NEW_RRT_TDO // LOAD_RRT // NEW_RRT_PLL

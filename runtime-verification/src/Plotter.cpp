@@ -24,7 +24,6 @@ using std::endl;
 
 Plotter::Plotter(string path){
 	gnuPlotPath = path ;
-<<<<<<< HEAD
 	#ifdef _WIN32
     gnuplotPipe = _popen(gnuPlotPath.c_str(),"w");
 	#else
@@ -32,15 +31,12 @@ Plotter::Plotter(string path){
 	#endif
 	emptyPlot("", 0, 1, 0, 1);
 	closed=false;
-=======
->>>>>>> origin/master
 }
 
 Plotter::~Plotter(){
     if(!closed) close();
 }
 
-<<<<<<< HEAD
 void Plotter::close(){
     string buffer = "replot\n";
     fprintf(gnuplotPipe, buffer.c_str());
@@ -82,14 +78,6 @@ void Plotter::emptyPlot(string title, double xmin, double xmax, double ymin, dou
     
     fprintf(gnuplotPipe, cmdstr.str().c_str());
     fflush(gnuplotPipe);
-=======
-string drawLine(const double iFromX, const double iFromY,
-				const double iToX, const double iToY){
-					stringstream cmdstr;
-					cmdstr << " set arrow from " << iFromX << "," << iFromY << " to " << iToX << "," << iToY << " nohead  lc rgb \"blue\" lw 2 \n" ;
-					printf(cmdstr.str().c_str());
-					return cmdstr.str();
->>>>>>> origin/master
 }
 
 
@@ -291,17 +279,9 @@ void Plotter::plotTrace(RRT rrt, int v1, int v2, int tdim, double simTime, doubl
 			if(x0<min[it0]) min[it0]=x0 ;
 			cout << "**" << endl ;
 //			cout << t0 << " " << t1 << " " << x0 << " " << x1 << endl ;
-<<<<<<< HEAD
 			drawLine(t0, x0, t1, x1);
 			fflush(gnuplotPipe);
 
-=======
-			buffer = drawLine(t0, x0, t1, x1);
-
-			fprintf(gnuplotPipe, buffer.c_str());
-			fflush(gnuplotPipe);
-
->>>>>>> origin/master
 		
 		}
 		for(int i=0;i<n->getSize();i++){
@@ -309,17 +289,10 @@ void Plotter::plotTrace(RRT rrt, int v1, int v2, int tdim, double simTime, doubl
 		}
 
 	}
-<<<<<<< HEAD
 	buffer = "replot\n";
 	fprintf(gnuplotPipe, buffer.c_str());
 	fflush(gnuplotPipe);
 	waitForKey();
-=======
-		buffer = "replot\n";
-			fprintf(gnuplotPipe, buffer.c_str());
-			fflush(gnuplotPipe);
-	wait_for_key();
->>>>>>> origin/master
 
 	_pclose(gnuplotPipe);
 	out.close();
