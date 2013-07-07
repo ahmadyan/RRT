@@ -1,3 +1,6 @@
+#define _USE_MATH_DEFINES
+#define NO_ALLOCA //The KDTree library might use the alloca function, which is not portable, nor good.
+#include <cmath>
 #include <iostream>
 #include <ctime>
 #include "Monitor.h"
@@ -11,6 +14,9 @@
 #include "hspiceInterface.h"
 #include "pll.h"
 #include "Monitor.h"
+#include "Frequency.h"
+
+#include "kdtree.h"
 using namespace std;
 
 #define NEW_RRT_TDO		0
@@ -169,10 +175,15 @@ void kernel_MC(){
 }
 
 
+<<<<<<< HEAD
+
+void date_2013_experiments(){
+=======
 int main (int argc, const char * argv[]){
 	srand((unsigned int)time(0));
 	//Plotter* plotter = new Plotter("/Applications/Gnuplot.app/Contents/Resources/bin");
 	//Plotter* plotter = new Plotter("C:\\Progra~1\\gnuplot\\bin\\gnuplot.exe -persist");
+>>>>>>> origin/master
 	Plotter* plotter = new Plotter("C:\\opt\\gnuplot\\bin\\gnuplot.exe -persist");
 
 	int mode = NEW_RRT_PLL ; // NEW_RRT_TDO // LOAD_RRT // NEW_RRT_PLL
@@ -182,7 +193,75 @@ int main (int argc, const char * argv[]){
 
 	kernel_MC();
 	kernel_RRT(mode, generatePlot, inputFileName, outputFileName, plotter);
+}
+
+void fft_experiments(){
+	double f0 = 1; //initial freqency
+	double f1 = 10; //final freq
+	double t = 5; //time interval
+	int size = 1000; //number of samples
+	Frequency f;
 	
+	vector<double> signal = f.generatoreSweepWaveform(f0, f1, t, size); //generate a sin wave sweeping from f0 to f1
+	f.init();
+	for(int i=0;i<size;i++){
+		f.sdft();
+		//if(++idx==N) idx=0;
+	}
+	
+	
+	//double powr1[N/2];
+    //f.powr_spectrum(powr1);
+
+	Plotter* plotter = new Plotter("C:\\opt\\gnuplot\\bin\\gnuplot.exe -persist");
+	plotter->drawTrace(signal, t);
+	plotter->saveToPdf("test.pdf");
+}
+
+void kdtree_experiment(){
+	struct kdtree *kd;
+    struct kdres  *set;
+	
+	int d=3;
+
+	double* min = new double[d];
+    double* max = new double[d];
+    //default values for min-max
+    for(int i=0;i<d;i++){
+        min[i]=0;
+        max[i]=1;
+    }
+
+	
+	 kd = kd_create(d);
+
+	 for(int i=0;i<100;i++){
+		 node* q_sample = new node(d);
+	     q_sample->randomize(min, max);
+		 
+		 kd_insert(kd,q_sample->get(), q_sample);
+	 }
+
+	node* q_sample = new node(d);
+	q_sample->randomize(min, max);
+
+	set = kd_nearest(kd, q_sample->get());
+    if(kd_res_size(set)>0){
+        node* res =  (node*) kd_res_item_data (set);
+		cout << res->toString() << endl ;
+    }else{
+        cout << "[error]" << endl ;
+    }
+
+}
+
+
+
+int main (int argc, const char * argv[]){
+	srand((unsigned int)time(0));
+	//fft_experiments();
+	kdtree_experiment();
+	system("PAUSE");
 	return 0;
 }
 

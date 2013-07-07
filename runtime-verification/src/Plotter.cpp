@@ -24,42 +24,167 @@ using std::endl;
 
 Plotter::Plotter(string path){
 	gnuPlotPath = path ;
+<<<<<<< HEAD
+	#ifdef _WIN32
+    gnuplotPipe = _popen(gnuPlotPath.c_str(),"w");
+	#else
+    gnuplotPipe = popen(gnuPlotPath.c_str(),"w");
+	#endif
+	emptyPlot("", 0, 1, 0, 1);
+	closed=false;
+=======
+>>>>>>> origin/master
 }
 
-Plotter::~Plotter(){}
+Plotter::~Plotter(){
+    if(!closed) close();
+}
 
+<<<<<<< HEAD
+void Plotter::close(){
+    string buffer = "replot\n";
+    fprintf(gnuplotPipe, buffer.c_str());
+    fflush(gnuplotPipe);
+    
+    waitForKey();
+    
+#ifdef _WIN32
+    _pclose(gnuplotPipe);
+#else
+    pclose(gnuplotPipe);
+#endif
+	closed=true;
+}
+
+string drawLine(const double iFromX, const double iFromY, const double iToX, const double iToY){
+	stringstream cmdstr;
+	cmdstr << " set arrow from " << iFromX << "," << iFromY << " to " << iToX << "," << iToY << " nohead  lc rgb \"blue\" lw 2 \n" ;
+	printf(cmdstr.str().c_str());
+	return cmdstr.str();
+}
+
+void Plotter::emptyPlot(string title, double xmin, double xmax, double ymin, double ymax, double zmin, double zmax, int angleX, int angleY, string xlabel, string ylabel, string zlabel){
+    stringstream cmdstr;
+    cmdstr << "splot [" << xmin << ":" << xmax << "][" << ymin << ":" << ymax << "][" << zmin << ":" << zmax <<"] 0 with linespoints lt \"white\" pt 0.01" ;
+    cmdstr  << " title \"" << title << "\"  \n";
+    cmdstr << "set xlabel \"$" << xlabel << "$\" \n";
+    cmdstr << "set ylabel \"$" << ylabel << "$\" \n";
+    cmdstr << "set zlabel \"$"<< zlabel<< "$\" \n";
+    
+    fprintf(gnuplotPipe, cmdstr.str().c_str());
+    fflush(gnuplotPipe);
+}
+
+void Plotter::emptyPlot(string title, double xmin, double xmax, double ymin, double ymax ){
+    stringstream cmdstr;
+    cmdstr << "plot [" << xmin << ":" << xmax << "][" << ymin << ":" << ymax << "] 0 with linespoints lt \"white\" pt 0.01" ;
+    cmdstr  << " title \"" << title << "\"  \n";
+    
+    fprintf(gnuplotPipe, cmdstr.str().c_str());
+    fflush(gnuplotPipe);
+=======
 string drawLine(const double iFromX, const double iFromY,
 				const double iToX, const double iToY){
 					stringstream cmdstr;
 					cmdstr << " set arrow from " << iFromX << "," << iFromY << " to " << iToX << "," << iToY << " nohead  lc rgb \"blue\" lw 2 \n" ;
 					printf(cmdstr.str().c_str());
 					return cmdstr.str();
-}
-
-string emptyPlot(string title, double xmin, double xmax, double ymin, double ymax, double zmin, double zmax, int angleX, int angleY, string xlabel, string ylabel, string zlabel){
-	stringstream cmdstr;
-	cmdstr << "splot [" << xmin << ":" << xmax << "][" << ymin << ":" << ymax << "][" << zmin << ":" << zmax <<"] 0 with linespoints lt \"white\" pt 0.01" ;
-	cmdstr  << " title \"" << title << "\"  \n";
-	cmdstr << "set xlabel \"$" << xlabel << "$\" \n";
-	cmdstr << "set ylabel \"$" << ylabel << "$\" \n";
-	cmdstr << "set zlabel \"$"<< zlabel<< "$\" \n";
-	return cmdstr.str();
-}
-
-string emptyPlot(string title, double xmin, double xmax, double ymin, double ymax ){
-	stringstream cmdstr;
-	cmdstr << "plot [" << xmin << ":" << xmax << "][" << ymin << ":" << ymax << "] 0 with linespoints lt \"white\" pt 0.01" ;
-	cmdstr  << " title \"" << title << "\"  \n";
-	return cmdstr.str();
+>>>>>>> origin/master
 }
 
 
-string drawLine(const double iFromX, const double iFromY, const double iFromZ, const double iToX, const double iToY, const double iToZ){
+
+void Plotter::drawLine(double iFromX, double iFromY, double iFromZ, double iToX, double iToY, double iToZ){
+    stringstream cmdstr;
+    cmdstr << " set arrow from " << iFromX << "," << iFromY << "," << iFromZ <<  "     to     " << iToX << "," << iToY  << "," << iToZ << "        nohead  lc rgb \"blue\" lw 2 \n" ;
+    fprintf(gnuplotPipe, cmdstr.str().c_str());
+    fflush(gnuplotPipe);
+}
+
+void Plotter::drawLine(double iFromX, double iFromY, double iToX, double iToY){
+    stringstream cmdstr;
+    cmdstr << " set arrow from " << iFromX << "," << iFromY << " to " << iToX << "," << iToY << " nohead  lc rgb \"blue\" lw 2 \n" ;
+    cout << cmdstr.str() << endl ;
+    fprintf(gnuplotPipe, cmdstr.str().c_str());
+    fflush(gnuplotPipe);
+}
+
+
+void Plotter::drawArray(vector< vector<double> > trace, int index1, int index2){
+    if(trace.size()>0){
+            //scaling
+        
+        double xmin=9999, xmax=-99999, ymin=9999, ymax=-9999;
+        for(int i=0;i<trace.size();i++){
+            if(trace.at(i).at(index1) > xmax) xmax=trace.at(i).at(index1);
+            if(trace.at(i).at(index1) < xmin) xmin=trace.at(i).at(index1);
+            if(trace.at(i).at(index2) > ymax) ymax=trace.at(i).at(index2);
+            if(trace.at(i).at(index2) < ymin) ymin=trace.at(i).at(index2);
+
+        }
+        stringstream cmdstr;
+        cmdstr << "plot [ " << xmin << ":" << xmax << "][" << ymin << ":" << ymax << "] 0 with linespoints lt \"white\" pt 0.01" ;
+        fprintf(gnuplotPipe, cmdstr.str().c_str());
+        fflush(gnuplotPipe);
+
+    for(int i=0;i<trace.size()-1;i++){
+        vector<double> point1 = trace[i] ;
+        vector<double> point2 = trace[i+1] ;
+        drawLine( point1[index1], point1[index2], point2[index1], point2[index2] ) ;
+    }
+        
+        
+        stringstream cmdstr2;
+        cmdstr2 << " replot \n" ;
+        fprintf(gnuplotPipe, cmdstr2.str().c_str());
+        fflush(gnuplotPipe);
+    }
+    else{ cout << "empty trace" << endl ;
+    }
+    
+    
+}
+
+/*void Plotter::drawTrace(Trace* trace, int index1, int index2){
+    drawArray(trace->getData(), index1, index2);
+}*/
+
+
+/*void Plotter::drawTrace(Trace* trace, double t_max, int index){
+    
+    double min=9999, max=-99999;
+    for(int i=0;i<trace->getSampleSize();i++){
+        if(trace->getSample(i)[index] > max) max=trace->getSample(i)[index];
+        if(trace->getSample(i)[index] < min) min=trace->getSample(i)[index];
+    }
+    stringstream cmdstr;
+    cmdstr << "plot [ " << 0 << ":" << t_max << "][" << min << ":" << max << "] 0 with linespoints lt \"white\" pt 0.01" ;
+    cmdstr  << " title \"" << " " << "\"  \n";
+    //cmdstr << "set ylabel " << "y(" << index << " )"  << " \n";
+    //cmdstr << "set xlabel " << "time" << " \n";
+    fprintf(gnuplotPipe, cmdstr.str().c_str());
+    fflush(gnuplotPipe);
+    
+    double time_step = t_max / trace->getSampleSize();
+    for(int i=0;i<trace->getData().size()-1;i++){
+        vector<double> point1 = trace->getSample(i) ;
+        vector<double> point2 = trace->getSample(i+1) ;
+        drawLine( i*time_step, point1[index], (i+1)*time_step, point2[index] ) ;
+    }
+    stringstream cmdstr2;
+    cmdstr2 << " replot \n" ;
+    fprintf(gnuplotPipe, cmdstr2.str().c_str());
+    fflush(gnuplotPipe);
+}*/
+
+
+
+/*string drawLine(const double iFromX, const double iFromY, const double iFromZ, const double iToX, const double iToY, const double iToZ){
 	stringstream cmdstr;
 	cmdstr << " set arrow from " << iFromX << "," << iFromY << "," << iFromZ <<  "     to     " << iToX << "," << iToY  << "," << iToZ << "        nohead  lc rgb \"blue\" lw 2 \n" ;
 	//cout << " set arrow from " << iFromX << "," << iFromY << "," << iFromZ << " to " << iToX << "," << iToY  << "," << iToZ << " nohead  lc rgb \"blue\" lw 2 " ;
 	return cmdstr.str();
-}
+}*/
 
 void Plotter::plotRRT(string name, string title, string output, RRT rrt, string xlabel, string ylabel, string zlabel){
 	if(rrt.getDimension()>3){
@@ -82,11 +207,9 @@ void Plotter::plotRRT(string name, string title, string output, RRT rrt, string 
 	if (rrt3d) {
 		zmin = rrt.getMin(2);
 		zmax = rrt.getMax(2);
-		buffer = emptyPlot(title, xmin, xmax, ymin, ymax, zmin, zmax, 45, 45, xlabel, ylabel, zlabel);
-		fprintf(gnuplotPipe, buffer.c_str());
+		emptyPlot(title, xmin, xmax, ymin, ymax, zmin, zmax, 45, 45, xlabel, ylabel, zlabel);
 	}else{
-		buffer = emptyPlot(title, xmin, xmax, ymin, ymax);
-		fprintf(gnuplotPipe, buffer.c_str());
+		emptyPlot(title, xmin, xmax, ymin, ymax);
 	}
 	fflush(gnuplotPipe);
 
@@ -111,12 +234,11 @@ void Plotter::plotRRT(string name, string title, string output, RRT rrt, string 
 			if(rrt3d){
 				z0 = zscale*begin[2];
 				z1 = zscale*end[2] ;
-				buffer = drawLine(x0, y0, z0, x1, y1, z1);
+				drawLine(x0, y0, z0, x1, y1, z1);
 				out << " set arrow from " << x0 << "," << y0 << "," << z0 << " to " << x1 << "," << y1  << "," << z1 << " nohead  lc rgb \"blue\" lw 2 " << endl;
 			}else{
-				buffer = drawLine(x0, y0, x1, y1);
+				drawLine(x0, y0, x1, y1);
 			}
-			fprintf(gnuplotPipe, buffer.c_str());
 			fflush(gnuplotPipe);
 		}
 
@@ -125,7 +247,7 @@ void Plotter::plotRRT(string name, string title, string output, RRT rrt, string 
 		}
 	}
 
-	wait_for_key();
+	waitForKey();
 	_pclose(gnuplotPipe);
 	out.close();
 }
@@ -143,11 +265,8 @@ void Plotter::plotTrace(RRT rrt, int v1, int v2, int tdim, double simTime, doubl
 		min[i]=+1;
 		max[i]=-1;
 	}
-	buffer = emptyPlot("test", -1e-7, 100e-6, -0.5, 0.5  );
-	fprintf(gnuplotPipe, buffer.c_str());
-	fflush(gnuplotPipe);
-
-
+	emptyPlot("test", -1e-7, 100e-6, -0.5, 0.5  );
+	
 	queue<node*> q ; 
 	q.push(rrt.getRoot());
 	while(!q.empty()){
@@ -172,11 +291,17 @@ void Plotter::plotTrace(RRT rrt, int v1, int v2, int tdim, double simTime, doubl
 			if(x0<min[it0]) min[it0]=x0 ;
 			cout << "**" << endl ;
 //			cout << t0 << " " << t1 << " " << x0 << " " << x1 << endl ;
+<<<<<<< HEAD
+			drawLine(t0, x0, t1, x1);
+			fflush(gnuplotPipe);
+
+=======
 			buffer = drawLine(t0, x0, t1, x1);
 
 			fprintf(gnuplotPipe, buffer.c_str());
 			fflush(gnuplotPipe);
 
+>>>>>>> origin/master
 		
 		}
 		for(int i=0;i<n->getSize();i++){
@@ -184,27 +309,85 @@ void Plotter::plotTrace(RRT rrt, int v1, int v2, int tdim, double simTime, doubl
 		}
 
 	}
+<<<<<<< HEAD
+	buffer = "replot\n";
+	fprintf(gnuplotPipe, buffer.c_str());
+	fflush(gnuplotPipe);
+	waitForKey();
+=======
 		buffer = "replot\n";
 			fprintf(gnuplotPipe, buffer.c_str());
 			fflush(gnuplotPipe);
 	wait_for_key();
+>>>>>>> origin/master
 
 	_pclose(gnuplotPipe);
 	out.close();
 
 }
-void Plotter::wait_for_key(){
+
+// draws the given signal w.r.t. time to gnuplot
+void Plotter::drawTrace(vector<double> signal, double t){
+	int n = signal.size() ;
+	double dt = t / signal.size();
+	//find the min/max
+	double min=9999, max=-99999;
+    for(int i=0;i<n;i++){
+        if(signal[i] > max) max=signal[i];
+        if(signal[i] < min) min=signal[i];
+    }
+
+	stringstream cmdstr;
+    cmdstr << "plot [ " << 0 << ":" << t << "][" << min << ":" << max << "] 0 with linespoints lt \"white\" pt 0.01" ;
+    cmdstr  << " title \"" << " " << "\"  \n";
+    //cmdstr << "set ylabel " << "y(" << index << " )"  << " \n";
+    //cmdstr << "set xlabel " << "time" << " \n";
+    fprintf(gnuplotPipe, cmdstr.str().c_str());
+    fflush(gnuplotPipe);
+
+	for(int i=0;i<n-1;i++){
+		drawLine(i*dt, signal[i], (i+1)*dt, signal[i+1]);
+	}
+	 
+	stringstream cmdstr2;
+    cmdstr2 << " replot \n" ;
+    fprintf(gnuplotPipe, cmdstr2.str().c_str());
+    fflush(gnuplotPipe);
+	waitForKey();
+}
+
+
+void Plotter::waitForKey(){
 #if defined(WIN32) || defined(_WIN32) || defined(__WIN32__) || defined(__TOS_WIN__)  // every keypress registered, also arrow keys
-	cout << endl << "Press any key to continue..." << endl;
-
-	FlushConsoleInputBuffer(GetStdHandle(STD_INPUT_HANDLE));
-	_getch();
+    cout << endl << "Press any key to continue..." << endl;
+    
+    FlushConsoleInputBuffer(GetStdHandle(STD_INPUT_HANDLE));
+    _getch();
 #elif defined(unix) || defined(__unix) || defined(__unix__) || defined(__APPLE__)
-	cout << endl << "Press ENTER to continue..." << endl;
-
-	std::cin.clear();
-	std::cin.ignore(std::cin.rdbuf()->in_avail());
-	std::cin.get();
+    cout << endl << "Press ENTER to continue..." << endl;
+    
+    std::cin.clear();
+    std::cin.ignore(std::cin.rdbuf()->in_avail());
+    std::cin.get();
 #endif
-	return;
+    return;
+}
+
+void Plotter::saveToPdf(string path){
+    stringstream cmdstr;
+    cmdstr << " set term post \n" ;
+    cmdstr << " set output \"" << path << "\"\n" ;
+    cmdstr << " replot \n" ;
+    fprintf(gnuplotPipe, cmdstr.str().c_str());
+    fflush(gnuplotPipe);
+}
+
+void Plotter::execute(string str){
+    fprintf(gnuplotPipe, str.c_str());
+    fflush(gnuplotPipe);
+    cout << str << endl ;
+    string buffer = "replot\n";
+    fprintf(gnuplotPipe, buffer.c_str());
+    fflush(gnuplotPipe);
+    
 }
