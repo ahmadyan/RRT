@@ -1,6 +1,6 @@
 #include "MonitorArgument.h"
 
-
+/*
 MonitorArgument::MonitorArgument(int i){
 	index = i ;
 	monitorArgumentType = MONITOR_ARGUMENT_SIGNAL ;
@@ -36,3 +36,4 @@ MonitorArgumentType MonitorArgument::getType(){
 	return monitorArgumentType ;
 }
 
+*/

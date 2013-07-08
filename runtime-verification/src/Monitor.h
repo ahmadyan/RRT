@@ -3,15 +3,38 @@
 #include <map>
 #include "System.h"
 #include "Rrt.h"
-#include "MonitorArgument.h"
+
+//#include "MonitorArgument.h"
 using namespace std;
-#define MONITOR_EXCEPTION_DIVISION_BY_ZERO	0x142495E
-#define MONITOR_EXCEPTION_VIOLATION			0x0F588C9
-#define MONITOR_EXCEPTION					0x0B8F500
-#define epsilon								1e-9
+
+class Monitor{
+	Property* property; //Every monitor is checking a unique property associated with it during construction
+
+	int monitorID;				//unique
+    static int monitorCount ;
+	
+	//methods
+	static int generateMonitorID();
+
+public:
+	Monitor(Property* p);
+	~Monitor();
+    int getMonitorID();
+
+	int monitor_update_add_state();
+	int monitor_update_add_edge();
+	int monitor_get_solution();
+};
+
+
+
+//#define MONITOR_EXCEPTION_DIVISION_BY_ZERO	0x142495E
+//#define MONITOR_EXCEPTION_VIOLATION			0x0F588C9
+//#define MONITOR_EXCEPTION					0x0B8F500
+//#define epsilon								1e-9
 //	This enum type will contain the different type of monitor that our algorithm supports, 
 //	both analog and temporal. In our implementation, we don't differentiate between analog and temporal.
-enum MonitorType { 
+/*enum MonitorType { 
 	CONSTANT, 
 	ANALOG_BINARY_ADD,
 	ANALOG_BINARY_SUB,
@@ -37,11 +60,11 @@ enum MonitorType {
 };
 
 enum MonitorStatus {DONTKNOW, SATISFIED, VIOLATED};
-
+*/
+/*
 class Monitor{
 	RRT* rrt ;
-	int monitorID;
-    static int monitorCount ;
+	
 	vector<MonitorArgument*> arguments ;
 	MonitorType type ;
 
@@ -65,4 +88,4 @@ public:
 	bool analyze(int i, node* q_new);
 	void update(node* q_new, bool value);
 	void update(node* q);
-};
+};*/

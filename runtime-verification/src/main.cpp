@@ -4,7 +4,6 @@
 #include <ctime>
 #include "Monitor.h"
 #include "System.h"
-#include "Property.h"
 #include "RRT.h"
 #include "TimedRRT.h"
 #include "Plotter.h"
@@ -12,7 +11,10 @@
 #include "transient.h"
 #include "hspiceInterface.h"
 #include "pll.h"
+
 #include "Monitor.h"
+#include "Property.h"
+
 #include "Frequency.h"
 
 #include "kdtree.h"
@@ -21,48 +23,6 @@ using namespace std;
 #define NEW_RRT_TDO		0
 #define LOAD_RRT 		1
 #define NEW_RRT_PLL		2
-
-Monitor* createMonitor_1(RRT* rrt){
-	Monitor* m_const5mv = new Monitor(rrt, CONSTANT);
-	m_const5mv->push_back(0.005);
-
-	return m_const5mv;
-}
-
-//PLL locking property
-// pll is locked when (v(pll_e)-v(pll_eb)) is settled to near zero for some time. 
-Monitor* pllLockingPropertyMonitor(RRT* rrt){
-	//(v(pll_e)-v(pll_eb))
-	Monitor* m0 = new Monitor(rrt, ANALOG_BINARY_SUB );		
-	m0->push_back(pll_e);
-	m0->push_back(pll_eb);		
-
-	//Norm( v(pll_e)-v(pll_eb) )
-	Monitor* m1 = new Monitor( rrt, ANALOG_NORM_L2 ) ;
-	m1->push_back(m0);
-
-	//0.005mv
-	Monitor* m_const5mv = new Monitor(rrt, CONSTANT);
-	m_const5mv->push_back(0.005);
-	
-	Monitor* m3 = new Monitor(rrt, ANALOG_DIFF_SIBLING);
-	m3->push_back(m1);
-	
-	//Norm( v(pll_e)-v(pll_eb) )<0.005mv
-	Monitor* m2 = new Monitor(rrt, LOGIC_LESS_THAN_OR_EQUAL ) ;
-	m2->push_back(m3);
-	m2->push_back(m_const5mv);
-
-
-	//Monitor* m2 = new Monitor(rrt, ANALOG_SHIFT ) ;			// m2 = x[t-(10e-7)]
-	//m2->push_back(10e-7);
-
-	//Monitor* m3 = new Monitor(rrt, ANALOG_BINARY_MUL) ;		// m3 = (x_2 + 0.5) * x[t-(10e-7)]
-	//m3->push_back(m1); 
-	//m3->push_back(m2);
-	
-	return m2 ;
-}
 
 void kernel_RRT_TDO(bool generatePlot, string outputFileName, Plotter* plotter, int iterations, double simulationTime){
 	double* initialState = new double[3];
@@ -83,8 +43,8 @@ void kernel_RRT_TDO(bool generatePlot, string outputFileName, Plotter* plotter, 
 		iterations, //k
 		simulationTime, //Simulation Time
 		"Tunnel Diode Oscillator");
-	Monitor* monitor = createMonitor_1(&rrt);
-	rrt.addMonitor(monitor);
+	//Monitor* monitor = createMonitor_1(&rrt);
+	//rrt.addMonitor(monitor);
 	rrt.setBound(0, -0.2, 1.2 );	//First Dimension = VC
 	rrt.setBound(1, -0.02, 0.08 );  //Second Dimension = IL
 	rrt.setdt(10e-9);
@@ -105,8 +65,8 @@ void kernel_RRT_PLL(bool generatePlot, string outputFileName, Plotter* plotter, 
 		simulationTime, //Simulation Time
 		"Tunnel Diode Oscillator");
 	
-	Monitor* pll_lock_property = pllLockingPropertyMonitor(&rrt);
-	rrt.addMonitor(pll_lock_property);
+	//Monitor* pll_lock_property = pllLockingPropertyMonitor(&rrt);
+	//rrt.addMonitor(pll_lock_property);
 
 	for(int i=0;i<dim-1;i++){
 		rrt.setBound(i, -1, +1);
@@ -121,8 +81,6 @@ void kernel_RRT_PLL(bool generatePlot, string outputFileName, Plotter* plotter, 
 	if(generatePlot)  plotter->plotTrace(rrt, pll_e, pll_eb, pll_time, simulationTime, dt);
 }
 
-
-
 void kernel_RRT(int mode, bool generatePlot,string inputFileName, string outputFileName, Plotter* plotter){
 	if(mode==NEW_RRT_TDO){
 		kernel_RRT_TDO(generatePlot, outputFileName, plotter, 100, 7e-6);
@@ -136,45 +94,6 @@ void kernel_RRT(int mode, bool generatePlot,string inputFileName, string outputF
 	}
 }
 
-
-//TODO: 
-//This function must be replaced with an actual simulation
-bool MC_run_simulation(){
-	double x = (double)rand()/RAND_MAX;
-	double  y = (double)rand()/RAND_MAX;
-	double  z = x*x+y*y;
-	if (z<=1){
-		return 1;
-	}else{
-		return 0;
-	}
-}
-
-void kernel_MC(){
-	double pi = 0 ;
-	long count=0;
-	long trials = 0 ;
-	long max_iteration = 100000;
-	double error_tolerance = 0.05;
-	double sim_epp, sim_var;
-	double z_alpha_half = 2.576;
-	int block_iteration = 100;
-	do{
-		for(int i=0;i<block_iteration;i++){
-			count += MC_run_simulation();
-		}
-		trials += block_iteration ;
-		sim_epp  = count / (double)trials;
-		sim_var = sqrt((sim_epp * (1 - sim_epp))/(double)trials);
-		if (sim_var==0) sim_var = sqrt(((1.0/(double)trials) * (1 - (1.0/(double)trials)))/(double)trials);
-	} while ((trials<max_iteration) && ((z_alpha_half*sim_var) > error_tolerance));
-	cout << trials << " " << count << " " << sim_epp << " " << sim_var << endl ;
-	pi = count / (double)trials*4 ;
-	cout << "pi=" << pi << endl ;
-}
-
-
-
 void date_2013_experiments(){
 	Plotter* plotter = new Plotter("C:\\opt\\gnuplot\\bin\\gnuplot.exe -persist");
 
@@ -183,7 +102,7 @@ void date_2013_experiments(){
 	string inputFileName = "test.rrt";
 	string outputFileName = "tdo-3000.rrt" ;
 
-	kernel_MC();
+	//kernel_MC();
 	kernel_RRT(mode, generatePlot, inputFileName, outputFileName, plotter);
 }
 
@@ -247,12 +166,23 @@ void kdtree_experiment(){
 
 }
 
+#include "ParseTree.h"
+void MonitorExperiment(){
+	Property* property = new Property(); 
+	Monitor* monitor = new Monitor(property); 
+
+	ParseTree* pt = new ParseTree();
+	pt->parseFormula("");
+	pt->printParseTree(pt->getRoot());
+	//setup an example tree execution to check the monitor
+}
 
 
 int main (int argc, const char * argv[]){
 	srand((unsigned int)time(0));
 	//fft_experiments();
-	kdtree_experiment();
+	//kdtree_experiment();
+	MonitorExperiment();
 	system("PAUSE");
 	return 0;
 }

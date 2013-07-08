@@ -45,8 +45,8 @@ void TimedRRT::build(double* initialState, double variation){
         //add the new node to the tree
         q_near->addChildren( q_new ) ;
 		q_new->setParent(q_near);		//We only make the parent-child releation ship during the tree build
-		for(int i=0;i<monitors.size();i++)
-			monitors[i]->verify( q_new ) ;
+		//for(int i=0;i<monitors.size();i++)
+		//	monitors[i]->verify( q_new ) ;
     }
 }
 

@@ -1,13 +1,31 @@
 #include "Monitor.h"
-#include <math.h>
 
 //Monitors needs static auto-increment id manager to mark which nodes are verified, they are violated or they don't know yet.
 int Monitor::monitorCount = 0 ;
-Monitor::Monitor(RRT* rrt, MonitorType type):type(type), rrt(rrt){
+Monitor::Monitor(Property* p){
+	monitorID = generateMonitorID() ;
+	property = p;
 }
 
 Monitor::~Monitor(){
-	monitorID = generateMonitorID() ;
+	delete property;
+}
+
+int Monitor::generateMonitorID(){
+	return monitorCount++;
+}  
+
+int Monitor::getMonitorID(){
+	return monitorID;    
+}
+
+/*
+
+#include <math.h>
+
+
+Monitor::~Monitor(){
+	
 	for(unsigned int i=0;i<arguments.size(); i++){
 		delete arguments[i];
 	}
@@ -226,10 +244,46 @@ double Monitor::verify(node* q_new){
 	}
 }
 
-int Monitor::generateMonitorID(){
-	return monitorCount++;
-}  
 
-int Monitor::getMonitorID(){
-	return monitorID;    
-}    
+Monitor* createMonitor_1(RRT* rrt){
+	Monitor* m_const5mv = new Monitor(rrt, CONSTANT);
+	m_const5mv->push_back(0.005);
+
+	return m_const5mv;
+}
+
+//PLL locking property
+// pll is locked when (v(pll_e)-v(pll_eb)) is settled to near zero for some time. 
+Monitor* pllLockingPropertyMonitor(RRT* rrt){
+	//(v(pll_e)-v(pll_eb))
+	Monitor* m0 = new Monitor(rrt, ANALOG_BINARY_SUB );		
+	m0->push_back(pll_e);
+	m0->push_back(pll_eb);		
+
+	//Norm( v(pll_e)-v(pll_eb) )
+	Monitor* m1 = new Monitor( rrt, ANALOG_NORM_L2 ) ;
+	m1->push_back(m0);
+
+	//0.005mv
+	Monitor* m_const5mv = new Monitor(rrt, CONSTANT);
+	m_const5mv->push_back(0.005);
+	
+	Monitor* m3 = new Monitor(rrt, ANALOG_DIFF_SIBLING);
+	m3->push_back(m1);
+	
+	//Norm( v(pll_e)-v(pll_eb) )<0.005mv
+	Monitor* m2 = new Monitor(rrt, LOGIC_LESS_THAN_OR_EQUAL ) ;
+	m2->push_back(m3);
+	m2->push_back(m_const5mv);
+
+
+	//Monitor* m2 = new Monitor(rrt, ANALOG_SHIFT ) ;			// m2 = x[t-(10e-7)]
+	//m2->push_back(10e-7);
+
+	//Monitor* m3 = new Monitor(rrt, ANALOG_BINARY_MUL) ;		// m3 = (x_2 + 0.5) * x[t-(10e-7)]
+	//m3->push_back(m1); 
+	//m3->push_back(m2);
+	
+	return m2 ;
+}
+*/
