@@ -173,6 +173,7 @@ void kdtree_experiment(){
 	//getting the set of nearest node for different time-frames
 	
 	//struct kdres *kd_nearest_range(struct kdtree *tree, const double *pos, double range);
+	/*
 	struct kdres *presults;
 	presults = kd_nearest_range(kd, q_sample->get(), 0.01); 
 	if(kd_res_size(presults)>0){	
@@ -192,7 +193,7 @@ void kdtree_experiment(){
 		}
     }else{
         cout << "[error] 2" << endl ;
-    }
+    }*/
 
 }
 
@@ -212,7 +213,7 @@ int main (int argc, const char * argv[]){
 	srand((unsigned int)time(0));
 	//fft_experiments();
 	//kdtree_experiment();
-	MonitorExperiment();
+	//MonitorExperiment();
 	system("PAUSE");
 	return 0;
 }
