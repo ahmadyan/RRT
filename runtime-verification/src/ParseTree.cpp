@@ -45,7 +45,9 @@ ParseTree::~ParseTree () {
 }
 
 PT_node *
-parseFormulaReachability () {
+parseFormulaReachability
+
+() {
   cout << "Parsing the hardcoded formula : mu x. (q and (p or suc x))" << endl;
 
   PT_node *node_child1, *node_child2;

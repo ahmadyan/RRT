@@ -156,12 +156,42 @@ void kdtree_experiment(){
 	node* q_sample = new node(d);
 	q_sample->randomize(min, max);
 
+
+
+
+	//getting the nearest node
+	//struct kdres *kd_nearest(struct kdtree *tree, const double *pos);
 	set = kd_nearest(kd, q_sample->get());
     if(kd_res_size(set)>0){
         node* res =  (node*) kd_res_item_data (set);
 		cout << res->toString() << endl ;
     }else{
         cout << "[error]" << endl ;
+    }
+
+
+	//getting the set of nearest node for different time-frames
+	
+	//struct kdres *kd_nearest_range(struct kdtree *tree, const double *pos, double range);
+	struct kdres *presults;
+	presults = kd_nearest_range(kd, q_sample->get(), 0.01); 
+	if(kd_res_size(presults)>0){	
+		while( !kd_res_end( presults ) ) {
+		// get the data and position of the current result item 
+		node* res =  (node*) kd_res_item( presults, pos );
+		cout << res->toString() << endl ;
+		// compute the distance of the current result from the pt 
+		dist = sqrt( dist_sq( pt, pos, 3 ) );
+
+		// print out the retrieved data 
+		printf( "node at (%.3f, %.3f, %.3f) is %.3f away and has data=%c\n", 
+	    pos[0], pos[1], pos[2], dist, *pch );
+
+		// go to the next entry 
+		kd_res_next( presults );
+		}
+    }else{
+        cout << "[error] 2" << endl ;
     }
 
 }
