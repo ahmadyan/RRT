@@ -11,15 +11,17 @@ class RRT{
 protected:
     int k ; // total number of nodes 
     int d ; // tree dimension, each node has a d dimension. (d-1 state + 1 time)
-    //vector< pair<int,node> > nodes; // this is the simple tree structure, each pair consists of the id to the parent and the node itself
+    vector< pair<int,node*> > nodes; //keeps a copy of each node for direct access, pair<parent_id, child>
 	node* root ;
     double* min ;
     double* max ;
     System* system ;
     string name;
 	double dt ;
+
+	int var; //number of variation parameters
 public:
-    RRT(int, int, string);
+    RRT(int, int, int, string);
     RRT(string);
     ~RRT();
     void load(string fileName);
@@ -42,4 +44,5 @@ public:
 	double RRT::getdt();
 	node* getNearestNode(node* q_sample);
 	node* getRoot();
+	node* getNode(int);
 };

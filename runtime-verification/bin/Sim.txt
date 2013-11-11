@@ -1,0 +1,252 @@
+ ****** HSPICE -- C-2009.03 32-BIT (Feb 24 2009) winnt ******                   
+  Copyright (C) 2009 Synopsys, Inc. All Rights Reserved.                        
+  Unpublished-rights reserved under US copyright laws.
+  This program is protected by law and is subject to the 
+  terms and conditions of the license agreement from Synopsys.
+  Use of this program is your acceptance to be bound by the 
+  license agreement. HSPICE is the trademark of Synopsys, Inc.
+  Input File: C:\code\RRT\runtime-verification\bin\pll.sp                       
+  lic:  
+  lic: FLEXlm: v8.5b 
+  lic: USER:   adel                 HOSTNAME: adel-CSL 
+  lic: HOSTID: "f46d0461a9b8 005056c00001 005056c00008 080027003c42" PID:      3
+ 6
+  lic: Using FLEXlm license file: 
+  lic: C:\flexlm\license.dat 
+  lic: Checkout 1 hspice 
+  lic: License/Maintenance for hspice will expire on 31-dec-2020/2007.9 
+  lic: NODE LOCKED license on hostid "f46d0461a9b8 005056c00001 005056c00008 080
+ 0
+  lic:   
+ Init: read install configuration file: C:\Users\adel\applications\hspice\meta.cfg
+ Init: hspice initialization file: C:\Users\adel\applications\hspice\hspice.ini
+
+ HSPICE will load 
+ C:\code\RRT\runtime-verification\bin\pll.ic0
+
+
+
+
+
+
+ .include param.sp
+ .param var=0.000309
+ .option  probe acct
+ **warning**  the obsolete option acct is ignored
+ .option relv=1e-5
+ *
+ * wideband fm example, grebene gives:
+ *  f0=1meg kf=250khz/v
+ *  kd=0.1 v/rad
+ *  r=10k c=1000p
+ *  f_lock = kf*kd*pi/2 = 39khz, v_lock = kd*pi/2 = 0.157
+ *  f_capture/f_lock ~= 1/sqrt(2*pi*r*c*f_lock)
+ *                    = 0.63,    v_capture ~= 0.100
+
+ *******************
+ * input waveforms *
+ *******************
+
+ * these are the input sinusoids at different frequencies
+ * hint: you can use the .alter statement to do three versions
+ * of the transient analysis in one run.
+
+ *vin in inb sin(0 0.6 1.00x)
+ vin in inb sin(0 0.6 1.02x)
+ *vin in inb sin(0 0.6 0.95x)
+ .tran 0.1u 5u uic
+ .save type=.ic level=all time=5u
+
+ **warning** unknown type, NODESET type is used
+ .load
+
+ 	+ gmindc=   1.0000p       
+ 	.nodeset	
+ 	+ e =  0.055330   
+ 	+ eb =  0.433454       
+ 	+ in =   0.477279            
+ 	+ inb =   -0.892941            
+ 	+ mout =  -0.953734        
+ 	+ moutb =  0.405927        
+ 	+ osc = -0.193945       
+ 	+ oscb =  -0.863399        
+ 	+ out =  -0.351421        
+ 	+ outb =  0.311625        
+ 	+ xvco.c =   -0.403974        
+ 	+ xvco.s =  -0.688223       
+ 	+ xvco.s_clip =  0.288369       
+ 	+ xpd.clip1 =   -0.506149            
+ 	+ xpd.clip2 = 0.951109       
+ 	+ xpd.n1 =   0.459853            
+
+ * fm signal for demodulation
+ *vin in inb sffm(0 0.6 1.0x 1 10k)
+ *.tran 0.1u 1000u
+
+ ******************************************
+ *************
+ * vco model *
+ *************
+ xvco e eb osc oscb vco f0=1x kf=125k phi=0 out_off=-1 out_amp=0.3
+
+ ************************
+ * phase detector model *
+ ************************
+ xpd in inb osc oscb mout moutb pd kd=0.1 out_off=-3.5
+
+ **********
+ * filter *
+ **********
+
+ rf mout e 10k
+ cf  e   0 1000p
+ rfb moutb eb 10k
+ cfb eb   0 1000p
+
+ ****************
+ * final output *
+ ****************
+ rout out e 100k
+ cout out 0 100p
+ routb outb eb 100k
+ coutb outb 0 100p
+
+
+ .macro vco in inb out outb f0=100k kf=50k phi=0.0 out_off=0.0 out_amp=1.0
+ gs 0 s poly(2) c 0 in inb    0 '6.2832e-9*f0' 0 0 '6.2832e-9*kf'
+ gc c 0 poly(2) s 0 in inb    0 '6.2832e-9*f0' 0 0 '6.2832e-9*kf'
+ cs s 0 1e-9
+ cc c 0 1e-9
+ e1 s_clip 0 pwl(1) s 0  -0.1,-0.1 0.1,0.1
+ e out 0 s_clip 0 out_off '10*out_amp'
+ eb outb 0 s_clip 0 out_off '-10*out_amp'2
+ .eom
+
+ .macro pd in inb in2 in2b out outb kd=0.1 out_off=0
+ e1 clip1 0 pwl(1) in inb  -0.1,-0.1 0.1,0.1
+ e2 clip2 0 pwl(1) in2 in2b  -0.1,-0.1 0.1,0.1
+ *e3 n1 0 poly(2) clip1 0 clip2 0    0 0 0 0 '78.6*kd'
+ e3 n1 0 poly(2) clip1 0 clip2 0    var 0 0 0 '78.6*kd'
+ e4 outb 0 n1 0  out_off 1
+ e5 out 0 n1 0  out_off -1
+ .eom
+
+ .option post delmax=0.01u interp
+ .probe v_in=v(in,inb) v_control=v(e,eb) v_vco=v(osc,oscb)
+
+ .end
+
+ ***********************************************************************
+ ** runlvl is invoked, you can disable it by:
+      a) Add option runlvl=0 to your current simulation job.
+      b) Copy $installdir/hspice.ini to your HOME directory and
+         customize it by adding option runlvl=0, which disables
+         it for all of your simulation jobs.
+      c) Re-invoke $installdir/bin/config program and unselect the
+         option runlvl setting in box 'hspice.ini' which disables
+         it for whole group simulation jobs.
+
+ ** runlvl is invoked, some options are ignored or automatically set:
+      Options below are automatically set(user setting will overwrite them):
+      if runlvl=[1|2|3|4|5|6],  .option bypass=2
+
+      Options below are ignored, they are replaced by automated algorithms:
+        lvltim    dvdt      ft    fast   trtol  absvar  relvar
+          relq  chgtol    dvtr    imin    itl3    rmax
+
+ ** runlvl is invoked, actual option value used by HSPICE are:
+       runlvl= 3       bypass= 2      mbypass=   2.00   bytol=  10.00u
+ ***********************************************************************
+
+1****** HSPICE -- C-2009.03 32-BIT (Feb 24 2009) winnt ******                   
+ ******  
+ phase-locked loop
+
+  ******  circuit name directory
+ circuit number to circuit name directory
+   number circuitname                     definition         multiplier
+        0 main circuit
+        1 xvco.                           vco                1.00 
+        2 xpd.                            pd                 1.00 
+  **warning** (C:\code\RRT\runtime-verification\bin\pll.sp:23)  dc voltage reset to initial transient source value             in source        0:vin                 new dc=  0.0000D+00
+ 
+ **warning**  no dc path to ground from node        1:c                defined in subckt vco             now it is connected with gdcpath
+
+
+      
+ *****************************************************************
+ ******  option summary
+ ******
+ runlvl  = 3         bypass  = 2         
+  Opening plot unit= 79
+ file=C:pll.pa0
+
+1****** HSPICE -- C-2009.03 32-BIT (Feb 24 2009) winnt ******                   
+ ******  
+ phase-locked loop
+
+  ******  operating point information tnom=  25.000 temp=  25.000 *****
+ ***** operating point status is voltage   simulation time is     5.0000u
+    node    =voltage      node    =voltage      node    =voltage
+
+ +0:e       =  -1.3070  0:eb      =  -1.1105  0:in      = 352.6712m
+ +0:inb     =   0.      0:mout    =  -3.5789  0:moutb   =  -3.4211 
+ +0:osc     =-786.4513m 0:oscb    =  -1.2034  0:out     =-505.5471m
+ +0:outb    =   3.6199m 1:c       =-795.2889m 1:s       =  53.5104m
+ +1:s_clip  =  71.1829m 2:clip1   = 100.0000m 2:clip2   = 100.0000m
+ +2:n1      =  78.9090m
+
+
+          ***** job concluded
+1****** HSPICE -- C-2009.03 32-BIT (Feb 24 2009) winnt ******                   
+ ******  
+ phase-locked loop
+
+  ******  job statistics summary tnom=  25.000 temp=  25.000 *****
+
+  ******  HSPICE Threads Information  ******
+  Command Line Threads Count                  :     0
+  Available CPU Count                         :     4
+  Actual Model Evaluation(Load) Threads Count :     1
+  Actual Solver Threads Count                 :     1
+
+
+  ******  Circuit Statistics  ******
+  # nodes       =      17 # elements   =      21
+  # resistors   =       4 # capacitors =       6 # inductors   =       0
+  # mutual_inds =       0 # vccs       =       2 # vcvs        =       8
+  # cccs        =       0 # ccvs       =       0 # volt_srcs   =       1
+  # curr_srcs   =       0 # diodes     =       0 # bjts        =       0
+  # jfets       =       0 # mosfets    =       0 # U elements  =       0
+  # T elements  =       0 # W elements =       0 # B elements  =       0
+  # S elements  =       0 # P elements =       0 # va device   =       0
+
+
+  ******  Matrix Statistics  ******
+  # external nodes =        11 # internal nodes   =         6
+  # branch currents=         9 # total matrix size=        26
+  matrix size(        69) = initial size(        61) + fill(         8)
+  words copied=         0
+
+
+  ******  Runtime Statistics (seconds)  ******
+
+  analysis           time    # points   tot. iter  conv.iter
+  op point           0.00           1           0
+  transient          0.01          51        1123         529 rev=         2
+  readin             0.01
+  errchk             0.00
+  setup              0.00
+  output             0.00
+
+
+           total memory used          169  kbytes
+           total cpu time            0.03 seconds
+           total elapsed time        0.06 seconds
+           job started at     16:19:32 11/11/2013
+           job ended   at     16:19:32 11/11/2013
+
+
+>info:         ***** hspice job concluded
+ Init: hspice initialization file: C:\Users\adel\applications\hspice\hspice.ini
+  lic: Release hspice token(s) 

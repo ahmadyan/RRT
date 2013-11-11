@@ -1,12 +1,12 @@
 #include "node.h"
 #include <iostream>
 #include <math.h>
+#include <fstream>
 #include <cstdlib>
 using namespace std;
 
 node::node(int _n){
-	id = generateID() ;
-
+	id = generateID();
 	root=false; 
 	n=_n;
 	data = new double[n];
@@ -36,6 +36,7 @@ node::~node(){
 int node::objectCount = 0 ;
 
 int node::generateID(){
+	cout << "Generating a new Object :" << objectCount+1 << endl;
 	return objectCount++;
 }
 
@@ -281,4 +282,18 @@ pair<node*, double> node::getNearestNode(node* q_sample, double* min, double* ma
 		}
 	}
 	return make_pair(nearestNode, distance);
+}
+
+void node::save(ofstream& of){
+	cout << "Printing node " << getID() << endl ;
+	if(root){
+		of << getID() << " -1 " <<  toString() << endl ;
+	}else{
+		of << getID() << " " << getParent()->getID() << " " <<  toString() << endl ;
+	}
+	
+	for(int i=0;i<children.size();i++){
+		cout << "Child " << i << endl ;
+		getChild(i)->save(of);
+	}
 }

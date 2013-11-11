@@ -12,18 +12,12 @@ using namespace std;
 class node{
 	node* parent ;
 	vector<node*> children ;
-
 	int n ; // n=node-dimension
 	double* data;  // this array holds the state-time space, n-1 double for holding x and last double for holding time
 	bool root ;
-
 	int id;
     static int objectCount ;
-
-
 public:
-
-
 	node(int n);
 	node(const node&);
 	~node();
@@ -66,6 +60,7 @@ public:
 
 	static int generateID();
 	int getID();
+	void save(ofstream&);
 };
 
 

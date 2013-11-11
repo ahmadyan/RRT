@@ -11,22 +11,21 @@
 #include "transient.h"
 #include "hspiceInterface.h"
 #include "pll.h"
-
 #include "Monitor.h"
 #include "Property.h"
-
 #include "Frequency.h"
-
 #include "kdtree.h"
 using namespace std;
 
 #define NEW_RRT_TDO		0
 #define LOAD_RRT 		1
 #define NEW_RRT_PLL		2
+#define LOAD_RRT_PLL	3
+#define LOAD_RRT_TDO	4	
 
 void kernel_RRT_TDO(bool generatePlot, string outputFileName, Plotter* plotter, int iterations, double simulationTime){
 	double* initialState = new double[3];
-
+	int variations = 2 ;
 	//For oscillation:
 	initialState[0] = 0.8;			//This initial condition, under low variation parameters are indicator of 
 	initialState[1] = 0.04e-3;		//correct circuit that will start a healty oscillation
@@ -39,8 +38,10 @@ void kernel_RRT_TDO(bool generatePlot, string outputFileName, Plotter* plotter, 
 	// Constructing System S
 	System* circuit = new System(TDO);
 
-	TimedRRT rrt = TimedRRT(	2, //dimension
+	TimedRRT rrt = TimedRRT(	
+		2, //dimension
 		iterations, //k
+		variations,
 		simulationTime, //Simulation Time
 		"Tunnel Diode Oscillator");
 	//Monitor* monitor = createMonitor_1(&rrt);
@@ -56,12 +57,14 @@ void kernel_RRT_TDO(bool generatePlot, string outputFileName, Plotter* plotter, 
 
 void kernel_RRT_PLL(bool generatePlot, string outputFileName, Plotter* plotter, int iterations, double simulationTime, double dt){
 	int dim = 16;
+	int variations = 1; 
 	double* initialState = new double[dim+1];
 	setInitialPLLState(initialState);
 	// Constructing System S
 	System* circuit = new System(PLL);
 	TimedRRT rrt = TimedRRT(	dim, //dimension
 		iterations, //k
+		variations,
 		simulationTime, //Simulation Time
 		"Tunnel Diode Oscillator");
 	
@@ -84,28 +87,31 @@ void kernel_RRT_PLL(bool generatePlot, string outputFileName, Plotter* plotter, 
 void kernel_RRT(int mode, bool generatePlot,string inputFileName, string outputFileName, Plotter* plotter){
 	if(mode==NEW_RRT_TDO){
 		kernel_RRT_TDO(generatePlot, outputFileName, plotter, 100, 7e-6);
-	}else if
-		(mode == NEW_RRT_PLL){
-		//kernel_RRT_PLL(generatePlot, outputFileName, plotter, 10, 100e-6);
-		kernel_RRT_PLL(generatePlot, outputFileName, plotter, 10, 100e-6, 0.1e-6);
-	}else if(mode == LOAD_RRT){
+	}else if(mode == NEW_RRT_PLL){
+		kernel_RRT_PLL(generatePlot, outputFileName, plotter, 10, 100e-6, 0.01e-6);
+	}else if(mode == LOAD_RRT_PLL){
 		TimedRRT rrt = TimedRRT(inputFileName);
+		if(generatePlot)  plotter->plotTrace(rrt, pll_e, pll_eb, pll_time, 100e-6, 0.01e-6);
+	}else if(mode == LOAD_RRT){
+		cout << "I was here" << endl ;
+		TimedRRT rrt = TimedRRT(inputFileName);
+		cout << "We are here" << endl ;
 		if(generatePlot) plotter->plotRRT("lines", rrt.getName().c_str(), "test", rrt,  "v_C", "i_L", "t");
 	}
 }
 
 void date_2013_experiments(){
 	Plotter* plotter = new Plotter("C:\\opt\\gnuplot\\bin\\gnuplot.exe -persist");
-
-	int mode = NEW_RRT_PLL ; // NEW_RRT_TDO // LOAD_RRT // NEW_RRT_PLL
+	int mode = NEW_RRT_PLL ; // NEW_RRT_TDO // LOAD_RRT // NEW_RRT_PLL, LOAD_RRT_PLL
 	bool generatePlot = true ;//true ;
-	string inputFileName = "test.rrt";
-	string outputFileName = "tdo-3000.rrt" ;
-
-	//kernel_MC();
+	string inputFileName = "pll_rev_100000.rrt";
+	//string outputFileName = "pll_rev_100000.rrt" ;
+	string outputFileName = "test.rrt" ;
 	kernel_RRT(mode, generatePlot, inputFileName, outputFileName, plotter);
 }
 
+//	Computing the joint time-frequency space instead of only time-augmented RRT
+//	work-in-progress, todo
 void fft_experiments(){
 	double f0 = 1; //initial freqency
 	double f1 = 10; //final freq
@@ -119,8 +125,6 @@ void fft_experiments(){
 		f.sdft();
 		//if(++idx==N) idx=0;
 	}
-	
-	
 	//double powr1[N/2];
     //f.powr_spectrum(powr1);
 
@@ -142,22 +146,15 @@ void kdtree_experiment(){
         min[i]=0;
         max[i]=1;
     }
-
-	
 	 kd = kd_create(d);
-
 	 for(int i=0;i<100;i++){
 		 node* q_sample = new node(d);
 	     q_sample->randomize(min, max);
 		 
 		 kd_insert(kd,q_sample->get(), q_sample);
 	 }
-
 	node* q_sample = new node(d);
 	q_sample->randomize(min, max);
-
-
-
 
 	//getting the nearest node
 	//struct kdres *kd_nearest(struct kdtree *tree, const double *pos);
@@ -214,6 +211,7 @@ int main (int argc, const char * argv[]){
 	//fft_experiments();
 	//kdtree_experiment();
 	//MonitorExperiment();
+	date_2013_experiments();
 	system("PAUSE");
 	return 0;
 }

@@ -3,12 +3,12 @@
 TimedRRT::TimedRRT(string fileName): RRT(fileName){
 }
 
-TimedRRT::TimedRRT(int _d, int _k, double _simTime, string nam): RRT(_d+1, _k, nam){ //Add time dimension to the RRT
+TimedRRT::TimedRRT(int _d, int _k, int _var, double _simTime, string nam): RRT(_d+1, _k, _var, nam){ //Add time dimension to the RRT
     sim_time = _simTime;
     setBound(_d, 0, sim_time); //maximum time for sim, minimum is 0 and it is assigned in RRT constructor
 }
 
-TimedRRT::TimedRRT(int _d, int _k, string nam): RRT(_d+1, _k, nam){ //Add time dimension to the RRT
+TimedRRT::TimedRRT(int _d, int _k, int _var, string nam): RRT(_d+1, _k, _var, nam){ //Add time dimension to the RRT
     sim_time = 1 ; //default
     setBound(_d, 0, sim_time); //maximum time for sim, minimum is 0 and it is assigned in RRT constructor
 }
@@ -17,7 +17,7 @@ void TimedRRT::build(double* initialState, double variation){
 	root = new node(d);
     root->set(initialState);
 	root->setRoot();
-    
+
     for(int i=0;i<k; i++){
     	cout <<"#### " << i << endl ;
         //create a new sample
@@ -30,7 +30,9 @@ void TimedRRT::build(double* initialState, double variation){
 
         double* state_near = q_near->get() ;
         double* state = new double[d];
-        for(int i=0;i<d;i++) state[i]=state_near[i];
+        for(int j=0;j<d;j++){
+			state[j]=state_near[j];
+		}
         
         //variation or input to the system
         //todo: should be defined in the main or system, not here
@@ -45,8 +47,15 @@ void TimedRRT::build(double* initialState, double variation){
         //add the new node to the tree
         q_near->addChildren( q_new ) ;
 		q_new->setParent(q_near);		//We only make the parent-child releation ship during the tree build
-		//for(int i=0;i<monitors.size();i++)
-		//	monitors[i]->verify( q_new ) ;
+
+
+		cout << "Some debug info:" << endl;
+
+		cout << "q_near->getID()" << q_near->getID() << endl ;
+		cout << "q_new->getID()" << q_new->getID() << endl ;
+		cout << "q_new->getParent->getID()" << q_new->getParent()->getID() << endl ;
+		cout << "q_near->getChildren().size()" << q_near->getChildren().size() << endl ;
+		cout << "OK, I'm finished blabbering" << endl;
     }
 }
 

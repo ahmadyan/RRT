@@ -4,9 +4,10 @@
 #include <stack>
 using namespace std;
 
-RRT::RRT(int _d, int _k, string nam){
+RRT::RRT(int _d, int _k, int _var, string nam){
     d=_d;
     k=_k;
+	var=_var;
     name=nam;
     min = new double[d];
     max = new double[d];
@@ -62,6 +63,7 @@ void RRT::build(double* initialState){
     root = new node(d);
     root->set(initialState);
 	root->setRoot();
+	
     for(int i=0;i<k; i++){
         node* q_sample = new node(d);
         q_sample->randomize(min, max);
@@ -69,11 +71,11 @@ void RRT::build(double* initialState){
     
 		double* state_near = q_near->get() ;
         double* state = new double[d];
-        for(int i=0;i<d;i++) state[i]=state_near[i];
-         double delta = 0.5;
+        for(int j=0;j<d;j++) state[j]=state_near[j];
+        double delta = 0.5;
         //variation or input to the system
         //todo: should be defined in the main or system, not here
-		double* param = new double[1] ;
+		double* param = new double[var] ;
         param[0] = unifRand(0.29, 0.31);
         //double param = 1.4 ;
         cout << "state==" << state[0] << " " << state[1] << endl ;
@@ -84,7 +86,7 @@ void RRT::build(double* initialState){
 
         q_near->addChildren( q_new ) ;
 		q_new->setParent(q_near);
-    }
+	}
 }
 
 
@@ -129,32 +131,36 @@ double RRT::getMax(int i){
     return max[i];
 }
 
+//Saving the RRT into a file
+//Stores each-node-id, parent-node-id, node-data, input
 void RRT::save(string fileName){
-	/*
 	cout << "Saving the RRT" << endl ;
 	ofstream file;
 	file.open (fileName.c_str());
-	file << "RRT" << endl;
-	file << d << endl ;
-	file << k << endl ;
+	file << "rrt" << endl;
+	file << d << endl ;		//number of dimensions
+	file << var << endl ;
+	file << k << endl ;		//number of nodes
 
+	//saving the bounds on each dimensions
 	for(int i=0;i<d; i++){
 		file << min[i] << endl ;
 		file << max[i] << endl ;
 	}
-	for(int i=0;i<k;i++){
-		file << i << " " << nodes[i].first << " " << nodes[i].second.toString()<< endl ;
-	}
-	file.close();*/
+
+	//start from the root and recursively print every node
+	root->save(file);
+	file.close();
 }
 
-void RRT::load(string fileName){/*
+void RRT::load(string fileName){
 	string line;
 	ifstream file (fileName.c_str());
 	if (file.is_open()){
 		file >> name ;
 		cout << "Loading RRT " << name << endl ;
 		file >> d ;
+		file >> var ;
 		file >> k;
 
 		min = new double[d];
@@ -177,10 +183,14 @@ void RRT::load(string fileName){/*
 			}
 			node newNode = node(d);
 			newNode.set(data);
-			nodes.push_back( make_pair(parent_id, newNode));
+
+			
+
+			nodes.push_back( make_pair(parent_id, &newNode));
+			cout << newNode.toString() << endl ;
 		}
 		file.close();
-	}*/
+	}
 }
 
 string RRT::getName(){
