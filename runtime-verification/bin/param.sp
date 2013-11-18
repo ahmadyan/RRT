@@ -1,1 +1,1 @@
-.param var=0.000309
+.param var=0.000955

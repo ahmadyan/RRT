@@ -88,7 +88,7 @@ void kernel_RRT(int mode, bool generatePlot,string inputFileName, string outputF
 	if(mode==NEW_RRT_TDO){
 		kernel_RRT_TDO(generatePlot, outputFileName, plotter, 100, 7e-6);
 	}else if(mode == NEW_RRT_PLL){
-		kernel_RRT_PLL(generatePlot, outputFileName, plotter, 10, 100e-6, 0.01e-6);
+		kernel_RRT_PLL(generatePlot, outputFileName, plotter, 100, 100e-6, 0.01e-6);
 	}else if(mode == LOAD_RRT_PLL){
 		TimedRRT rrt = TimedRRT(inputFileName);
 		if(generatePlot)  plotter->plotTrace(rrt, pll_e, pll_eb, pll_time, 100e-6, 0.01e-6);
@@ -104,8 +104,7 @@ void date_2013_experiments(){
 	Plotter* plotter = new Plotter("C:\\opt\\gnuplot\\bin\\gnuplot.exe -persist");
 	int mode = NEW_RRT_PLL ; // NEW_RRT_TDO // LOAD_RRT // NEW_RRT_PLL, LOAD_RRT_PLL
 	bool generatePlot = true ;//true ;
-	string inputFileName = "pll_rev_100000.rrt";
-	//string outputFileName = "pll_rev_100000.rrt" ;
+	string inputFileName = "test2.rrt";
 	string outputFileName = "test.rrt" ;
 	kernel_RRT(mode, generatePlot, inputFileName, outputFileName, plotter);
 }

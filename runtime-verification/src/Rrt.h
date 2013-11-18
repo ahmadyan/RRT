@@ -11,7 +11,7 @@ class RRT{
 protected:
     int k ; // total number of nodes 
     int d ; // tree dimension, each node has a d dimension. (d-1 state + 1 time)
-    vector< pair<int,node*> > nodes; //keeps a copy of each node for direct access, pair<parent_id, child>
+    vector<node*> nodes; //keeps a copy of each node for direct access, pair<parent_id, child>
 	node* root ;
     double* min ;
     double* max ;
@@ -43,6 +43,7 @@ public:
 	void setdt(double);
 	double RRT::getdt();
 	node* getNearestNode(node* q_sample);
+	vector<node*> getNearestNode(node* q_sample, double errorTolerance, bool timed);
 	node* getRoot();
 	node* getNode(int);
 };

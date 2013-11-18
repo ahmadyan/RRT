@@ -1,7 +1,7 @@
 * "simulator" "HSPICE" 
 * "version" "C-2009.03 32-BIT"
 * "format" "HSP"
-* "rundate" "16:19:32 11/11/2013 "
+* "rundate" "17:48:58 11/18/2013 "
 * "netlist" "C:\code\RRT\runtime-verification\bin\pll.sp "
 * "runtitle" "phase-locked loop"
 * time =    5.0000u       
@@ -10,20 +10,20 @@
 .option 
 + gmindc=   1.0000p       
 .nodeset
-+ e =  -1.3070        
-+ eb =  -1.1105        
++ e =  -3.4989        
++ eb =  -3.5010        
 + in = 352.6712m       
 + inb =   0.            
-+ mout =  -3.5789        
-+ moutb =  -3.4211        
-+ osc =-786.4513m       
-+ oscb =  -1.2034        
-+ out =-505.5471m       
-+ outb =   3.6199m       
-+ xvco.c =-795.2889m       
-+ xvco.s =  53.5104m       
-+ xvco.s_clip =  71.1829m       
++ mout =  -3.4224        
++ moutb =  -3.5776        
++ osc =  -1.3000        
++ oscb =-680.0000m       
++ out =  -3.4997        
++ outb =  -3.5001        
++ xvco.c = 197.1931m       
++ xvco.s =-630.3095m       
++ xvco.s_clip =-100.0000m       
 + xpd.clip1 = 100.0000m       
-+ xpd.clip2 = 100.0000m       
-+ xpd.n1 =  78.9090m       
++ xpd.clip2 =-100.0000m       
++ xpd.n1 = -77.6450m       
 ***   END: Saved Operating Point ***                     

@@ -12,6 +12,7 @@ using namespace std;
 class node{
 	node* parent ;
 	vector<node*> children ;
+	vector<node*> cast;			//the casts are at the same state space, but in different time
 	int n ; // n=node-dimension
 	double* data;  // this array holds the state-time space, n-1 double for holding x and last double for holding time
 	bool root ;
@@ -20,6 +21,7 @@ class node{
 public:
 	node(int n);
 	node(const node&);
+	node::node(int _n, int _id, double* _data);
 	~node();
 	void set(double* _data);
 	double* get();
@@ -49,9 +51,12 @@ public:
 	const double operator*(const node &rhs) const;
 
 	void addChildren(node*);
+	void addCast(node*);
 	void setParent(node*); 
 	vector<node*> getChildren();
+	vector<node*> getCast();
 	node* getChild(int i);
+	node* getCast(int);
 	int getSize();
 	node* getParent();
 	bool isRoot();

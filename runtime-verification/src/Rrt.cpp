@@ -172,21 +172,31 @@ void RRT::load(string fileName){
 			cout << min[i] << " " << max[i] << endl ;
 		}
 		cout << "loading nodes" << endl ;
-		int dummy ;
+		
+
+		node* lastParent; 
+
 		for(int i=0;i<k;i++){
 			double* data = new double[d];
-			int parent_id = 0 ;
-			file >> dummy ;
+			int id =-1;
+			int parent_id = -1 ;
+			file >> id ;
 			file >> parent_id ;
 			for(int j=0;j<d;j++){
 				file >> data[j];
 			}
-			node newNode = node(d);
-			newNode.set(data);
 
+			cout << "Loading node " << i << endl ;
+			node newNode= node(d, id, data);
+			nodes.push_back(&newNode);
 			
 
-			nodes.push_back( make_pair(parent_id, &newNode));
+			//just adding the parent is not enought, we need a proper get node by id method. 
+
+
+
+
+
 			cout << newNode.toString() << endl ;
 		}
 		file.close();
@@ -207,4 +217,40 @@ double RRT::getdt(){
 
 node* RRT::getRoot(){
 	return root;
+}
+
+
+vector<node*> RRT::getNearestNode(node* q_sample, double errorTolerance, bool timed){
+	//old method, O(n), used recursive tree search
+	//return root->getNearestNode(q_sample, min, max, true).first ;
+
+	vector<node*> results;
+	if(errorTolerance <= 0){ 
+		//Searching for the nearest node, 
+		//Usually used for searching for closest node in the RRT from q_sample during the RRT loop
+		double closestDistance= ( timed ? q_sample->timed_distance(nodes[0], min, max) : q_sample->distance(nodes[0], min, max) );
+		int closestNodeIndex=0; 
+		for(int i=0; i<nodes.size();i++){
+			double d= ( timed ? q_sample->timed_distance(nodes[i], min, max) : q_sample->distance(nodes[i], min, max) );
+			if( d<closestDistance ){
+				closestDistance=d;
+				closestNodeIndex=i;
+			}
+		}
+		results.push_back(nodes[closestNodeIndex]);
+	}else{
+		//There is a positive errorTolerance, which means we are searching for the set of close nodes within the errorTolerance epsilon
+		//THis is usually used for the casting searches (i.e. nodes that are within the same state, but possibly different time)
+		for(int i=0; i<nodes.size();i++){
+			double d= ( timed ? q_sample->timed_distance(nodes[i], min, max) : q_sample->distance(nodes[i], min, max) );
+			cout << "Searching for closest neighbors" << endl ;
+			cout << "distance=" << d << endl ;
+			if(d<=errorTolerance){
+				if(nodes[i]->getID()!=q_sample->getID()){
+					results.push_back(nodes[i]);
+				}
+			}
+		}
+	}
+	return results;
 }

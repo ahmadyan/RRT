@@ -17,7 +17,7 @@ void TimedRRT::build(double* initialState, double variation){
 	root = new node(d);
     root->set(initialState);
 	root->setRoot();
-
+	nodes.push_back(root);
     for(int i=0;i<k; i++){
     	cout <<"#### " << i << endl ;
         //create a new sample
@@ -26,8 +26,8 @@ void TimedRRT::build(double* initialState, double variation){
         //q_sample.randomize(min, max);
         
         //find nearest node in the tree
-        node* q_near = getNearestNode(q_sample);
-
+        vector<node*> q_near_vec = getNearestNode(q_sample, -1, true);
+		node* q_near = q_near_vec[0];
         double* state_near = q_near->get() ;
         double* state = new double[d];
         for(int j=0;j<d;j++){
@@ -41,30 +41,25 @@ void TimedRRT::build(double* initialState, double variation){
         double t_init = state[d-1];
         double t = system->simulate(state, param, dt);
         state[d-1] = t_init + t ;
-        cout << endl <<  "TIME " << t_init << " " << t << " " << state[d-1] << endl ;
         node* q_new = new node(d);
         q_new->set(state);
-        //add the new node to the tree
-        q_near->addChildren( q_new ) ;
+        q_near->addChildren(q_new);		//add the new node to the tree
 		q_new->setParent(q_near);		//We only make the parent-child releation ship during the tree build
 
-
-		cout << "Some debug info:" << endl;
-
-		cout << "q_near->getID()" << q_near->getID() << endl ;
-		cout << "q_new->getID()" << q_new->getID() << endl ;
-		cout << "q_new->getParent->getID()" << q_new->getParent()->getID() << endl ;
-		cout << "q_near->getChildren().size()" << q_near->getChildren().size() << endl ;
-		cout << "OK, I'm finished blabbering" << endl;
+		nodes.push_back(q_new);
+		//casting
+		vector<node*> cast = getNearestNode(q_sample, 0.1, true);
+		cout << endl << "CAST size=" << cast.size() << endl ;
+		for(int j=0;j<cast.size();j++){
+			cout << "Cast id = " << cast[j]->getID() << endl ;
+			q_new->addCast(cast[j]);
+			cast[j]->addCast(q_new);
+		}
     }
 }
 
 void TimedRRT::addMonitor(Monitor* m){
 	monitors.push_back(m);
-}
-
-node* TimedRRT::getNearestNode(node* q_sample){
-	return root->getNearestNode(q_sample, min, max, true).first ;
 }
 
 double TimedRRT::getSimTime(){

@@ -13,6 +13,15 @@ node::node(int _n){
 	for(int i=0;i<n;i++) data[i]=0;
 }
 
+node::node(int _n, int _id, double* _data){
+	id=_id; 
+	root=false;
+	n=_n;
+	data=_data;
+	if(id>=objectCount)
+		objectCount=id+1;
+}
+
 //copy constructor
 node::node(const node& Node){
 	id = generateID() ;
@@ -36,7 +45,6 @@ node::~node(){
 int node::objectCount = 0 ;
 
 int node::generateID(){
-	cout << "Generating a new Object :" << objectCount+1 << endl;
 	return objectCount++;
 }
 
@@ -242,12 +250,24 @@ void node::addChildren(node* k){
 	children.push_back(k);
 }
 
+void node::addCast(node* k){
+	cast.push_back(k);
+}
+
 vector<node*> node::getChildren(){
 	return children;
 }
 
+vector<node*> node::getCast(){
+	return cast;
+}
+
 node* node::getChild(int i){
 	return children[i];
+}
+
+node* node::getCast(int i){
+	return cast[i];
 }
 
 int node::getSize(){
@@ -271,11 +291,14 @@ void node::setRoot(){
 }
 
 //recursively returns the nearestNode between this node and all of it's children w.r.t. q_sample
+//bugfix, we cannot return or even use the q_sample as the nearest node
+//todo: this is an O(n) search. Use KD-tree for faster search
+//todo: utilize the time factor in the search for nearest neighbor
 pair<node*, double> node::getNearestNode(node* q_sample, double* min, double* max, bool timed){
-	node* nearestNode = this ;
+	node* nearestNode = this;
 	double distance = ( timed ? q_sample->timed_distance(this, min, max) : q_sample->distance(this, min, max) );
 	for(int i=0;i<children.size(); i++){
-		pair<node*, double> p = q_sample->getNearestNode(children[i], min, max, timed); 
+		pair<node*, double> p = children[i]->getNearestNode(q_sample, min, max, timed);
 		if(p.second < distance ){
 			distance = p.second ;
 			nearestNode = p.first ;

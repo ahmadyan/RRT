@@ -10,6 +10,5 @@ public:
     TimedRRT(string fileName);
 	void addMonitor(Monitor* m);
     void build(double* initialState, double);
-	node* getNearestNode(node* q_sample);
 	double getSimTime();
 };

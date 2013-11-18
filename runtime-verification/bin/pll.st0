@@ -3,7 +3,7 @@
  lic:
  lic: FLEXlm: v8.5b
  lic: USER:   adel                 HOSTNAME: adel-CSL
- lic: HOSTID: "f46d0461a9b8 005056c00001 005056c00008 080027003c42" PID:      36
+ lic: HOSTID: "f46d0461a9b8 005056c00001 005056c00008 080027003c42" PID:      10
  lic: Using FLEXlm license file:
  lic: C:\flexlm\license.dat
  lic: Checkout 1 hspice
@@ -11,7 +11,7 @@
  lic: NODE LOCKED license on hostid "f46d0461a9b8 005056c00001 005056c00008 0800
  lic:
  Init: hspice initialization file: C:\Users\adel\applications\hspice\hspice.ini
- init: begin read circuit files,  cpu clock=  4.30E-02
+ init: begin read circuit files,  cpu clock=  4.20E-02
        option search   = C:\Users\adel\applications\hspice\PARTS\behave\
        option search   = C:\Users\adel\applications\hspice\PARTS\AD\
        option search   = C:\Users\adel\applications\hspice\PARTS\XILINX\
@@ -40,24 +40,24 @@
  init: end read circuit files,  cpu clock=  4.70E-02 memory=    147 kb
  init: begin check errors,  cpu clock=  4.70E-02
  **warning**  no dc path to ground from node        1:                c
- init: end check errors,  cpu clock=  4.80E-02 memory=    149 kb
- init: begin setup matrix, pivot=     0 cpu clock=  4.80E-02
+ init: end check errors,  cpu clock=  4.70E-02 memory=    149 kb
+ init: begin setup matrix, pivot=     0 cpu clock=  4.70E-02
        establish matrix -- done,  cpu clock=  4.80E-02 memory=    153 kb
        re-order matrix -- done,  cpu clock=  4.80E-02 memory=    155 kb
- init: end setup matrix,  cpu clock=  5.10E-02 memory=    168 kb
+ init: end setup matrix,  cpu clock=  5.00E-02 memory=    168 kb
  output: C:pll.tr0
  sweep: tran tran0    begin, stop_t=  5.00E-06 #sweeps=  51 cpu clock=  5.10E-02
- tran: time= 5.0284E-07 tot_iter=     128 conv_iter=      59 cpu clock= 5.20E-02
- tran: time= 1.0040E-06 tot_iter=     237 conv_iter=     111 cpu clock= 5.30E-02
- tran: time= 1.5041E-06 tot_iter=     347 conv_iter=     163 cpu clock= 5.40E-02
- tran: time= 2.0022E-06 tot_iter=     457 conv_iter=     215 cpu clock= 5.50E-02
- tran: time= 2.5008E-06 tot_iter=     568 conv_iter=     267 cpu clock= 5.60E-02
- tran: time= 3.0080E-06 tot_iter=     682 conv_iter=     320 cpu clock= 5.60E-02
- tran: time= 3.5047E-06 tot_iter=     794 conv_iter=     373 cpu clock= 5.70E-02
- tran: time= 4.0059E-06 tot_iter=     906 conv_iter=     426 cpu clock= 5.80E-02
- tran: time= 4.5032E-06 tot_iter=    1011 conv_iter=     476 cpu clock= 5.90E-02
- tran: time= 5.0000E-06 tot_iter=    1120 conv_iter=     528 cpu clock= 5.90E-02
- sweep: tran tran0    end,  cpu clock=  6.30E-02 memory=    169 kb
+ tran: time= 5.0067E-07 tot_iter=     110 conv_iter=      52 cpu clock= 5.20E-02
+ tran: time= 1.0007E-06 tot_iter=     216 conv_iter=     102 cpu clock= 5.20E-02
+ tran: time= 1.5007E-06 tot_iter=     321 conv_iter=     152 cpu clock= 5.30E-02
+ tran: time= 2.0007E-06 tot_iter=     428 conv_iter=     202 cpu clock= 5.40E-02
+ tran: time= 2.5007E-06 tot_iter=     535 conv_iter=     252 cpu clock= 5.50E-02
+ tran: time= 3.0007E-06 tot_iter=     642 conv_iter=     302 cpu clock= 5.50E-02
+ tran: time= 3.5007E-06 tot_iter=     749 conv_iter=     352 cpu clock= 5.60E-02
+ tran: time= 4.0007E-06 tot_iter=     856 conv_iter=     402 cpu clock= 5.70E-02
+ tran: time= 4.5007E-06 tot_iter=     963 conv_iter=     452 cpu clock= 5.80E-02
+ tran: time= 5.0000E-06 tot_iter=    1070 conv_iter=     502 cpu clock= 5.80E-02
+ sweep: tran tran0    end,  cpu clock=  6.10E-02 memory=    169 kb
 >info:         ***** hspice job concluded
  Init: hspice initialization file: C:\Users\adel\applications\hspice\hspice.ini
  lic: Release hspice token(s)
