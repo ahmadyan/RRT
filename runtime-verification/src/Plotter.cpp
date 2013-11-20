@@ -240,6 +240,10 @@ void Plotter::plotRRT(string name, string title, string output, RRT rrt, string 
 	out.close();
 }
 
+
+//This method can draw the trace for one signal or the difference between two signals. 
+//Usage drawTrace(rrt, v1, v2, ...) draws v1-v2 w.r.t. time
+//		drawTrace(rrt, v1, -1, ...) draws v1    w.r.t. time
 void Plotter::plotTrace(RRT rrt, int v1, int v2, int tdim, double simTime, double dt){
 	ofstream out("plot.txt");
 	FILE *gnuplotPipe = _popen(gnuPlotPath.c_str(),"w");
@@ -260,34 +264,32 @@ void Plotter::plotTrace(RRT rrt, int v1, int v2, int tdim, double simTime, doubl
 	while(!q.empty()){
 		node* n = q.front();
 		q.pop();
-
 		if(!n->isRoot()){
 			double* begin = n->get();
 			double* end   = n->getParent()->get();
-
 			int xscale = 1, yscale=1, zscale=1 ;
-			double x1 = xscale*(begin[v1]-begin[v2]) ;
+			double x0=0, x1=1;
+			if(v2<0){
+				x0 = xscale*(end[v1]) ;
+				x1 = xscale*(begin[v1]) ;
+			}else{
+				x0 = xscale*(end[v1]-end[v2]) ;
+				x1 = xscale*(begin[v1]-begin[v2]) ;
+			}
 			double t1 = yscale*begin[tdim] ;
-			double x0 = xscale*(end[v1]-end[v2]) ;
 			double t0 = yscale*end[tdim] ;
-
 
 			int it0 = t0/dt; int it1 = t1/dt;
 			if(x1>max[it1]) max[it1]=x1 ;
 			if(x1<min[it1]) min[it1]=x1 ;
 			if(x0>max[it0]) max[it0]=x0 ;
 			if(x0<min[it0]) min[it0]=x0 ;
-			cout << "**" << endl ;
-//			cout << t0 << " " << t1 << " " << x0 << " " << x1 << endl ;
 			drawLine(t0, x0, t1, x1);
 			fflush(gnuplotPipe);
-
-		
 		}
 		for(int i=0;i<n->getSize();i++){
 			q.push(n->getChild(i));
 		}
-
 	}
 	buffer = "replot\n";
 	fprintf(gnuplotPipe, buffer.c_str());

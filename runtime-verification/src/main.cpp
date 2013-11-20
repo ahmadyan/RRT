@@ -81,7 +81,8 @@ void kernel_RRT_PLL(bool generatePlot, string outputFileName, Plotter* plotter, 
 	cout << "RRT Constructed" << endl ;
 	rrt.save(outputFileName);
 	cout << "RRT Saved" << endl ;
-	if(generatePlot)  plotter->plotTrace(rrt, pll_e, pll_eb, pll_time, simulationTime, dt);
+	//if(generatePlot)  plotter->plotTrace(rrt, pll_e, pll_eb, pll_time, simulationTime, dt);
+	 plotter->plotTrace(rrt, pll_e, -1, pll_time, simulationTime, dt);
 }
 
 void kernel_RRT(int mode, bool generatePlot,string inputFileName, string outputFileName, Plotter* plotter){
