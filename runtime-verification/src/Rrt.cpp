@@ -254,3 +254,9 @@ vector<node*> RRT::getNearestNode(node* q_sample, double errorTolerance, bool ti
 	}
 	return results;
 }
+
+
+void RRT::addMonitor(Monitor* m){
+	cout << "Adding a new monitor to the RRT , total monitors=" << monitors.size() << endl ;
+	monitors.push_back(m);
+}

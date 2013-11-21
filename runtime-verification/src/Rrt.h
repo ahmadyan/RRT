@@ -4,8 +4,10 @@
 #include <utility>
 #include "node.h"
 #include "System.h"
+#include "Monitor.h"
 
 using namespace std;
+class Monitor;
 
 class RRT{
 protected:
@@ -20,6 +22,8 @@ protected:
 	double dt ;
 
 	int var; //number of variation parameters
+
+	vector<Monitor*> monitors;
 public:
     RRT(int, int, int, string);
     RRT(string);
@@ -46,4 +50,5 @@ public:
 	vector<node*> getNearestNode(node* q_sample, double errorTolerance, bool timed);
 	node* getRoot();
 	node* getNode(int);
+	void addMonitor(Monitor*);
 };

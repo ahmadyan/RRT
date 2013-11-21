@@ -2,20 +2,13 @@
 #include <vector>
 #include <iostream>
 #include "hspiceInterface.h"
-
 //#include <gsl/gsl_errno.h>
 //#include <gsl/gsl_matrix.h>
 //#include <gsl/gsl_odeiv2.h>
 
-#include "Property.h"
 using namespace std;
-
-
-
-
 class System{
     int d;  //dimension
-    vector<Property*> properties ;
     int (*function)(double t, const double y[], double f[], void *params);
     int (*jacobian) (double t, const double y[], double *dfdy, double dfdt[], void *params);
     CircuitType type;
@@ -29,7 +22,6 @@ public:
     void dumpSystemInfo();
     double simulate();
     
-    void addProperty(Property*);
     void check();
     void setDimension(int);
     int getDimension();

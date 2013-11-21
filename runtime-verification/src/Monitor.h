@@ -3,30 +3,26 @@
 #include <map>
 #include "System.h"
 #include "Rrt.h"
+#include "property.h"
 
-//#include "MonitorArgument.h"
 using namespace std;
 
+//This class is the heart of the runtime monitoring algorithm, 
+//We arrange and keep the parse tree in this class. 
+//There is only one monitor class in the entire program, similar to one RRT
+//The rrt class will execute the monitor after each iteration
 class Monitor{
-	Property* property; //Every monitor is checking a unique property associated with it during construction
-
-	int monitorID;				//unique
-    static int monitorCount ;
-	
-	//methods
-	static int generateMonitorID();
-
+	Property* property;						//Every monitor is checking a unique property associated with it during construction
+	vector<Property*> propertyInstance;		//An instance of the property at a given node
 public:
-	Monitor(Property* p);
+	Monitor();
 	~Monitor();
-    int getMonitorID();
-
-	int monitor_update_add_state();
-	int monitor_update_add_edge();
-	int monitor_get_solution();
+    
+	//The RRT will call the monitor after each iteration to incrementally check for violation/satisfaction of the property. 
+	void check(node*);
+	void setProperty(Property* pt);
+	Property* getProperty();
 };
-
-
 
 //#define MONITOR_EXCEPTION_DIVISION_BY_ZERO	0x142495E
 //#define MONITOR_EXCEPTION_VIOLATION			0x0F588C9

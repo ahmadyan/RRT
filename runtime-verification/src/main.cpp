@@ -12,7 +12,6 @@
 #include "hspiceInterface.h"
 #include "pll.h"
 #include "Monitor.h"
-#include "Property.h"
 #include "Frequency.h"
 #include "kdtree.h"
 using namespace std;
@@ -23,7 +22,7 @@ using namespace std;
 #define LOAD_RRT_PLL	3
 #define LOAD_RRT_TDO	4	
 
-void kernel_RRT_TDO(bool generatePlot, string outputFileName, Plotter* plotter, int iterations, double simulationTime){
+void kernel_RRT_TDO(vector<Monitor*> monitors, bool generatePlot, string outputFileName, Plotter* plotter, int iterations, double simulationTime){
 	double* initialState = new double[3];
 	int variations = 2 ;
 	//For oscillation:
@@ -44,8 +43,10 @@ void kernel_RRT_TDO(bool generatePlot, string outputFileName, Plotter* plotter, 
 		variations,
 		simulationTime, //Simulation Time
 		"Tunnel Diode Oscillator");
-	//Monitor* monitor = createMonitor_1(&rrt);
-	//rrt.addMonitor(monitor);
+
+	for(int i=0;i<(int)(monitors.size());i++){
+		rrt.addMonitor(monitors[i]);
+	}
 	rrt.setBound(0, -0.2, 1.2 );	//First Dimension = VC
 	rrt.setBound(1, -0.02, 0.08 );  //Second Dimension = IL
 	rrt.setdt(10e-9);
@@ -55,7 +56,7 @@ void kernel_RRT_TDO(bool generatePlot, string outputFileName, Plotter* plotter, 
 	if(generatePlot) plotter->plotRRT("lines", rrt.getName().c_str(), "test", rrt, "v_C", "i_L", "t");
 }
 
-void kernel_RRT_PLL(bool generatePlot, string outputFileName, Plotter* plotter, int iterations, double simulationTime, double dt){
+void kernel_RRT_PLL(vector<Monitor*> monitors, bool generatePlot, string outputFileName, Plotter* plotter, int iterations, double simulationTime, double dt){
 	int dim = 16;
 	int variations = 1; 
 	double* initialState = new double[dim+1];
@@ -68,9 +69,10 @@ void kernel_RRT_PLL(bool generatePlot, string outputFileName, Plotter* plotter, 
 		simulationTime, //Simulation Time
 		"Tunnel Diode Oscillator");
 	
-	//Monitor* pll_lock_property = pllLockingPropertyMonitor(&rrt);
-	//rrt.addMonitor(pll_lock_property);
-
+	for(int i=0;i<(int)(monitors.size());i++){
+		rrt.addMonitor(monitors[i]);
+	}
+	
 	for(int i=0;i<dim-1;i++){
 		rrt.setBound(i, -1, +1);
 	}
@@ -81,22 +83,20 @@ void kernel_RRT_PLL(bool generatePlot, string outputFileName, Plotter* plotter, 
 	cout << "RRT Constructed" << endl ;
 	rrt.save(outputFileName);
 	cout << "RRT Saved" << endl ;
-	//if(generatePlot)  plotter->plotTrace(rrt, pll_e, pll_eb, pll_time, simulationTime, dt);
-	 plotter->plotTrace(rrt, pll_e, -1, pll_time, simulationTime, dt);
+	if(generatePlot)  plotter->plotTrace(rrt, pll_e, pll_eb, pll_time, simulationTime, dt);
+	//plotter->plotTrace(rrt, pll_e, -1, pll_time, simulationTime, dt);
 }
 
-void kernel_RRT(int mode, bool generatePlot,string inputFileName, string outputFileName, Plotter* plotter){
+void kernel_RRT(vector<Monitor*> monitors, int mode, bool generatePlot,string inputFileName, string outputFileName, Plotter* plotter){
 	if(mode==NEW_RRT_TDO){
-		kernel_RRT_TDO(generatePlot, outputFileName, plotter, 100, 7e-6);
+		kernel_RRT_TDO(monitors, generatePlot, outputFileName, plotter, 100, 7e-6);
 	}else if(mode == NEW_RRT_PLL){
-		kernel_RRT_PLL(generatePlot, outputFileName, plotter, 100, 100e-6, 0.01e-6);
+		kernel_RRT_PLL(monitors, generatePlot, outputFileName, plotter, 10, 100e-6, 0.01e-6);
 	}else if(mode == LOAD_RRT_PLL){
 		TimedRRT rrt = TimedRRT(inputFileName);
 		if(generatePlot)  plotter->plotTrace(rrt, pll_e, pll_eb, pll_time, 100e-6, 0.01e-6);
 	}else if(mode == LOAD_RRT){
-		cout << "I was here" << endl ;
 		TimedRRT rrt = TimedRRT(inputFileName);
-		cout << "We are here" << endl ;
 		if(generatePlot) plotter->plotRRT("lines", rrt.getName().c_str(), "test", rrt,  "v_C", "i_L", "t");
 	}
 }
@@ -107,7 +107,8 @@ void date_2013_experiments(){
 	bool generatePlot = true ;//true ;
 	string inputFileName = "test2.rrt";
 	string outputFileName = "test.rrt" ;
-	kernel_RRT(mode, generatePlot, inputFileName, outputFileName, plotter);
+	//the new kernel has the monitors argument
+	//kernel_RRT(mode, generatePlot, inputFileName, outputFileName, plotter);
 }
 
 //	Computing the joint time-frequency space instead of only time-augmented RRT
@@ -196,12 +197,22 @@ void kdtree_experiment(){
 
 #include "ParseTree.h"
 void MonitorExperiment(){
-	Property* property = new Property(); 
-	Monitor* monitor = new Monitor(property); 
+	vector<Monitor*> monitors;
+	Monitor* monitor = new Monitor();
+	Property* pt = new Property(1);
+	monitor->setProperty(pt);
+	monitors.push_back(monitor);
 
-	ParseTree* pt = new ParseTree();
-	pt->parseFormula("");
-	pt->printParseTree(pt->getRoot());
+	Plotter* plotter = new Plotter("C:\\opt\\gnuplot\\bin\\gnuplot.exe -persist");
+	int mode = NEW_RRT_PLL ; // NEW_RRT_TDO // LOAD_RRT // NEW_RRT_PLL, LOAD_RRT_PLL
+	bool generatePlot = true ;//true ;
+	string inputFileName = "test2.rrt";
+	string outputFileName = "test.rrt" ;
+	kernel_RRT(monitors, mode, generatePlot, inputFileName, outputFileName, plotter);
+
+
+	//pt->parseFormula("");
+	//pt->printParseTree(pt->getRoot());
 	//setup an example tree execution to check the monitor
 }
 
@@ -210,8 +221,8 @@ int main (int argc, const char * argv[]){
 	srand((unsigned int)time(0));
 	//fft_experiments();
 	//kdtree_experiment();
-	//MonitorExperiment();
-	date_2013_experiments();
+	MonitorExperiment();
+	//date_2013_experiments();
 	system("PAUSE");
 	return 0;
 }

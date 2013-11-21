@@ -9,8 +9,8 @@
   lic:  
   lic: FLEXlm: v8.5b 
   lic: USER:   adel                 HOSTNAME: adel-CSL 
-  lic: HOSTID: "f46d0461a9b8 005056c00001 005056c00008 080027003c42" PID:      6
- 2
+  lic: HOSTID: "f46d0461a9b8 005056c00001 005056c00008 080027003c42" PID:      7
+ 8
   lic: Using FLEXlm license file: 
   lic: C:\flexlm\license.dat 
   lic: Checkout 1 hspice 
@@ -30,7 +30,7 @@
 
 
  .include param.sp
- .param var=0.000808
+ .param var=-0.000296
  .option  probe acct
  **warning**  the obsolete option acct is ignored
  .option relv=1e-5
@@ -62,22 +62,22 @@
 
  	+ gmindc=   1.0000p       
  	.nodeset	
- 	+ e =  -3.498900   
- 	+ eb =  -3.501100       
+ 	+ e =  -3.483600   
+ 	+ eb =  -3.511900       
  	+ in =   0.352671            
  	+ inb =   0.000000            
  	+ mout =  -3.422300        
  	+ moutb =  -3.577700        
  	+ osc = -1.300000       
  	+ oscb =  -0.680000        
- 	+ out =  -3.499600        
- 	+ outb =  -3.500200        
- 	+ xvco.c =   0.202054        
- 	+ xvco.s =  -0.643288       
+ 	+ out =  -3.484400        
+ 	+ outb =  -3.500000        
+ 	+ xvco.c =   0.117408        
+ 	+ xvco.s =  -0.836045       
  	+ xvco.s_clip =  -0.100000       
  	+ xpd.clip1 =   0.100000            
  	+ xpd.clip2 = -0.100000       
- 	+ xpd.n1 =   -0.077660            
+ 	+ xpd.n1 =   -0.077730            
 
  * fm signal for demodulation
  *vin in inb sffm(0 0.6 1.0x 1 10k)
@@ -189,12 +189,12 @@
  ***** operating point status is voltage   simulation time is     5.0000u
     node    =voltage      node    =voltage      node    =voltage
 
- +0:e       =  -3.4985  0:eb      =  -3.5015  0:in      = 352.6712m
- +0:inb     =   0.      0:mout    =  -3.4222  0:moutb   =  -3.5778 
- +0:osc     =  -1.3000  0:oscb    =-680.0000m 0:out     =  -3.4995 
- +0:outb    =  -3.5003  1:c       = 194.3778m 1:s       =-633.0938m
+ +0:e       =  -3.4866  0:eb      =  -3.5103  0:in      = 352.6712m
+ +0:inb     =   0.      0:mout    =  -3.4211  0:moutb   =  -3.5789 
+ +0:osc     =  -1.3000  0:oscb    =-680.0000m 0:out     =  -3.4850 
+ +0:outb    =  -3.5041  1:c       = 184.7547m 1:s       =-806.1742m
  +1:s_clip  =-100.0000m 2:clip1   = 100.0000m 2:clip2   =-100.0000m
- +2:n1      = -77.7920m
+ +2:n1      = -78.8960m
 
 
           ***** job concluded
@@ -233,7 +233,7 @@
 
   analysis           time    # points   tot. iter  conv.iter
   op point           0.00           1           0
-  transient          0.01          51        1067         503 rev=         0
+  transient          0.01          51        1067         504 rev=         0
   readin             0.00
   errchk             0.00
   setup              0.00
@@ -243,8 +243,8 @@
            total memory used          169  kbytes
            total cpu time            0.02 seconds
            total elapsed time        0.04 seconds
-           job started at     16:19:52 11/20/2013
-           job ended   at     16:19:52 11/20/2013
+           job started at     16:58:41 11/21/2013
+           job ended   at     16:58:41 11/21/2013
 
 
 >info:         ***** hspice job concluded

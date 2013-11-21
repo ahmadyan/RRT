@@ -1,23 +1,35 @@
 #include "Monitor.h"
 
-//Monitors needs static auto-increment id manager to mark which nodes are verified, they are violated or they don't know yet.
-int Monitor::monitorCount = 0 ;
-Monitor::Monitor(Property* p){
-	monitorID = generateMonitorID() ;
-	property = p;
+Monitor::Monitor(){
+	cout << "Monitor has been initialized" << endl ;
 }
 
 Monitor::~Monitor(){
-	delete property;
 }
 
-int Monitor::generateMonitorID(){
-	return monitorCount++;
-}  
+void Monitor::check(node* q){
+	cout << "Checking the monitor execution" << endl ;
 
-int Monitor::getMonitorID(){
-	return monitorID;    
+	//step 1: create a new property instance for q
+	Property* p = new Property(property);
+	p->setNode(q);
+	propertyInstance.push_back(p);
+
+	//step 2: 
+	p->check();
+
+	//step 3: is there any violation?
+	cout << "The evaluation of property " << p->getID() << "  is " <<  p->getResult() << endl ;
 }
+
+void Monitor::setProperty(Property* pt){
+	property=pt;
+}
+
+Property* Monitor::getProperty(){
+	return property;
+}
+
 
 /*
 

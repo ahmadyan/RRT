@@ -73,18 +73,6 @@ double System::simulate(){
 	return 0 ;
 }
 
-
-void System::addProperty(Property* property){
-    properties.push_back(property);
-}
-
-void System::check(){
-    if(properties.size()==0){
-        cout << "System does not contain any properties" << endl ;
-        return;
-    }
-}
-
 void System::setDimension(int _d){
     d=_d;
 }

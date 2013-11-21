@@ -48,13 +48,17 @@ void TimedRRT::build(double* initialState, double variation){
 
 		nodes.push_back(q_new);
 		//casting
-		vector<node*> cast = getNearestNode(q_sample, 0.1, true);
-		cout << endl << "CAST size=" << cast.size() << endl ;
-		for(int j=0;j<cast.size();j++){
-			cout << "Cast id = " << cast[j]->getID() << endl ;
-			q_new->addCast(cast[j]);
-			cast[j]->addCast(q_new);
-		}
+		//vector<node*> cast = getNearestNode(q_sample, 0.1, true);
+		//cout << endl << "CAST size=" << cast.size() << endl ;
+		//for(int j=0;j<cast.size();j++){
+		//	cout << "Cast id = " << cast[j]->getID() << endl ;
+		//	q_new->addCast(cast[j]);
+		//	cast[j]->addCast(q_new);
+		//}
+
+		for(int i=0;i<monitors.size();i++){
+			monitors[i]->check(q_new);
+		}	
     }
 }
 
