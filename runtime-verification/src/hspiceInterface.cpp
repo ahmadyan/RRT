@@ -101,7 +101,8 @@ G1 1 0 	POLY(1)	1 0 0 0.6 -1.5 1
 .OPT LIST NODE OPTS  numdgt=10 post
 .END
 */
-vector<double>  spice::simulateTDO(double v0, double i0, double dvin, double dId){
+vector<double>  spice::simulateTDO(double v0, double i0, double dvin, double 
+	){
 	vector<double> result;
 	FILE * netList;
 	string aString;
