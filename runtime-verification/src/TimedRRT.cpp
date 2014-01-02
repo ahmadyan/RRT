@@ -69,3 +69,38 @@ void TimedRRT::addMonitor(Monitor* m){
 double TimedRRT::getSimTime(){
 	return sim_time;
 }
+
+
+void TimedRRT::simulate(double* initialState, double variation){
+	root = new node(d);
+    root->set(initialState);
+	root->setRoot();
+	nodes.push_back(root);
+    for(int i=0;i<k; i++){
+    	cout <<"#### " << i << endl ;
+		node* q_near = nodes[ nodes.size()-1 ]; //last inserted node for the linear simulation
+        double* state_near = q_near->get() ;
+        double* state = new double[d];
+        for(int j=0;j<d;j++){
+			state[j]=state_near[j];
+		}
+        
+        //variation or input to the system
+        //todo: should be defined in the main or system, not here
+		double* param = new double[1];
+        param[0] = unifRand(-variation, variation);
+        double t_init = state[d-1];
+        double t = system->simulate(state, param, dt);
+        state[d-1] = t_init + t ;
+        node* q_new = new node(d);
+        q_new->set(state);
+        q_near->addChildren(q_new);		//add the new node to the tree
+		q_new->setParent(q_near);		//We only make the parent-child releation ship during the tree build
+
+		nodes.push_back(q_new);
+
+		for(int i=0;i<monitors.size();i++){
+			monitors[i]->check(q_new);
+		}	
+    }
+}

@@ -18,6 +18,7 @@ class node{
 	bool root ;
 	int id;
     static int objectCount ;
+	int index; //this node index in the nodes array
 public:
 	node(int n);
 	node(const node&);
@@ -65,6 +66,8 @@ public:
 
 	static int generateID();
 	int getID();
+	int getIndex();
+	void setIndex(int);
 	void save(ofstream&);
 };
 

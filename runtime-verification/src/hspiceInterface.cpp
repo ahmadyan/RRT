@@ -101,8 +101,7 @@ G1 1 0 	POLY(1)	1 0 0 0.6 -1.5 1
 .OPT LIST NODE OPTS  numdgt=10 post
 .END
 */
-vector<double>  spice::simulateTDO(double v0, double i0, double dvin, double 
-	){
+vector<double>  spice::simulateTDO(double v0, double i0, double dvin, double dId){
 	vector<double> result;
 	FILE * netList;
 	string aString;
@@ -112,13 +111,14 @@ vector<double>  spice::simulateTDO(double v0, double i0, double dvin, double
 
 	fprintf (netList, "TDO - TUNNEL DIODE OSCILLATOR	\n");
 	fprintf (netList, "VIN	3	0	%f\n", 0.3+dvin);
-	//fprintf (netList, "R1	2	3	0.2\n");	//For oscillation result
-	fprintf (netList, "R1	2	3	0.5\n");	//For No oscillation result
+	fprintf (netList, "R1	2	3	0.2\n");	//For oscillation result
+	//fprintf (netList, "R1	2	3	0.5\n");	//For No oscillation result
 	fprintf (netList, "LS  2 	1 	1UH	 IC=%f \n", i0);
 	fprintf (netList, "CS  1 	0 	1000PF\n");
 	fprintf (netList, "G1 1 0 	POLY(1)	1 0 %f 0.6 -1.5 1 	\n", dId);
 	fprintf (netList, ".IC V(1)=%f\n", v0);
-	fprintf (netList, ".TRAN 10NS 20NS 0 5NS UIC\n");
+	//fprintf (netList, ".TRAN 10NS 20NS 0 5NS UIC\n");
+	fprintf (netList, ".TRAN 1NS 10NS UIC\n");
 	//fprintf (netList, ".PLOT TRAN V(1) \n");
 	fprintf (netList, ".PRINT V(1) I(LS) I(Vin)\n");
 	fprintf (netList, ".OPT BRIEF numdgt=10\n");

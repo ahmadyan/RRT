@@ -149,7 +149,13 @@ void RRT::save(string fileName){
 	}
 
 	//start from the root and recursively print every node
-	root->save(file);
+	//root->save(file);
+
+	for(int i=0;i<nodes.size();i++){
+		file << i << " ";
+		file << nodes[i]->parent. index?
+	}
+
 	file.close();
 }
 

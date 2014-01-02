@@ -320,3 +320,12 @@ void node::save(ofstream& of){
 		getChild(i)->save(of);
 	}
 }
+
+int node::getIndex(){
+	return index;
+}
+
+void node::setIndex(int i){
+	index=i;
+
+}

@@ -22,7 +22,7 @@ using namespace std;
 #define LOAD_RRT_PLL	3
 #define LOAD_RRT_TDO	4	
 
-void kernel_RRT_TDO(vector<Monitor*> monitors, bool generatePlot, string outputFileName, Plotter* plotter, int iterations, double simulationTime){
+void kernel_RRT_TDO(vector<Monitor*> monitors, bool generatePlot, string outputFileName, Plotter* plotter, int iterations, double simulationTime, double dt){
 	double* initialState = new double[3];
 	int variations = 2 ;
 	//For oscillation:
@@ -49,9 +49,10 @@ void kernel_RRT_TDO(vector<Monitor*> monitors, bool generatePlot, string outputF
 	}
 	rrt.setBound(0, -0.2, 1.2 );	//First Dimension = VC
 	rrt.setBound(1, -0.02, 0.08 );  //Second Dimension = IL
-	rrt.setdt(10e-9);
+	rrt.setdt(dt);
 	rrt.setSystem(circuit);
-	rrt.build(initialState, 0.005 /*variation*/);
+	//rrt.build(initialState, 0.005 /*variation*/);
+	rrt.simulate(initialState, 0.005 /*variation*/);
 	rrt.save(outputFileName);
 	if(generatePlot) plotter->plotRRT("lines", rrt.getName().c_str(), "test", rrt, "v_C", "i_L", "t");
 }
@@ -89,7 +90,7 @@ void kernel_RRT_PLL(vector<Monitor*> monitors, bool generatePlot, string outputF
 
 void kernel_RRT(vector<Monitor*> monitors, int mode, bool generatePlot,string inputFileName, string outputFileName, Plotter* plotter){
 	if(mode==NEW_RRT_TDO){
-		kernel_RRT_TDO(monitors, generatePlot, outputFileName, plotter, 100, 7e-6);
+		kernel_RRT_TDO(monitors, generatePlot, outputFileName, plotter, 100, 7e-6, 1e-9);
 	}else if(mode == NEW_RRT_PLL){
 		kernel_RRT_PLL(monitors, generatePlot, outputFileName, plotter, 10, 100e-6, 0.01e-6);
 	}else if(mode == LOAD_RRT_PLL){
@@ -102,13 +103,14 @@ void kernel_RRT(vector<Monitor*> monitors, int mode, bool generatePlot,string in
 }
 
 void date_2013_experiments(){
+	vector<Monitor*> monitors;	//for this experiment, the monitors are empty. 
 	Plotter* plotter = new Plotter("C:\\opt\\gnuplot\\bin\\gnuplot.exe -persist");
-	int mode = NEW_RRT_PLL ; // NEW_RRT_TDO // LOAD_RRT // NEW_RRT_PLL, LOAD_RRT_PLL
+	int mode = NEW_RRT_TDO ; // NEW_RRT_TDO // LOAD_RRT // NEW_RRT_PLL, LOAD_RRT_PLL
 	bool generatePlot = true ;//true ;
 	string inputFileName = "test2.rrt";
 	string outputFileName = "test.rrt" ;
 	//the new kernel has the monitors argument
-	//kernel_RRT(mode, generatePlot, inputFileName, outputFileName, plotter);
+	kernel_RRT(monitors, mode, generatePlot, inputFileName, outputFileName, plotter);
 }
 
 //	Computing the joint time-frequency space instead of only time-augmented RRT
@@ -216,13 +218,12 @@ void MonitorExperiment(){
 	//setup an example tree execution to check the monitor
 }
 
-
 int main (int argc, const char * argv[]){
 	srand((unsigned int)time(0));
 	//fft_experiments();
 	//kdtree_experiment();
-	MonitorExperiment();
-	//date_2013_experiments();
+	//MonitorExperiment();
+	date_2013_experiments();
 	system("PAUSE");
 	return 0;
 }

@@ -10,5 +10,6 @@ public:
     TimedRRT(string fileName);
 	void addMonitor(Monitor* m);
     void build(double* initialState, double);
+	void simulate(double* initialState, double variation);
 	double getSimTime();
 };
