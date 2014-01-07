@@ -14,6 +14,9 @@ TimedRRT::TimedRRT(int _d, int _k, int _var, string nam): RRT(_d+1, _k, _var, na
 }
 
 void TimedRRT::build(double* initialState, double variation){
+	
+	double time_envlope=1e-9;
+
 	root = new node(d);
     root->set(initialState);
 	root->setRoot();
@@ -22,9 +25,11 @@ void TimedRRT::build(double* initialState, double variation){
     	cout <<"#### " << i << endl ;
         //create a new sample
         node* q_sample = new node(d);
-        q_sample->timed_randomize(i, k, min, max);
-        //q_sample.randomize(min, max);
-        
+        q_sample->randomize(min, max);
+		//double offset = ( (double)i/(double)k ) *unifRand(0, 2*time_envlope) ;
+		//q_sample->set(d-1, unifRand(  offset , time_envlope) );
+		q_sample->set(d-1, time_envlope);
+		
         //find nearest node in the tree
         vector<node*> q_near_vec = getNearestNode(q_sample, -1, true);
 		node* q_near = q_near_vec[0];
@@ -41,7 +46,12 @@ void TimedRRT::build(double* initialState, double variation){
         double t_init = state[d-1];
         double t = system->simulate(state, param, dt);
         state[d-1] = t_init + t ;
-        node* q_new = new node(d);
+		if(state[d-1]>time_envlope){ 
+			cout << "Time envlope pushed to " << time_envlope << endl ;
+			time_envlope=state[d-1];
+		}
+
+		node* q_new = new node(d);
         q_new->set(state);
         q_near->addChildren(q_new);		//add the new node to the tree
 		q_new->setParent(q_near);		//We only make the parent-child releation ship during the tree build

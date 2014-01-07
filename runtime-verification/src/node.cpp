@@ -64,6 +64,10 @@ void node::set(double* _x){
 	data=_x;
 }
 
+void node::set(int i, double d){
+	data[i]=d;
+}
+
 double* node::get(){
 	return data ;
 }
@@ -89,31 +93,6 @@ void node::randomize(double* min, double* max){
 	}
 }
 
-//this is a bit offsetted to push the rrt through time
-// i = current sample #
-// k = maximum sample #
-// min, max = minimum and maximum value for each dim
-void node::timed_randomize(int i, int k, double* min, double* max){
-	for(int c=0;c<n-1;c++){
-		data[c] = unifRand(min[c], max[c]); //(max[c]-min[c])*( rand()/double(RAND_MAX) ) + min[c] ;
-	}
-
-	cout << max[n-1] << endl;
-	if(i>2000){//1000-3000 uniform
-		data[n-1]=unifRand(0,max[n-1]);
-	}else if(i>1000){	//1000-2000  //standard
-		double offset = ( (double)i/(double)k ) *unifRand(min[n-1], max[n-1]) ;
-		data[n-1] = unifRand(  offset , max[n-1]);
-	}else if (i>100){	//0-1000 //rapid-growth
-		data[n-1] = (double)i/(double)k * max[n-1];
-	}else{
-		data[n-1] = max[n-1];
-	}
-	//cout << "trand = " << i << " " << offset << " "  << data[n-1] << endl ;
-
-}
-
-
 //compute the norm between current node and given node a
 double node::distance(node* a, double* max, double* min){
 	double d = 0;
@@ -127,18 +106,43 @@ double node::distance(node* a, double* max, double* min){
 //compute the norm between current node and given node a
 //d = || x-x' ||_p + a.dt
 double node::timed_distance(node* a, double* max, double* min){
-	//if( data[n-1] < a.data[n-1] ){
-	//    return 99999999;  //unfourtunately we cannot go back in time, yet.
-	//}
+	double d = 0;
+	double alpha=1;
+	//cout << "-----------------------DISTANCE---------------------"<<endl;
+	
+	double time_envlope=data[n-1];
+	for(int i=0;i<n-1;i++){
+		d +=  ( ( data[i]-a->data[i] ) * ( data[i] - a->data[i] ) / ((max[i]-min[i])*(max[i]-min[i])));
+	}
+	//cout << "Data distance=" << d << endl ;
+	double pos = a->data[n-1] / time_envlope;  // 0 <= pos <= 1
+	//cout << "Time distance=" << pos << endl ;   
+	
+	d += alpha*(1-pos)*d;
+	//cout << "Weighted distance=" << d << endl ;
+	
+	//cout << "++++++++++++++++++++++++++++++++++++++++++++++++++++" << endl ;
+	
+	return d;
+
+
+/*
 	double alpha = 0.5 ;
-	double beta  = 0.5 ;
+	double beta  = 0.01 ;
 	double d = 0;
 	for(int i=0;i<n-1;i++){
 		d +=  ( ( data[i]-a->data[i] ) * ( data[i] - a->data[i] ) / ((max[i]-min[i])*(max[i]-min[i])));
 	}
+	cout << "-----------------------DISTANCE---------------------"<<endl;
+	cout << "Data distance=" << d << endl ;
+	double xxx= fabs((data[n-1] - a->data[n-1])/(max[n-1]-min[n-1]));
+	cout << data[n-1] << " " << a->data[n-1] << endl ;
+	cout << "Time distance=" << xxx << endl ;   
+	cout << "Weighted distance=" << beta*d + alpha*xxx << endl ;
+	cout << "++++++++++++++++++++++++++++++++++++++++++++++++++++" << endl ;
 	d = beta * sqrt(d);
 	d += alpha * fabs((data[n-1] - a->data[n-1])/(max[n-1]-min[n-1]));
-	return d;
+	return d;*/
 }
 
 //TODO: issue a warning when the vector size does not match in any of overloaded operators

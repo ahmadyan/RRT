@@ -25,12 +25,12 @@ public:
 	node::node(int _n, int _id, double* _data);
 	~node();
 	void set(double* _data);
+	void set(int, double);
 	double* get();
 	double  get(int i);
 	double  getTime();
 	int getDimension();
 	void randomize(double* min, double* max);
-	void timed_randomize(int i, int k, double* min, double* max);
 	double distance(node* a, double* max, double* min);
 	double timed_distance(node* a, double* max, double* min);
 
