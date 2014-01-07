@@ -118,7 +118,7 @@ vector<double>  spice::simulateTDO(double v0, double i0, double dvin, double dId
 	fprintf (netList, "G1 1 0 	POLY(1)	1 0 %f 0.6 -1.5 1 	\n", dId);
 	fprintf (netList, ".IC V(1)=%f\n", v0);
 	//fprintf (netList, ".TRAN 10NS 20NS 0 5NS UIC\n");
-	fprintf (netList, ".TRAN 1NS 10NS UIC\n");
+	fprintf (netList, ".TRAN 1NS 20NS UIC\n");
 	//fprintf (netList, ".PLOT TRAN V(1) \n");
 	fprintf (netList, ".PRINT V(1) I(LS) I(Vin)\n");
 	fprintf (netList, ".OPT BRIEF numdgt=10\n");

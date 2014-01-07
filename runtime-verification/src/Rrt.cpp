@@ -151,9 +151,27 @@ void RRT::save(string fileName){
 	//start from the root and recursively print every node
 	//root->save(file);
 
+	//linear printing of every nodes
+	//nodes are being printed in this format: id parentid data timestamp
+
+	cout << "Nodes.size="<< nodes.size() << endl ;
 	for(int i=0;i<nodes.size();i++){
+		cout << "Saving node " << i << endl ;
 		file << i << " ";
-		file << nodes[i]->parent. index?
+
+		if(nodes[i]->isRoot()){
+			file << "-1" << " " ;
+		}else{
+		for(int j=0;j<nodes.size();j++){
+			if(	nodes[i]->getParent()->getID() == nodes[j]->getID() )
+				file << j << " " ;
+			}
+		}
+		
+		for(int j=0;j<nodes[i]->getDimension();j++){
+			file << nodes[i]->get(j) << " " ;
+		}
+		file << endl ;
 	}
 
 	file.close();

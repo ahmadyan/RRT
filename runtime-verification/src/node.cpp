@@ -130,8 +130,8 @@ double node::timed_distance(node* a, double* max, double* min){
 	//if( data[n-1] < a.data[n-1] ){
 	//    return 99999999;  //unfourtunately we cannot go back in time, yet.
 	//}
-	double alpha = 1 ;
-	double beta  = 0.01 ;
+	double alpha = 0.5 ;
+	double beta  = 0.5 ;
 	double d = 0;
 	for(int i=0;i<n-1;i++){
 		d +=  ( ( data[i]-a->data[i] ) * ( data[i] - a->data[i] ) / ((max[i]-min[i])*(max[i]-min[i])));
