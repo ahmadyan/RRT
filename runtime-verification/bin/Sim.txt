@@ -1,140 +1,27 @@
- ****** HSPICE -- C-2009.03 32-BIT (Feb 24 2009) winnt ******                   
-  Copyright (C) 2009 Synopsys, Inc. All Rights Reserved.                        
+ ****** HSPICE -- A-2008.03 32-BIT (Feb 26 2008) winnt ******                   
+  Copyright (C) 2008 Synopsys, Inc. All Rights Reserved.                        
   Unpublished-rights reserved under US copyright laws.
   This program is protected by law and is subject to the 
-  terms and conditions of the license agreement from Synopsys.
-  Use of this program is your acceptance to be bound by the 
+  terms and conditions of the license agreement found in:
+    C:\synopsys\Hspice_A-2008.03\license.warn
+  Use of this program is your acceptance to be bound by this 
   license agreement. HSPICE is the trademark of Synopsys, Inc.
-  Input File: C:\code\RRT\runtime-verification\bin\pll.sp                       
-  lic:  
-  lic: FLEXlm: v8.5b 
-  lic: USER:   adel                 HOSTNAME: adel-CSL 
-  lic: HOSTID: "f46d0461a9b8 005056c00001 005056c00008 080027003c42" PID:      7
- 8
-  lic: Using FLEXlm license file: 
-  lic: C:\flexlm\license.dat 
-  lic: Checkout 1 hspice 
-  lic: License/Maintenance for hspice will expire on 31-dec-2020/2007.9 
-  lic: NODE LOCKED license on hostid "f46d0461a9b8 005056c00001 005056c00008 080
- 0
-  lic:   
- Init: read install configuration file: C:\Users\adel\applications\hspice\meta.cfg
- Init: hspice initialization file: C:\Users\adel\applications\hspice\hspice.ini
-
- HSPICE will load 
- C:\code\RRT\runtime-verification\bin\pll.ic0
+  Input File: tdo.sp                                                            
+ Init: read install configuration file: C:\synopsys\Hspice_A-2008.03\meta.cfg
+ Init: hspice initialization file: C:\synopsys\Hspice_A-2008.03\hspice.ini
 
 
 
 
-
-
- .include param.sp
- .param var=-0.000296
- .option  probe acct
- **warning**  the obsolete option acct is ignored
- .option relv=1e-5
- *
- * wideband fm example, grebene gives:
- *  f0=1meg kf=250khz/v
- *  kd=0.1 v/rad
- *  r=10k c=1000p
- *  f_lock = kf*kd*pi/2 = 39khz, v_lock = kd*pi/2 = 0.157
- *  f_capture/f_lock ~= 1/sqrt(2*pi*r*c*f_lock)
- *                    = 0.63,    v_capture ~= 0.100
-
- *******************
- * input waveforms *
- *******************
-
- * these are the input sinusoids at different frequencies
- * hint: you can use the .alter statement to do three versions
- * of the transient analysis in one run.
-
- *vin in inb sin(0 0.6 1.00x)
- vin in inb sin(0 0.6 1.02x)
- *vin in inb sin(0 0.6 0.95x)
- .tran 0.1u 5u uic
- .save type=.ic level=all time=5u
-
- **warning** unknown type, NODESET type is used
- .load
-
- 	+ gmindc=   1.0000p       
- 	.nodeset	
- 	+ e =  -3.483600   
- 	+ eb =  -3.511900       
- 	+ in =   0.352671            
- 	+ inb =   0.000000            
- 	+ mout =  -3.422300        
- 	+ moutb =  -3.577700        
- 	+ osc = -1.300000       
- 	+ oscb =  -0.680000        
- 	+ out =  -3.484400        
- 	+ outb =  -3.500000        
- 	+ xvco.c =   0.117408        
- 	+ xvco.s =  -0.836045       
- 	+ xvco.s_clip =  -0.100000       
- 	+ xpd.clip1 =   0.100000            
- 	+ xpd.clip2 = -0.100000       
- 	+ xpd.n1 =   -0.077730            
-
- * fm signal for demodulation
- *vin in inb sffm(0 0.6 1.0x 1 10k)
- *.tran 0.1u 1000u
-
- ******************************************
- *************
- * vco model *
- *************
- xvco e eb osc oscb vco f0=1x kf=125k phi=0 out_off=-1 out_amp=0.3
-
- ************************
- * phase detector model *
- ************************
- xpd in inb osc oscb mout moutb pd kd=0.1 out_off=-3.5
-
- **********
- * filter *
- **********
-
- rf mout e 10k
- cf  e   0 1000p
- rfb moutb eb 10k
- cfb eb   0 1000p
-
- ****************
- * final output *
- ****************
- rout out e 100k
- cout out 0 100p
- routb outb eb 100k
- coutb outb 0 100p
-
-
- .macro vco in inb out outb f0=100k kf=50k phi=0.0 out_off=0.0 out_amp=1.0
- gs 0 s poly(2) c 0 in inb    0 '6.2832e-9*f0' 0 0 '6.2832e-9*kf'
- gc c 0 poly(2) s 0 in inb    0 '6.2832e-9*f0' 0 0 '6.2832e-9*kf'
- cs s 0 1e-9
- cc c 0 1e-9
- e1 s_clip 0 pwl(1) s 0  -0.1,-0.1 0.1,0.1
- e out 0 s_clip 0 out_off '10*out_amp'
- eb outb 0 s_clip 0 out_off '-10*out_amp'2
- .eom
-
- .macro pd in inb in2 in2b out outb kd=0.1 out_off=0
- e1 clip1 0 pwl(1) in inb  -0.1,-0.1 0.1,0.1
- e2 clip2 0 pwl(1) in2 in2b  -0.1,-0.1 0.1,0.1
- *e3 n1 0 poly(2) clip1 0 clip2 0    0 0 0 0 '78.6*kd'
- e3 n1 0 poly(2) clip1 0 clip2 0    var 0 0 0 '78.6*kd'
- e4 outb 0 n1 0  out_off 1
- e5 out 0 n1 0  out_off -1
- .eom
-
- .option post delmax=0.01u interp
- .probe v_in=v(in,inb) v_control=v(e,eb) v_vco=v(osc,oscb)
-
- .end
+ vin	3	0	0.230860
+ r1	2	3	0.2
+ ls  2 	1 	1uh	 ic=-0.003386 
+ cs  1 	0 	1000pf
+ g1 1 0 	poly(1)	1 0 -0.006914 0.6 -1.5 1 	
+ .ic v(1)=0.426814
+ .tran 1ns 5ns uic
+ .print v(1) i(ls) i(vin)
+ .opt brief numdgt=10
 
  ***********************************************************************
  ** runlvl is invoked, you can disable it by:
@@ -148,105 +35,61 @@
 
  ** runlvl is invoked, some options are ignored or automatically set:
       Options below are automatically set(user setting will overwrite them):
-      if runlvl=[1|2|3|4|5|6],  .option bypass=2
+      if runlvl=6,            .option bypass=0
+      if runlvl=[1|2|3|4|5],  .option bypass=2
 
       Options below are ignored, they are replaced by automated algorithms:
         lvltim    dvdt      ft    fast   trtol  absvar  relvar
           relq  chgtol    dvtr    imin    itl3    rmax
 
  ** runlvl is invoked, actual option value used by HSPICE are:
-       runlvl= 3       bypass= 2      mbypass=   2.00   bytol=  10.00u
+       runlvl= 3       bypass= 2      mbypass=   2.00   bytol= 100.00u
  ***********************************************************************
 
-1****** HSPICE -- C-2009.03 32-BIT (Feb 24 2009) winnt ******                   
- ******  
- phase-locked loop
-
-  ******  circuit name directory
- circuit number to circuit name directory
-   number circuitname                     definition         multiplier
-        0 main circuit
-        1 xvco.                           vco                1.00 
-        2 xpd.                            pd                 1.00 
-  **warning** (C:\code\RRT\runtime-verification\bin\pll.sp:23)  dc voltage reset to initial transient source value             in source        0:vin                 new dc=  0.0000D+00
  
- **warning**  no dc path to ground from node        1:c                defined in subckt vco             now it is connected with gdcpath
-
-
       
- *****************************************************************
- ******  option summary
- ******
- runlvl  = 3         bypass  = 2         
-  Opening plot unit= 79
- file=C:pll.pa0
-
-1****** HSPICE -- C-2009.03 32-BIT (Feb 24 2009) winnt ******                   
  ******  
- phase-locked loop
+ tdo - tunnel diode oscillator	                                                 
+  ******  transient analysis               tnom=  25.000 temp=  25.000          
+ ******  
+x
 
-  ******  operating point information tnom=  25.000 temp=  25.000 *****
- ***** operating point status is voltage   simulation time is     5.0000u
-    node    =voltage      node    =voltage      node    =voltage
-
- +0:e       =  -3.4866  0:eb      =  -3.5103  0:in      = 352.6712m
- +0:inb     =   0.      0:mout    =  -3.4211  0:moutb   =  -3.5789 
- +0:osc     =  -1.3000  0:oscb    =-680.0000m 0:out     =  -3.4850 
- +0:outb    =  -3.5041  1:c       = 184.7547m 1:s       =-806.1742m
- +1:s_clip  =-100.0000m 2:clip1   = 100.0000m 2:clip2   =-100.0000m
- +2:n1      = -78.8960m
-
+            time    voltage          current          current        
+                         1               ls               vin        
+    0.              426.8140000000m    0.               0.           
+    1.0000000000n   365.2529664870m   -3.5434520469m    3.5434523968m
+    2.0000000000n   300.8252579828m   -3.6234141013m    3.6234149828m
+    3.0000000000n   237.1486336709m   -3.6388822997m    3.6388827603m
+    4.0000000000n   173.4720093590m   -3.6543504980m    3.6543505377m
+    5.0000000000n   118.4668636413m   -3.5755571627m    3.5755571627m
+y
 
           ***** job concluded
-1****** HSPICE -- C-2009.03 32-BIT (Feb 24 2009) winnt ******                   
+ ****** HSPICE -- A-2008.03 32-BIT (Feb 26 2008) winnt ******                   
  ******  
- phase-locked loop
+ tdo - tunnel diode oscillator	                                                 
+  ******  job statistics summary           tnom=  25.000 temp=  25.000          
+ ******  
 
-  ******  job statistics summary tnom=  25.000 temp=  25.000 *****
+           total memory used         24 kbytes
 
-  ******  HSPICE Threads Information  ******
-  Command Line Threads Count                  :     0
-  Available CPU Count                         :     4
-  Actual Model Evaluation(Load) Threads Count :     1
-  Actual Solver Threads Count                 :     1
+  # nodes =       4 # elements=       5
+  # diodes=       0 # bjts    =       0 # jfets   =       0 # mosfets =       0
+  # va device =       0
 
+    analysis           time    # points   tot. iter  conv.iter
 
-  ******  Circuit Statistics  ******
-  # nodes       =      17 # elements   =      21
-  # resistors   =       4 # capacitors =       6 # inductors   =       0
-  # mutual_inds =       0 # vccs       =       2 # vcvs        =       8
-  # cccs        =       0 # ccvs       =       0 # volt_srcs   =       1
-  # curr_srcs   =       0 # diodes     =       0 # bjts        =       0
-  # jfets       =       0 # mosfets    =       0 # U elements  =       0
-  # T elements  =       0 # W elements =       0 # B elements  =       0
-  # S elements  =       0 # P elements =       0 # va device   =       0
-
-
-  ******  Matrix Statistics  ******
-  # external nodes =        11 # internal nodes   =         6
-  # branch currents=         9 # total matrix size=        26
-  matrix size(        69) = initial size(        61) + fill(         8)
-  words copied=         0
-
-
-  ******  Runtime Statistics (seconds)  ******
-
-  analysis           time    # points   tot. iter  conv.iter
-  op point           0.00           1           0
-  transient          0.01          51        1067         504 rev=         0
-  readin             0.00
-  errchk             0.00
-  setup              0.00
-  output             0.00
-
-
-           total memory used          169  kbytes
-           total cpu time            0.02 seconds
-           total elapsed time        0.04 seconds
-           job started at     16:58:41 11/21/2013
-           job ended   at     16:58:41 11/21/2013
+    op point           0.00           1           0
+    transient          0.00           6          22           9 rev=         1
+    readin             0.00
+    errchk             0.00
+    setup              0.00
+    output             0.00
+           total cpu time          0.00 seconds
+           total elapsed time         1 seconds
+               job started at  15:07:12 01/08/2014
+               job ended   at  15:07:12 01/08/2014
 
 
 >info:         ***** hspice job concluded
- Init: hspice initialization file: C:\Users\adel\applications\hspice\hspice.ini
-  lic: Release hspice token(s) 
+ Init: hspice initialization file: C:\synopsys\Hspice_A-2008.03\hspice.ini

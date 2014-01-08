@@ -104,45 +104,21 @@ double node::distance(node* a, double* max, double* min){
 }
 
 //compute the norm between current node and given node a
-//d = || x-x' ||_p + a.dt
+//In timed_distance, unlike normal distance function, we add an extra emphasis on the time dimension.
+//We wish to ensure forwawrd progress in time, therefore we are going to pick the samples that 
+//are more forward in time (i.e. their time dimension is closer to the time_envlope, the latest time sampled discovered so far, 
+//with higher probability. 
+//How? We scale samples by 1-time_difference.
 double node::timed_distance(node* a, double* max, double* min){
 	double d = 0;
-	double alpha=1;
-	//cout << "-----------------------DISTANCE---------------------"<<endl;
-	
-	double time_envlope=data[n-1];
+	double weightFactor=1;			//how much emphasize should we put it time dimension?
+	double sampleTime=data[n-1]; //time_envlope is the latest time discovered so far. 
 	for(int i=0;i<n-1;i++){
 		d +=  ( ( data[i]-a->data[i] ) * ( data[i] - a->data[i] ) / ((max[i]-min[i])*(max[i]-min[i])));
 	}
-	//cout << "Data distance=" << d << endl ;
-	double pos = a->data[n-1] / time_envlope;  // 0 <= pos <= 1
-	//cout << "Time distance=" << pos << endl ;   
-	
-	d += alpha*(1-pos)*d;
-	//cout << "Weighted distance=" << d << endl ;
-	
-	//cout << "++++++++++++++++++++++++++++++++++++++++++++++++++++" << endl ;
-	
+	double relativeTimeDistance = abs(a->data[n - 1] - sampleTime) / sampleTime;  // 0 <= pos <= 1
+	d += weightFactor*(1 - relativeTimeDistance)*d;
 	return d;
-
-
-/*
-	double alpha = 0.5 ;
-	double beta  = 0.01 ;
-	double d = 0;
-	for(int i=0;i<n-1;i++){
-		d +=  ( ( data[i]-a->data[i] ) * ( data[i] - a->data[i] ) / ((max[i]-min[i])*(max[i]-min[i])));
-	}
-	cout << "-----------------------DISTANCE---------------------"<<endl;
-	cout << "Data distance=" << d << endl ;
-	double xxx= fabs((data[n-1] - a->data[n-1])/(max[n-1]-min[n-1]));
-	cout << data[n-1] << " " << a->data[n-1] << endl ;
-	cout << "Time distance=" << xxx << endl ;   
-	cout << "Weighted distance=" << beta*d + alpha*xxx << endl ;
-	cout << "++++++++++++++++++++++++++++++++++++++++++++++++++++" << endl ;
-	d = beta * sqrt(d);
-	d += alpha * fabs((data[n-1] - a->data[n-1])/(max[n-1]-min[n-1]));
-	return d;*/
 }
 
 //TODO: issue a warning when the vector size does not match in any of overloaded operators

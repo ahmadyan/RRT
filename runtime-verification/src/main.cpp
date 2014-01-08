@@ -2,6 +2,11 @@
 #include <cmath>
 #include <iostream>
 #include <ctime>
+#include <stdio.h>
+#include <conio.h>
+#include <stdlib.h>
+#include <direct.h>
+
 #include "Monitor.h"
 #include "System.h"
 #include "RRT.h"
@@ -90,7 +95,7 @@ void kernel_RRT_PLL(vector<Monitor*> monitors, bool generatePlot, string outputF
 
 void kernel_RRT(vector<Monitor*> monitors, int mode, bool generatePlot,string inputFileName, string outputFileName, Plotter* plotter){
 	if(mode==NEW_RRT_TDO){
-		kernel_RRT_TDO(monitors, generatePlot, outputFileName, plotter, 2000, 7e-6, 1e-9);
+		kernel_RRT_TDO(monitors, generatePlot, outputFileName, plotter, 300, 7e-6, 1e-9);
 	}else if(mode == NEW_RRT_PLL){
 		kernel_RRT_PLL(monitors, generatePlot, outputFileName, plotter, 10, 100e-6, 0.01e-6);
 	}else if(mode == LOAD_RRT_PLL){
@@ -220,6 +225,10 @@ void MonitorExperiment(){
 
 int main (int argc, const char * argv[]){
 	srand((unsigned int)time(0));
+	char full[_MAX_PATH];
+	_fullpath(full, ".\\", _MAX_PATH);
+	cout << "Current working directory is:" << full << endl;
+
 	//fft_experiments();
 	//kdtree_experiment();
 	//MonitorExperiment();

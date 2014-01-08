@@ -14,21 +14,28 @@ TimedRRT::TimedRRT(int _d, int _k, int _var, string nam): RRT(_d+1, _k, _var, na
 }
 
 void TimedRRT::build(double* initialState, double variation){
-	
-	double time_envlope=1e-9;
+	double timeEnvlope=1e-9;		//time_envlope is the latest sampled discovered so far
 
+	//first, we construct the root from the given initial state
 	root = new node(d);
     root->set(initialState);
 	root->setRoot();
 	nodes.push_back(root);
+
+	//main RRT loop
     for(int i=0;i<k; i++){
-    	cout <<"#### " << i << endl ;
+		cout <<"#################################################  Iteration  " << i << endl ;
         //create a new sample
         node* q_sample = new node(d);
         q_sample->randomize(min, max);
-		//double offset = ( (double)i/(double)k ) *unifRand(0, 2*time_envlope) ;
-		//q_sample->set(d-1, unifRand(  offset , time_envlope) );
-		q_sample->set(d-1, time_envlope);
+		//ensuring forward progress, initially we push the timeEnvlope to the simTime to gain depth, 
+		//when we reached that time, we use it normally to ensure breath. 
+		if (timeEnvlope >= sim_time){
+			double t = q_sample->unifRand(0, sim_time);
+			q_sample->set(d - 1, timeEnvlope);
+		}else{
+			q_sample->set(d - 1, timeEnvlope);
+		}
 		
         //find nearest node in the tree
         vector<node*> q_near_vec = getNearestNode(q_sample, -1, true);
@@ -46,9 +53,10 @@ void TimedRRT::build(double* initialState, double variation){
         double t_init = state[d-1];
         double t = system->simulate(state, param, dt);
         state[d-1] = t_init + t ;
-		if(state[d-1]>time_envlope){ 
-			cout << "Time envlope pushed to " << time_envlope << endl ;
-			time_envlope=state[d-1];
+		cout << endl<< "Next state is " << state[0] << " " << state[1] << endl;
+		if((state[d-1]>timeEnvlope) && (timeEnvlope<=sim_time)){ 
+			cout << "Time envlope pushed to " << timeEnvlope << endl ;
+			timeEnvlope=state[d-1];
 		}
 
 		node* q_new = new node(d);

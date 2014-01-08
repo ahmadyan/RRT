@@ -117,8 +117,8 @@ vector<double>  spice::simulateTDO(double v0, double i0, double dvin, double dId
 	fprintf (netList, "CS  1 	0 	1000PF\n");
 	fprintf (netList, "G1 1 0 	POLY(1)	1 0 %f 0.6 -1.5 1 	\n", dId);
 	fprintf (netList, ".IC V(1)=%f\n", v0);
-	fprintf (netList, ".TRAN 10NS 20NS 0 5NS UIC\n");
-	//fprintf (netList, ".TRAN 1NS 20NS UIC\n");
+	//fprintf (netList, ".TRAN 10NS 20NS 0 5NS UIC\n");
+	fprintf (netList, ".TRAN 1NS 5NS UIC\n");
 	//fprintf (netList, ".PLOT TRAN V(1) \n");
 	fprintf (netList, ".PRINT V(1) I(LS) I(Vin)\n");
 	fprintf (netList, ".OPT BRIEF numdgt=10\n");
@@ -126,13 +126,27 @@ vector<double>  spice::simulateTDO(double v0, double i0, double dvin, double dId
 	
 	fclose(netList);
 	system ("hspice tdo.sp > Sim.txt");
+	system("cat Sim.txt | grep 5.0000000000n > grep.txt");		// grep the line containing my results at sim time 10ns
 
 	string line;
+	ifstream simResult("grep.txt");
+	while (simResult.good()){
+		getline(simResult, line);
+		if (line.size() > 0){
+			cout << "Sim: " << line << endl;
+			result = parse(line);
+			break;
+		}
+	}
+	simResult.close();
+	return result;
+
+	/*
 	ifstream simResult ("Sim.txt");
 
 	while (simResult.good()){
 		getline (simResult,line);
-		//cout << line << endl ;
+		cout << line << endl ;
 		if (std::string::npos != line.find("transient analysis")){
 			std::cout << "found! " << line << std::endl;
 			//Now gettings transient results ...
@@ -152,6 +166,7 @@ vector<double>  spice::simulateTDO(double v0, double i0, double dvin, double dId
     simResult.close();
 
 	return result;
+	*/
 }
 
 vector<double>  spice::simulatePLL(double* nodeset, double variation){
