@@ -111,13 +111,15 @@ double node::distance(node* a, double* max, double* min){
 //How? We scale samples by 1-time_difference.
 double node::timed_distance(node* a, double* max, double* min){
 	double d = 0;
-	double weightFactor=1;			//how much emphasize should we put it time dimension?
-	double sampleTime=data[n-1]; //time_envlope is the latest time discovered so far. 
-	for(int i=0;i<n-1;i++){
-		d +=  ( ( data[i]-a->data[i] ) * ( data[i] - a->data[i] ) / ((max[i]-min[i])*(max[i]-min[i])));
+	double weightFactor = 1;			//how much emphasize should we put it time dimension?
+	double sampleTime = data[n - 1]; //time_envlope is the latest time discovered so far. 
+	for (int i = 0; i < n - 1; i++){
+		d += ((data[i] - a->data[i]) * (data[i] - a->data[i]) / ((max[i] - min[i])*(max[i] - min[i])));
 	}
-	double relativeTimeDistance = abs(a->data[n - 1] - sampleTime) / sampleTime;  // 0 <= pos <= 1
-	d += weightFactor*(1 - relativeTimeDistance)*d;
+	if (sampleTime >= 0){
+		double relativeTimeDistance = abs(a->data[n - 1] - sampleTime) / sampleTime;  // 0 <= pos <= 1
+		d += weightFactor*(1 - relativeTimeDistance)*d;
+	}
 	return d;
 }
 

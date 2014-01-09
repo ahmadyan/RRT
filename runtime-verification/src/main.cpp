@@ -56,7 +56,7 @@ void kernel_RRT_TDO(vector<Monitor*> monitors, bool generatePlot, string outputF
 	rrt.setBound(1, -0.02, 0.08 );  //Second Dimension = IL
 	rrt.setdt(dt);
 	rrt.setSystem(circuit);
-	rrt.build(initialState, 0.1 /*variation*/);
+	rrt.build(initialState, 0.01 /*variation*/);
 	//rrt.simulate(initialState, 0.005 /*variation*/);  //for just simulating the circuit
 	rrt.save(outputFileName);
 	if(generatePlot) plotter->plotRRT("lines", rrt.getName().c_str(), "test", rrt, "v_C", "i_L", "t");
@@ -95,7 +95,7 @@ void kernel_RRT_PLL(vector<Monitor*> monitors, bool generatePlot, string outputF
 
 void kernel_RRT(vector<Monitor*> monitors, int mode, bool generatePlot,string inputFileName, string outputFileName, Plotter* plotter){
 	if(mode==NEW_RRT_TDO){
-		kernel_RRT_TDO(monitors, generatePlot, outputFileName, plotter, 300, 7e-6, 1e-9);
+		kernel_RRT_TDO(monitors, generatePlot, outputFileName, plotter, 5000, 1e-5, 1e-9);
 	}else if(mode == NEW_RRT_PLL){
 		kernel_RRT_PLL(monitors, generatePlot, outputFileName, plotter, 10, 100e-6, 0.01e-6);
 	}else if(mode == LOAD_RRT_PLL){
@@ -113,7 +113,7 @@ void date_2013_experiments(){
 	int mode = NEW_RRT_TDO ; // NEW_RRT_TDO // LOAD_RRT // NEW_RRT_PLL, LOAD_RRT_PLL
 	bool generatePlot = true ;//true ;
 	string inputFileName = "test2.rrt";
-	string outputFileName = "exp4_rrt_oscillation_bad_3000.rrt" ;
+	string outputFileName = "exp4_rrt_oscillation_bad_5000.rrt" ;
 	//the new kernel has the monitors argument
 	kernel_RRT(monitors, mode, generatePlot, inputFileName, outputFileName, plotter);
 }

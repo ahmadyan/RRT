@@ -31,8 +31,8 @@ void TimedRRT::build(double* initialState, double variation){
 		//ensuring forward progress, initially we push the timeEnvlope to the simTime to gain depth, 
 		//when we reached that time, we use it normally to ensure breath. 
 		if (timeEnvlope >= sim_time){
-			double t = q_sample->unifRand(0, sim_time);
-			q_sample->set(d - 1, timeEnvlope);
+			//double t = q_sample->unifRand(0, sim_time);
+			q_sample->set(d - 1, -1);
 		}else{
 			q_sample->set(d - 1, timeEnvlope);
 		}
