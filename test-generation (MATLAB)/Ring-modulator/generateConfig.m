@@ -5,12 +5,14 @@ global variation0
 global variation1
 
 %variables
-config.iterations=3000;
-config.learningSamples=300;
-config.resolution=20;
-config.sim_time=1e-4; ; %1
-config.deltaT=1e-5; 
-config.tmax=1e-3;
+config.iterations=25000;            %total number of iterations
+config.learningSamples=1000;        %number of samples used in MC to identify the goal regions
+config.explore_step=100;            %number of samples for inital MC simulation for generating the true signal without any deviation, total_sim (1e-3) / dt (1e-5)=100
+
+config.resolution=20;               
+config.sim_time=1e-4;               %sim_time is used for short MC simulation at the begining to identify the goal regions
+config.deltaT=1e-5;                 %lendth of each edge at the RRT, should satisfy the Nyquist criteria
+config.tmax=1e-3;                   %Maximum time window of the analysis
 config.tbias=0.8;
 config.numberOfClusters = 5 ;
 config.segment = 0.01;
@@ -79,7 +81,6 @@ config.final_variance = 0.01 ;
 config.init_variance = 0.5 ;
 config.variance_cooling_rate = 1;
 
-config.explore_step=100;
 
 end
 

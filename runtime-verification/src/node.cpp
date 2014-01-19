@@ -117,8 +117,9 @@ double node::timed_distance(node* a, double* max, double* min){
 		d += ((data[i] - a->data[i]) * (data[i] - a->data[i]) / ((max[i] - min[i])*(max[i] - min[i])));
 	}
 	if (sampleTime >= 0){
-		double relativeTimeDistance = abs(a->data[n - 1] - sampleTime) / sampleTime;  // 0 <= pos <= 1
-		d += weightFactor*(1 - relativeTimeDistance)*d;
+		double relativeTimeDistance = abs(a->data[n - 1] - sampleTime) / sampleTime;  // 0 <= pos <= 1, 0 is close in time where as 1 is faraway in time
+		d += weightFactor*(relativeTimeDistance)*d;
+		//d += weightFactor*(1 - relativeTimeDistance)*d;
 	}
 	return d;
 }

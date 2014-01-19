@@ -1,4 +1,4 @@
-
+m
 
 mex discrepancy.cpp
 d = 0.2 ;

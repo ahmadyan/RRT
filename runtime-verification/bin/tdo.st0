@@ -1,0 +1,32 @@
+***** HSPICE -- A-2008.03 32-BIT (Feb 26 2008) winnt ******
+ Input File: tdo.sp
+ lic:
+ lic: FLEXlm: v8.5b
+ lic: USER:   adel                 HOSTNAME: adel-PC
+ lic: HOSTID: f46d0461a9b8         PID:      9564
+ lic: Using FLEXlm license file:
+ lic: c:\flexlm\license.dat
+ lic: Checkout 1 hspice
+ lic: License/Maintenance for hspice will expire on 31-dec-2020/2007.9
+ lic: NODE LOCKED license on hostid f46d0461a9b8
+ lic:
+ Init: hspice initialization file: C:\synopsys\Hspice_A-2008.03\hspice.ini
+ init: begin read circuit files,  cpu clock=  1.40E-02
+       option brief
+ init: end read circuit files,  cpu clock=  1.50E-02 memory=     14 kb
+ init: begin check errors,  cpu clock=  1.50E-02
+ init: end check errors,  cpu clock=  1.50E-02 memory=     14 kb
+ init: begin setup matrix, pivot=    10 cpu clock=  1.50E-02
+       establish matrix -- done,  cpu clock=  1.50E-02 memory=     14 kb
+       re-order matrix -- done,  cpu clock=  1.50E-02 memory=     15 kb
+ init: end setup matrix,  cpu clock=  1.50E-02 memory=     24 kb
+ output: tdo.tr0
+ sweep: tran tran0    begin, stop_t=  5.00E-09 #sweeps=   6 cpu clock=  1.70E-02
+ tran: time= 5.0000E-10 tot_iter=       4 conv_iter=       1 cpu clock= 1.70E-02
+ tran: time= 1.8578E-09 tot_iter=      14 conv_iter=       6 cpu clock= 1.70E-02
+ tran: time= 4.3578E-09 tot_iter=      16 conv_iter=       7 cpu clock= 1.70E-02
+ tran: time= 5.0000E-09 tot_iter=      18 conv_iter=       8 cpu clock= 1.70E-02
+ sweep: tran tran0    end,  cpu clock=  1.70E-02 memory=     24 kb
+>info:         ***** hspice job concluded
+ Init: hspice initialization file: C:\synopsys\Hspice_A-2008.03\hspice.ini
+ lic: Release hspice token(s)
