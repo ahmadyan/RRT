@@ -1,0 +1,58 @@
+***** HSPICE -- H-2013.03 64-BIT (Mar  7 2013) win64 ******
+ Input File: netlist.sp
+ lic:
+ lic: FLEXlm: v10.9.8
+ lic: USER:   adel                 HOSTNAME: adel-PC
+ lic: HOSTID: f46d0461a9b8         PID:      8880
+ lic: Using FLEXlm license file:
+ lic: 27000@adel-PC
+ lic: Checkout 1 hspice
+ lic: License/Maintenance for hspice will expire on 31-dec-2019/2019.12
+ lic: NODE LOCKED license on hostid f46d0461a9b8
+ lic:
+ init: begin read circuit files,  cpu clock=  4.55E+00
+       option search = C:\synopsys\Hspice_H-2013.03\PARTS\behave\
+       option search = C:\synopsys\Hspice_H-2013.03\PARTS\behave\
+       option search = C:\synopsys\Hspice_H-2013.03\PARTS\AD\
+       option search = C:\synopsys\Hspice_H-2013.03\PARTS\XILINX\
+       option search = C:\synopsys\Hspice_H-2013.03\PARTS\TLINE\
+       option search = C:\synopsys\Hspice_H-2013.03\PARTS\TI\
+       option search = C:\synopsys\Hspice_H-2013.03\PARTS\SIGNET\
+       option search = C:\synopsys\Hspice_H-2013.03\PARTS\PCI\
+       option search = C:\synopsys\Hspice_H-2013.03\PARTS\LIN_TECH\
+       option search = C:\synopsys\Hspice_H-2013.03\PARTS\FET\
+       option search = C:\synopsys\Hspice_H-2013.03\PARTS\DIO\
+       option search = C:\synopsys\Hspice_H-2013.03\PARTS\COMLINE\
+       option search = C:\synopsys\Hspice_H-2013.03\PARTS\BURR_BRN\
+       option search = C:\synopsys\Hspice_H-2013.03\PARTS\BJT\
+       option search = C:\synopsys\Hspice_H-2013.03\PARTS\behave\
+       option search = C:\synopsys\Hspice_H-2013.03\PARTS\AD\
+       option post =     2.00
+       option runlvl
+       option gmindc =    1.000E-12
+       option post
+ init: end read circuit files,  cpu clock=  4.55E+00 peak memory=        63 mb
+ init: begin check errors,  cpu clock=  4.55E+00
+ init: end check errors,  cpu clock=  4.57E+00 peak memory=        63 mb
+ init: begin setup matrix, pivot=     0 cpu clock=  4.57E+00
+       establish matrix -- done,  cpu clock=  4.57E+00 peak memory=        63 mb
+       re-order matrix -- done,  cpu clock=  4.57E+00 peak memory=        63 mb
+ init: end setup matrix,  cpu clock=  4.57E+00 peak memory=        63 mb
+ output: netlist.sw0
+ sweep: dc dc0    begin, #sweeps= 251 cpu clock=  4.57E+00
+ sweep: dc dc0    end,  cpu clock=  4.59E+00 peak memory=        63 mb
+ output: netlist.tr0
+ sweep: tran tran0    begin, stop_t=  1.00E-09 #sweeps=**** cpu clock=  4.59E+00
+ tran: time= 1.0500E-10 tot_iter=     104 conv_iter=      44 cpu clock= 4.60E+00
+ tran: time= 2.0500E-10 tot_iter=     186 conv_iter=      78 cpu clock= 4.60E+00
+ tran: time= 3.0500E-10 tot_iter=     268 conv_iter=     112 cpu clock= 4.60E+00
+ tran: time= 4.0500E-10 tot_iter=     350 conv_iter=     146 cpu clock= 4.60E+00
+ tran: time= 5.0500E-10 tot_iter=     432 conv_iter=     180 cpu clock= 4.61E+00
+ tran: time= 6.0500E-10 tot_iter=     514 conv_iter=     214 cpu clock= 4.61E+00
+ tran: time= 7.0500E-10 tot_iter=     596 conv_iter=     248 cpu clock= 4.61E+00
+ tran: time= 8.0500E-10 tot_iter=     678 conv_iter=     282 cpu clock= 4.61E+00
+ tran: time= 9.0500E-10 tot_iter=     760 conv_iter=     316 cpu clock= 4.61E+00
+ tran: time= 1.0000E-09 tot_iter=     839 conv_iter=     349 cpu clock= 4.62E+00
+ sweep: tran tran0    end,  cpu clock=  4.62E+00 peak memory=        63 mb
+>info:         ***** hspice job concluded
+ lic: Release hspice token(s)

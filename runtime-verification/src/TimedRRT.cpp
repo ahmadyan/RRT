@@ -14,7 +14,7 @@ TimedRRT::TimedRRT(int _d, int _k, int _var, string nam): RRT(_d+1, _k, _var, na
 }
 
 void TimedRRT::build(double* initialState, double variation){
-	double timeEnvlope=1e-9;		//time_envlope is the latest sampled discovered so far
+	double timeEnvlope=dt;		//time_envlope is the latest sampled discovered so far
 
 	//first, we construct the root from the given initial state
 	root = new node(d);

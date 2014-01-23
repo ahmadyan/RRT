@@ -19,4 +19,15 @@
 #define pll_time			16
 
 
-void setInitialPLLState(double* state);
+
+#include "simulation.h"
+#include <vector>
+#include <string>
+
+using namespace std;
+
+class PLL : public Simulation {
+public:
+	vector<double> simulate(vector<double> ic, vector<double> parameters, vector<string> settings, double dt);
+	void setInitialPLLState(double* state);
+};

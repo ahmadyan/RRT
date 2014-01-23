@@ -43,7 +43,7 @@ double System::integareODE(double* initialState, double* param, double dt){
 
 double System::runSPICE(double* initialState, double* param, double dt){
 	spice hspice;
-	vector<double> result = hspice.simulate(type, initialState, param);
+	vector<double> result = hspice.simulate(type, initialState, param, dt);
 	cout << "result.size()=" << result.size() << endl;
 	for (int i = 0; i < result.size(); i++){
 		cout << i << " " << result[i] << endl;

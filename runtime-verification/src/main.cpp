@@ -26,6 +26,41 @@ using namespace std;
 #define NEW_RRT_PLL		2
 #define LOAD_RRT_PLL	3
 #define LOAD_RRT_TDO	4	
+#define NEW_RRT_INV		5
+#define LOAD_RRT_INV	6
+
+void kernel_RRT_INV(vector<Monitor*> monitors, bool generatePlot, string outputFileName, Plotter* plotter, int iterations, double simulationTime, double dt){
+	double* initialState = new double[3];
+	int variations = 2;
+	//For oscillation:
+	initialState[0] = 0.8;			//This initial condition, under low variation parameters are indicator of 
+	initialState[1] = 0.04e-3;		//correct circuit that will start a healty oscillation
+	initialState[2] = 0;
+
+	//For No-Oscillation
+	//initialState[0] = 0.131;			//This initial condition cause the circuit to do not oscillate. 
+	//initialState[1] = 0.055;
+	//initialState[2] = 0;
+	// Constructing System S
+	
+	TimedRRT rrt = TimedRRT(
+		2, //dimension
+		iterations, //k
+		variations,
+		simulationTime, //Simulation Time
+		"Tunnel Diode Oscillator");
+
+	for (int i = 0; i<(int)(monitors.size()); i++){
+		rrt.addMonitor(monitors[i]);
+	}
+	rrt.setBound(0, -0.2, 1.2);	//First Dimension = VC
+	rrt.setBound(1, -0.02, 0.08);  //Second Dimension = IL
+	rrt.setdt(dt);
+	rrt.build(initialState, 0.1 /*variation*/);
+	//rrt.simulate(initialState, 0.005 /*variation*/);  //for just simulating the circuit
+	rrt.save(outputFileName);
+	if (generatePlot) plotter->plotRRT("lines", rrt.getName().c_str(), "test", rrt, "v_C", "i_L", "t");
+}
 
 void kernel_RRT_TDO(vector<Monitor*> monitors, bool generatePlot, string outputFileName, Plotter* plotter, int iterations, double simulationTime, double dt){
 	double* initialState = new double[3];
@@ -39,8 +74,6 @@ void kernel_RRT_TDO(vector<Monitor*> monitors, bool generatePlot, string outputF
 	//initialState[0] = 0.131;			//This initial condition cause the circuit to do not oscillate. 
 	//initialState[1] = 0.055;
 	//initialState[2] = 0;
-	// Constructing System S
-	System* circuit = new System(TDO);
 
 	TimedRRT rrt = TimedRRT(	
 		2, //dimension
@@ -55,8 +88,7 @@ void kernel_RRT_TDO(vector<Monitor*> monitors, bool generatePlot, string outputF
 	rrt.setBound(0, -0.2, 1.2 );	//First Dimension = VC
 	rrt.setBound(1, -0.02, 0.08 );  //Second Dimension = IL
 	rrt.setdt(dt);
-	rrt.setSystem(circuit);
-	rrt.build(initialState, 0.01 /*variation*/);
+	rrt.build(initialState, 0.1 /*variation*/);
 	//rrt.simulate(initialState, 0.005 /*variation*/);  //for just simulating the circuit
 	rrt.save(outputFileName);
 	if(generatePlot) plotter->plotRRT("lines", rrt.getName().c_str(), "test", rrt, "v_C", "i_L", "t");
@@ -95,7 +127,7 @@ void kernel_RRT_PLL(vector<Monitor*> monitors, bool generatePlot, string outputF
 
 void kernel_RRT(vector<Monitor*> monitors, int mode, bool generatePlot,string inputFileName, string outputFileName, Plotter* plotter){
 	if(mode==NEW_RRT_TDO){
-		kernel_RRT_TDO(monitors, generatePlot, outputFileName, plotter, 5000, 1e-5, 1e-9);
+		kernel_RRT_TDO(monitors, generatePlot, outputFileName, plotter, 10000, 1e-5, 5e-9);
 	}else if(mode == NEW_RRT_PLL){
 		kernel_RRT_PLL(monitors, generatePlot, outputFileName, plotter, 10, 100e-6, 0.01e-6);
 	}else if(mode == LOAD_RRT_PLL){
@@ -111,9 +143,9 @@ void date_2013_experiments(){
 	vector<Monitor*> monitors;	//for this experiment, the monitors are empty. 
 	Plotter* plotter = new Plotter("C:\\opt\\gnuplot\\bin\\gnuplot.exe -persist");
 	int mode = NEW_RRT_TDO ; // NEW_RRT_TDO // LOAD_RRT // NEW_RRT_PLL, LOAD_RRT_PLL
-	bool generatePlot = true ;//true ;
+	bool generatePlot = true ;
 	string inputFileName = "test2.rrt";
-	string outputFileName = "exp4_rrt_oscillation_bad_5000.rrt" ;
+	string outputFileName = "tdo_experiment2.rrt" ;
 	//the new kernel has the monitors argument
 	kernel_RRT(monitors, mode, generatePlot, inputFileName, outputFileName, plotter);
 }
