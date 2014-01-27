@@ -1,0 +1,4 @@
+- variation handling should be done independently, also add bound on each variation instead of a global bound
+
+-document the system simulate function
+-fix timedRRT and RRT result handling

@@ -21,9 +21,10 @@ void TimedRRT::build(double* initialState, double variation){
     root->set(initialState);
 	root->setRoot();
 	nodes.push_back(root);
+	root->setIndex(0);
 
 	//main RRT loop
-    for(int i=0;i<k; i++){
+    for(int i=1;i<k; i++){
 		cout <<"#################################################  Iteration  " << i << endl ;
         //create a new sample
         node* q_sample = new node(d);
@@ -41,29 +42,43 @@ void TimedRRT::build(double* initialState, double variation){
         vector<node*> q_near_vec = getNearestNode(q_sample, -1, true);
 		node* q_near = q_near_vec[0];
         double* state_near = q_near->get() ;
-        double* state = new double[d];
+        double* ic = new double[d];
         for(int j=0;j<d;j++){
-			state[j]=state_near[j];
+			ic[j]=state_near[j];
 		}
         
-        //variation or input to the system
-        //todo: should be defined in the main or system, not here
-		double* param = new double[1];
-        param[0] = unifRand(-variation, variation);
-        double t_init = state[d-1];
-        double t = system->simulate(state, param, dt);
-        state[d-1] = t_init + t ;
-		cout << endl<< "Next state is " << state[0] << " " << state[1] << endl;
-		if((state[d-1]>timeEnvlope) && (timeEnvlope<=sim_time)){ 
-			cout << "Time envlope pushed to " << timeEnvlope << endl ;
-			timeEnvlope=state[d-1];
+        vector<double> param;	//variation or input to the system 
+		for (int j = 0; j < var; j++){
+			param.push_back(unifRand(-variation, variation));
 		}
 
+		vector<string> settings;
+		stringstream icInputFileName; icInputFileName << "ic_" << q_near->getIndex();
+		stringstream icOutputFileName; icOutputFileName << "ic_" << i ;
+		settings.push_back(icOutputFileName.str());
+		settings.push_back(icInputFileName.str());
+		
+
+        double t_init = ic[d-1];
+		vector<double> result = system->simulate(ic, param, settings, dt);
+		
+
+		result[0] += t_init;		//result[0] contains the time-stamp, in the simulation it is stamped as dt, however we have to add the time of the parrent node as well.
+		 
+		if ((result[0]>timeEnvlope) && (timeEnvlope <= sim_time)){
+			cout << "Time envlope pushed to " << timeEnvlope << endl;
+			timeEnvlope = result[0];
+		}
+
+		cout << endl<< "Next state is " << result[1] << " " << result[2] << endl;
+		
 		node* q_new = new node(d);
-        q_new->set(state);
+        q_new->set(result);
+		cout << "New node is " << q_new->toString() << endl;
+		cout << "Parrent Node is" << q_near->toString() << endl;
         q_near->addChildren(q_new);		//add the new node to the tree
 		q_new->setParent(q_near);		//We only make the parent-child releation ship during the tree build
-
+		q_new->setIndex(i);
 		nodes.push_back(q_new);
 		//casting
 		//vector<node*> cast = getNearestNode(q_sample, 0.1, true);
@@ -74,9 +89,10 @@ void TimedRRT::build(double* initialState, double variation){
 		//	cast[j]->addCast(q_new);
 		//}
 
-		for(int i=0;i<monitors.size();i++){
-			monitors[i]->check(q_new);
-		}	
+		for(int j=0;j<monitors.size();j++){
+			monitors[j]->check(q_new);
+		}
+		delete ic;
     }
 }
 
@@ -87,7 +103,6 @@ void TimedRRT::addMonitor(Monitor* m){
 double TimedRRT::getSimTime(){
 	return sim_time;
 }
-
 
 void TimedRRT::simulate(double* initialState, double variation){
 	root = new node(d);
@@ -104,14 +119,19 @@ void TimedRRT::simulate(double* initialState, double variation){
 		}
         
         //variation or input to the system
-        //todo: should be defined in the main or system, not here
-		double* param = new double[1];
-        param[0] = unifRand(-variation, variation);
-        double t_init = state[d-1];
-        double t = system->simulate(state, param, dt);
-        state[d-1] = t_init + t ;
+		vector<double> param;
+		for (int i = 0; i < var; i++){
+			param.push_back(unifRand(-variation, variation));
+		}
+
+		vector<string> settings;
+
+		double t_init = state[d - 1];
+
+		vector<double> result = system->simulate(state, param, settings, dt);
+		result[0] += t_init;
         node* q_new = new node(d);
-        q_new->set(state);
+        q_new->set(result);
         q_near->addChildren(q_new);		//add the new node to the tree
 		q_new->setParent(q_near);		//We only make the parent-child releation ship during the tree build
 

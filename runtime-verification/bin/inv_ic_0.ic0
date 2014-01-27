@@ -1,0 +1,41 @@
+* "simulator" "HSPICE" 
+* "version" "A-2008.03 32-BIT"
+* "format" "HSP"
+* "rundate" "16:25:05 01/22/2014 "
+* "netlist" "netlist.sp "
+* "runtitle" "cmos inverter"
+* time =  420.0000p       
+* temperature =   25.0000        
+*** BEGIN: Saved Operating Point ***                     
+.option 
++ gmindc=   1.0000p       
+.nodeset
++ vdd =   1.0000        
++ vin =   1.0000        
++ vout = 523.5995m       
++ vss =   0.            
++ xinv.n_a_m0_g = 999.0565m       
++ xinv.n_a_m1_g = 999.1465m       
++ xinv.n_vdd_m0_s =   1.0000        
++ xinv.n_vss_m1_s = 752.2486u       
++ xinv.n_zn_m0_d = 523.6423m       
++ xinv.n_zn_m1_d = 523.1240m       
++ xinv.x_pm_inv_x1%vss_8 =   0.            
++ xinv.x_pm_inv_x1%vss_29 =  71.0103u       
++ xinv.x_pm_inv_x1%vdd_31 =   1.0000        
++ xinv.x_pm_inv_x1%vdd_19 =   1.0000        
++ xinv.x_pm_inv_x1%vdd_18 =   1.0000        
++ xinv.x_pm_inv_x1%vdd_12 =   1.0000        
++ xinv.x_pm_inv_x1%vdd_11 =   1.0000        
++ xinv.x_pm_inv_x1%vdd_8 =   1.0000        
++ xinv.x_pm_inv_x1%vdd_28 =   1.0000        
++ xinv.x_pm_inv_x1%vss_18 =  49.9691u       
++ xinv.x_pm_inv_x1%vss_17 =   0.            
++ xinv.x_pm_inv_x1%vss_10 =   0.            
++ xinv.x_pm_inv_x1%vss_9 =   0.            
++ xinv.x_pm_inv_x1%a_1 = 999.5000m       
++ xinv.x_pm_inv_x1%a_11 = 999.5820m       
++ xinv.x_pm_inv_x1%a_18 = 999.5171m       
++ xinv.x_pm_inv_x1%a_5 = 999.5019m       
++ xinv.x_pm_inv_x1%a_9 = 999.9977m       
+***   END: Saved Operating Point ***                     

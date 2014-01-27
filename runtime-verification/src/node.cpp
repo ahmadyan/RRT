@@ -68,6 +68,23 @@ void node::set(int i, double d){
 	data[i]=d;
 }
 
+
+/// This setter should only be called from the TimedRRT, not the RRT class
+void node::set(vector<double> v){
+	cout << "Setting new node data" << endl;
+
+
+	//First, copying the data
+	for (int i = 0; i < n-1; i++){
+		data[i] = v[i + 1];
+		cout << data[i] << " ";
+	}
+
+	//Then copying the time-stamp
+	data[n - 1] = v[0];
+	cout << data[n - 1] << endl;
+}
+
 double* node::get(){
 	return data ;
 }
@@ -310,5 +327,4 @@ int node::getIndex(){
 
 void node::setIndex(int i){
 	index=i;
-
 }

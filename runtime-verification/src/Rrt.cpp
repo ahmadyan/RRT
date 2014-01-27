@@ -70,16 +70,23 @@ void RRT::build(double* initialState){
         node* q_near = getNearestNode(q_sample);
     
 		double* state_near = q_near->get() ;
-        double* state = new double[d];
-        for(int j=0;j<d;j++) state[j]=state_near[j];
+        double* ic = new double[d];
+        for(int j=0;j<d;j++) ic[j]=state_near[j];
         double delta = 0.5;
         //variation or input to the system
         //todo: should be defined in the main or system, not here
-		double* param = new double[var] ;
-        param[0] = unifRand(0.29, 0.31);
-        //double param = 1.4 ;
-        cout << "state==" << state[0] << " " << state[1] << endl ;
-        system->simulate(state, param, delta);
+		vector<double> param ;
+		for (int i = 0; i < var; i++){
+			param.push_back(unifRand(0.29, 0.31));
+		}
+		vector<string> settings;
+		vector<double> result = system->simulate(ic, param, settings, delta);
+
+		double* state = new double[d];
+		for (int i = 0; i < d; i++){
+			state[i] = result[i+1];
+		}
+		delete ic;
         cout << "state*=" << state[0] << " " << state[1] << endl ;
         node* q_new = new node(d);
         q_new->set(state);

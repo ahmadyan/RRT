@@ -20,14 +20,14 @@
 
 
 
-#include "simulation.h"
+#include "system.h"
 #include <vector>
 #include <string>
 
 using namespace std;
 
-class PLL : public Simulation {
+class PLL : public System {
 public:
-	vector<double> simulate(vector<double> ic, vector<double> parameters, vector<string> settings, double dt);
+	vector<double> simulate(double* ic, vector<double> parameters, vector<string> settings, double dt);
 	void setInitialPLLState(double* state);
 };

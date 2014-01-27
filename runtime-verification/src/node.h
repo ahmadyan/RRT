@@ -26,6 +26,7 @@ public:
 	~node();
 	void set(double* _data);
 	void set(int, double);
+	void set(vector<double>);
 	double* get();
 	double  get(int i);
 	double  getTime();

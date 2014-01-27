@@ -5,9 +5,10 @@
 OdeSolver::OdeSolver(){}
 OdeSolver::~OdeSolver(){}
 
-void OdeSolver::simulate(){
-    cout << "hello"<< endl ;
-    
+vector<double>  OdeSolver::simulate(double* ic, vector<double> param, vector<string> setting, double dt){
+	vector<double> v;
+	return v;
+
     //double x = 5.0;
     //double y = gsl_sf_bessel_J0 (x);
     //cout << y << endl ;
