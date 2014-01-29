@@ -26,9 +26,10 @@ using namespace std;
 #define LOAD_RRT 		1
 #define NEW_RRT_PLL		2
 #define LOAD_RRT_PLL	3
-#define LOAD_RRT_TDO	4	
+#define LOAD_RRT_TDO	4
 #define NEW_RRT_INV		5
 #define LOAD_RRT_INV	6
+#define SIM_TDO			7
 
 void kernel_RRT_INV(vector<Monitor*> monitors, bool generatePlot, string outputFileName, Plotter* plotter, int iterations, double simulationTime, double dt){
 	double* initialState = new double[3];
@@ -53,19 +54,22 @@ void kernel_RRT_INV(vector<Monitor*> monitors, bool generatePlot, string outputF
 	rrt.setBound(0, -0.2, 1.2);	
 	rrt.setBound(1, -0.2, 1.2); 
 
+	rrt.setVariationBound(0, -0.1, 0.1);	//p0, v = 300mv +- p0
+	rrt.setVariationBound(1, -0.1, 0.1);	//p0, v = 300mv +- p0
+	rrt.setVariationBound(2, -0.1, 0.1);	//p0, v = 300mv +- p0
 	
 
 	rrt.setdt(dt);
 	rrt.setSystem(circuit);
-	rrt.build(initialState, 0.1 );
+	rrt.build(initialState );
  	rrt.save(outputFileName);
 	if (generatePlot) plotter->plotRRT("lines", rrt.getName().c_str(), "test", rrt, "v_C", "i_L", "t");
 }
 
-void kernel_RRT_TDO(vector<Monitor*> monitors, bool generatePlot, string outputFileName, Plotter* plotter, int iterations, double simulationTime, double dt){
+void kernel_RRT_TDO(vector<Monitor*> monitors, bool generatePlot, string outputFileName, Plotter* plotter, int iterations, double simulationTime, double dt, bool mc){
 	double* initialState = new double[3];
 	int variations = 2 ;
-
+	
 	TDO* circuit = new TDO();
 	//For oscillation:
 	initialState[0] = 0.8;			//This initial condition, under low variation parameters are indicator of 
@@ -76,10 +80,17 @@ void kernel_RRT_TDO(vector<Monitor*> monitors, bool generatePlot, string outputF
 	//initialState[0] = 0.131;			//This initial condition cause the circuit to do not oscillate. 
 	//initialState[1] = 0.055;
 	//initialState[2] = 0;
-
+	
+	int iter=0;
+	if (mc){
+		iter = simulationTime / dt;
+	}
+	else{
+		iter = iterations;
+	}
 	TimedRRT rrt = TimedRRT(	
 		2, //dimension
-		iterations, //k
+		iter, //k
 		variations,
 		simulationTime, //Simulation Time
 		"Tunnel Diode Oscillator");
@@ -89,10 +100,17 @@ void kernel_RRT_TDO(vector<Monitor*> monitors, bool generatePlot, string outputF
 	}
 	rrt.setBound(0, -0.2, 1.2 );	//First Dimension = VC
 	rrt.setBound(1, -0.02, 0.08 );  //Second Dimension = IL
+
+	rrt.setVariationBound(0, -0.05, 0.05);	//p0, v = 300mv +- p0
+	rrt.setVariationBound(1, -0.005, 0.005);//p1, i = id(vc) +- p1
 	rrt.setdt(dt);
+	
 	rrt.setSystem(circuit);
-	rrt.build(initialState, 0.1 /*variation*/);
-	//rrt.simulate(initialState, 0.005 /*variation*/);  //for just simulating the circuit
+	if (mc){
+		rrt.simulate(initialState);  //for just simulating the circuit
+	}else{
+		rrt.build(initialState);
+	}
 	rrt.save(outputFileName);
 	if(generatePlot) plotter->plotRRT("lines", rrt.getName().c_str(), "test", rrt, "v_C", "i_L", "t");
 }
@@ -100,6 +118,7 @@ void kernel_RRT_TDO(vector<Monitor*> monitors, bool generatePlot, string outputF
 void kernel_RRT_PLL(vector<Monitor*> monitors, bool generatePlot, string outputFileName, Plotter* plotter, int iterations, double simulationTime, double dt){
 	int dim = 16;
 	int variations = 1; 
+	
 	double* initialState = new double[dim+1];
 	PLL* circuit = new PLL();		// Constructing System S
 	circuit->setInitialPLLState(initialState);
@@ -117,10 +136,12 @@ void kernel_RRT_PLL(vector<Monitor*> monitors, bool generatePlot, string outputF
 	for(int i=0;i<dim-1;i++){
 		rrt.setBound(i, -1, +1);
 	}
+	rrt.setVariationBound(0, -0.001, 0.001);	//p0, v = 300mv +- p0
+
 	rrt.setdt(dt);
 	rrt.setSystem(circuit);
 	cout << "RRT Init." << endl ;
-	rrt.build(initialState, 0.001 /*variation*/);
+	rrt.build(initialState);
 	cout << "RRT Constructed" << endl ;
 	rrt.save(outputFileName);
 	cout << "RRT Saved" << endl ;
@@ -130,7 +151,7 @@ void kernel_RRT_PLL(vector<Monitor*> monitors, bool generatePlot, string outputF
 
 void kernel_RRT(vector<Monitor*> monitors, int mode, bool generatePlot,string inputFileName, string outputFileName, Plotter* plotter){
 	if(mode==NEW_RRT_TDO){
-		kernel_RRT_TDO(monitors, generatePlot, outputFileName, plotter, 100, 1e-5, 5e-9);
+		kernel_RRT_TDO(monitors, generatePlot, outputFileName, plotter, 100, 1e-5, 5e-9, false);
 	}else if(mode == NEW_RRT_PLL){
 		kernel_RRT_PLL(monitors, generatePlot, outputFileName, plotter, 10, 100e-6, 0.01e-6);
 	}else if(mode == LOAD_RRT_PLL){
@@ -142,15 +163,18 @@ void kernel_RRT(vector<Monitor*> monitors, int mode, bool generatePlot,string in
 	}else if (mode == NEW_RRT_INV){
 		kernel_RRT_INV(monitors, generatePlot, outputFileName, plotter, 100, 1e-9, 5e-12);
 	}
+	else if (mode == SIM_TDO){
+		kernel_RRT_TDO(monitors, generatePlot, outputFileName, plotter, -1, 5e-6, 5e-9, true);
+	}
 }
 
 void date_2013_experiments(){
 	vector<Monitor*> monitors;	//for this experiment, the monitors are empty. 
 	Plotter* plotter = new Plotter("C:\\opt\\gnuplot\\bin\\gnuplot.exe -persist");
-	int mode = NEW_RRT_INV; // NEW_RRT_TDO // LOAD_RRT // NEW_RRT_PLL, LOAD_RRT_PLL
+	int mode = SIM_TDO;
 	bool generatePlot = true ;
 	string inputFileName = "test2.rrt";
-	string outputFileName = "inv_experiment3.rrt" ;
+	string outputFileName = "tdo_sim_bad.rrt" ;
 	//the new kernel has the monitors argument
 	kernel_RRT(monitors, mode, generatePlot, inputFileName, outputFileName, plotter);
 }

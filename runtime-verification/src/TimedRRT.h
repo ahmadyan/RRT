@@ -9,7 +9,7 @@ public:
     TimedRRT(int, int, int, string);
     TimedRRT(string fileName);
 	void addMonitor(Monitor* m);
-    void build(double* initialState, double);
-	void simulate(double* initialState, double variation);
+    void build(double* initialState);
+	void simulate(double* initialState );
 	double getSimTime();
 };

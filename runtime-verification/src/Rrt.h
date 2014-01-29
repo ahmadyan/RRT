@@ -17,6 +17,8 @@ protected:
 	node* root ;
     double* min ;
     double* max ;
+	double* variationMin;
+	double* variationMax;
     System* system ;
     string name;
 	double dt ;
@@ -36,6 +38,7 @@ public:
     void build(double*);
     void buildUniform(double* initialState);
     void setBound(int d, double _min, double _max);
+	void setVariationBound(int i, double _min, double _max);
     //int sampleNumber();
     //node getNode(int i);
     //node getParentNode(int i);

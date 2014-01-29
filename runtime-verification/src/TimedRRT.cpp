@@ -13,7 +13,7 @@ TimedRRT::TimedRRT(int _d, int _k, int _var, string nam): RRT(_d+1, _k, _var, na
     setBound(_d, 0, sim_time); //maximum time for sim, minimum is 0 and it is assigned in RRT constructor
 }
 
-void TimedRRT::build(double* initialState, double variation){
+void TimedRRT::build(double* initialState){
 	double timeEnvlope=dt;		//time_envlope is the latest sampled discovered so far
 
 	//first, we construct the root from the given initial state
@@ -49,7 +49,7 @@ void TimedRRT::build(double* initialState, double variation){
         
         vector<double> param;	//variation or input to the system 
 		for (int j = 0; j < var; j++){
-			param.push_back(unifRand(-variation, variation));
+			param.push_back(unifRand(variationMin[j], variationMax[j]));
 		}
 
 		vector<string> settings;
@@ -104,33 +104,39 @@ double TimedRRT::getSimTime(){
 	return sim_time;
 }
 
-void TimedRRT::simulate(double* initialState, double variation){
+void TimedRRT::simulate(double* initialState){
 	root = new node(d);
     root->set(initialState);
 	root->setRoot();
 	nodes.push_back(root);
     for(int i=0;i<k; i++){
-    	cout <<"#### " << i << endl ;
+    	cout <<"[s] #### " << i << endl ;
 		node* q_near = nodes[ nodes.size()-1 ]; //last inserted node for the linear simulation
         double* state_near = q_near->get() ;
         double* state = new double[d];
         for(int j=0;j<d;j++){
 			state[j]=state_near[j];
 		}
-        
-        //variation or input to the system
-		vector<double> param;
-		for (int i = 0; i < var; i++){
-			param.push_back(unifRand(-variation, variation));
+
+
+		vector<double> param;	//variation or input to the system 
+		for (int j = 0; j < var; j++){
+			param.push_back(unifRand(variationMin[j], variationMax[j]));
 		}
 
 		vector<string> settings;
+		stringstream icInputFileName; icInputFileName << "ic_" << q_near->getIndex();
+		stringstream icOutputFileName; icOutputFileName << "ic_" << i;
+		settings.push_back(icOutputFileName.str());
+		settings.push_back(icInputFileName.str());
+
 
 		double t_init = state[d - 1];
-
 		vector<double> result = system->simulate(state, param, settings, dt);
-		result[0] += t_init;
-        node* q_new = new node(d);
+		result[0] += t_init;		//result[0] contains the time-stamp, in the simulation it is stamped as dt, however we have to add the time of the parrent node as well.
+
+
+		node* q_new = new node(d);
         q_new->set(result);
         q_near->addChildren(q_new);		//add the new node to the tree
 		q_new->setParent(q_near);		//We only make the parent-child releation ship during the tree build

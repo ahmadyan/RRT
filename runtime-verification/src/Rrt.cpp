@@ -11,11 +11,17 @@ RRT::RRT(int _d, int _k, int _var, string nam){
     name=nam;
     min = new double[d];
     max = new double[d];
+	variationMin = new double[var];
+	variationMax = new double[var];
     //default values for min-max
     for(int i=0;i<d;i++){
         min[i]=0;
         max[i]=1;
     }
+	for (int i = 0; i < var; i++){
+		variationMin[i] = 0;
+		variationMax[i] = 0;
+	}
 }
 
 RRT::RRT(string fileName){
@@ -101,6 +107,11 @@ void RRT::build(double* initialState){
 void RRT::setBound(int i, double _min, double _max){
     min[i] = _min;
     max[i] = _max;
+}
+
+void RRT::setVariationBound(int i, double _min, double _max){
+	variationMin[i] = _min;
+	variationMax[i] = _max;
 }
 
 /*
