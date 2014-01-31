@@ -1,63 +1,48 @@
-***** HSPICE -- C-2009.03 32-BIT (Feb 24 2009) winnt ******
- Input File: C:\code\RRT\runtime-verification\bin\pll.sp
+***** HSPICE -- A-2008.03 32-BIT (Feb 26 2008) winnt ******
+ Input File: pll.sp
  lic:
  lic: FLEXlm: v8.5b
- lic: USER:   adel                 HOSTNAME: adel-CSL
- lic: HOSTID: "f46d0461a9b8 005056c00001 005056c00008 080027003c42" PID:      78
+ lic: USER:   adel                 HOSTNAME: adel-PC
+ lic: HOSTID: f46d0461a9b8         PID:      76504
  lic: Using FLEXlm license file:
- lic: C:\flexlm\license.dat
+ lic: c:\flexlm\license.dat
  lic: Checkout 1 hspice
  lic: License/Maintenance for hspice will expire on 31-dec-2020/2007.9
- lic: NODE LOCKED license on hostid "f46d0461a9b8 005056c00001 005056c00008 0800
+ lic: NODE LOCKED license on hostid f46d0461a9b8
  lic:
- Init: hspice initialization file: C:\Users\adel\applications\hspice\hspice.ini
- init: begin read circuit files,  cpu clock=  2.10E-02
-       option search   = C:\Users\adel\applications\hspice\PARTS\behave\
-       option search   = C:\Users\adel\applications\hspice\PARTS\AD\
-       option search   = C:\Users\adel\applications\hspice\PARTS\XILINX\
-       option search   = C:\Users\adel\applications\hspice\PARTS\TLINE\
-       option search   = C:\Users\adel\applications\hspice\PARTS\TI\
-       option search   = C:\Users\adel\applications\hspice\PARTS\SIGNET\
-       option search   = C:\Users\adel\applications\hspice\PARTS\PCI\
-       option search   = C:\Users\adel\applications\hspice\PARTS\LIN_TECH
-                         \
-       option search   = C:\Users\adel\applications\hspice\PARTS\FET\
-       option search   = C:\Users\adel\applications\hspice\PARTS\DIO\
-       option search   = C:\Users\adel\applications\hspice\PARTS\COMLINE\
-       option search   = C:\Users\adel\applications\hspice\PARTS\BURR_BRN
-                         \
-       option search   = C:\Users\adel\applications\hspice\PARTS\BJT\
-       option search   = C:\Users\adel\applications\hspice\PARTS\behave\
-       option search   = C:\Users\adel\applications\hspice\PARTS\AD\
-       option post     =     2.00
-       option runlvl
+ Init: hspice initialization file: C:\synopsys\Hspice_A-2008.03\hspice.ini
+ init: begin read circuit files,  cpu clock=  1.40E-02
        option probe
        option acct
        option relv     =    1.000E-05
        option post
        option delmax   =    1.000E-08
        option interp
- init: end read circuit files,  cpu clock=  2.30E-02 memory=    147 kb
- init: begin check errors,  cpu clock=  2.30E-02
+ init: end read circuit files,  cpu clock=  1.50E-02 memory=    147 kb
+ init: begin check errors,  cpu clock=  1.50E-02
  **warning**  no dc path to ground from node        1:                c
- init: end check errors,  cpu clock=  2.40E-02 memory=    149 kb
- init: begin setup matrix, pivot=     0 cpu clock=  2.40E-02
-       establish matrix -- done,  cpu clock=  2.40E-02 memory=    153 kb
-       re-order matrix -- done,  cpu clock=  2.40E-02 memory=    155 kb
- init: end setup matrix,  cpu clock=  2.70E-02 memory=    168 kb
- output: C:pll.tr0
- sweep: tran tran0    begin, stop_t=  5.00E-06 #sweeps=  51 cpu clock=  2.70E-02
- tran: time= 5.0067E-07 tot_iter=     111 conv_iter=      52 cpu clock= 2.80E-02
- tran: time= 1.0007E-06 tot_iter=     217 conv_iter=     102 cpu clock= 2.90E-02
- tran: time= 1.5007E-06 tot_iter=     323 conv_iter=     152 cpu clock= 2.90E-02
- tran: time= 2.0007E-06 tot_iter=     429 conv_iter=     202 cpu clock= 3.00E-02
- tran: time= 2.5007E-06 tot_iter=     534 conv_iter=     252 cpu clock= 3.10E-02
- tran: time= 3.0007E-06 tot_iter=     640 conv_iter=     302 cpu clock= 3.20E-02
- tran: time= 3.5027E-06 tot_iter=     747 conv_iter=     353 cpu clock= 3.20E-02
- tran: time= 4.0027E-06 tot_iter=     854 conv_iter=     403 cpu clock= 3.30E-02
- tran: time= 4.5027E-06 tot_iter=     960 conv_iter=     453 cpu clock= 3.40E-02
- tran: time= 5.0000E-06 tot_iter=    1065 conv_iter=     503 cpu clock= 3.40E-02
- sweep: tran tran0    end,  cpu clock=  3.70E-02 memory=    169 kb
+ init: end check errors,  cpu clock=  1.60E-02 memory=    149 kb
+ init: begin setup matrix, pivot=    10 cpu clock=  1.60E-02
+       establish matrix -- done,  cpu clock=  1.70E-02 memory=    153 kb
+       re-order matrix -- done,  cpu clock=  1.70E-02 memory=    154 kb
+ init: end setup matrix,  cpu clock=  1.70E-02 memory=    167 kb
+ dcop: begin dcop,  cpu clock=  1.70E-02
+       establish matrix -- done,  cpu clock=  1.80E-02 memory=    161 kb
+       re-order matrix -- done,  cpu clock=  1.80E-02 memory=    162 kb
+ dcop: end dcop,  cpu clock=  2.30E-02 memory=    167 kb  tot_iter=       6
+ output: pll.tr0
+ sweep: tran tran0    begin, stop_t=  2.00E-04 #sweeps=2001 cpu clock=  2.40E-02
+ tran: time= 2.0003E-05 tot_iter=    4002 conv_iter=    2001 cpu clock= 4.70E-02
+ tran: time= 4.0003E-05 tot_iter=    8002 conv_iter=    4001 cpu clock= 6.90E-02
+ tran: time= 6.0003E-05 tot_iter=   12002 conv_iter=    6001 cpu clock= 9.00E-02
+ tran: time= 8.0003E-05 tot_iter=   16002 conv_iter=    8001 cpu clock= 1.12E-01
+ tran: time= 1.0000E-04 tot_iter=   20002 conv_iter=   10001 cpu clock= 1.34E-01
+ tran: time= 1.2000E-04 tot_iter=   24002 conv_iter=   12001 cpu clock= 1.55E-01
+ tran: time= 1.4000E-04 tot_iter=   28002 conv_iter=   14001 cpu clock= 1.77E-01
+ tran: time= 1.6000E-04 tot_iter=   32002 conv_iter=   16001 cpu clock= 1.98E-01
+ tran: time= 1.8000E-04 tot_iter=   36002 conv_iter=   18001 cpu clock= 2.20E-01
+ tran: time= 2.0000E-04 tot_iter=   40002 conv_iter=   20001 cpu clock= 2.41E-01
+ sweep: tran tran0    end,  cpu clock=  2.41E-01 memory=    168 kb
 >info:         ***** hspice job concluded
- Init: hspice initialization file: C:\Users\adel\applications\hspice\hspice.ini
+ Init: hspice initialization file: C:\synopsys\Hspice_A-2008.03\hspice.ini
  lic: Release hspice token(s)

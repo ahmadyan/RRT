@@ -30,8 +30,11 @@ using namespace std;
 #define NEW_RRT_INV		5
 #define LOAD_RRT_INV	6
 #define SIM_TDO			7
+#define SIM_PLL			8
+#define SIM_INV			9
+#define SIM_RING		10
 
-void kernel_RRT_INV(vector<Monitor*> monitors, bool generatePlot, string outputFileName, Plotter* plotter, int iterations, double simulationTime, double dt){
+void kernel_RRT_INV(vector<Monitor*> monitors, bool generatePlot, string outputFileName, Plotter* plotter, int iterations, double simulationTime, double dt, bool mc){
 	double* initialState = new double[3];
 	int variations = 3;
 	//For oscillation:
@@ -101,8 +104,8 @@ void kernel_RRT_TDO(vector<Monitor*> monitors, bool generatePlot, string outputF
 	rrt.setBound(0, -0.2, 1.2 );	//First Dimension = VC
 	rrt.setBound(1, -0.02, 0.08 );  //Second Dimension = IL
 
-	rrt.setVariationBound(0, -0.05, 0.05);	//p0, v = 300mv +- p0
-	rrt.setVariationBound(1, -0.005, 0.005);//p1, i = id(vc) +- p1
+	rrt.setVariationBound(0, -0.005, 0.005);	//p0, v = 300mv +- p0
+	rrt.setVariationBound(1, -0.005, 0.0005);//p1, i = id(vc) +- p1
 	rrt.setdt(dt);
 	
 	rrt.setSystem(circuit);
@@ -115,7 +118,7 @@ void kernel_RRT_TDO(vector<Monitor*> monitors, bool generatePlot, string outputF
 	if(generatePlot) plotter->plotRRT("lines", rrt.getName().c_str(), "test", rrt, "v_C", "i_L", "t");
 }
 
-void kernel_RRT_PLL(vector<Monitor*> monitors, bool generatePlot, string outputFileName, Plotter* plotter, int iterations, double simulationTime, double dt){
+void kernel_RRT_PLL(vector<Monitor*> monitors, bool generatePlot, string outputFileName, Plotter* plotter, int iterations, double simulationTime, double dt, bool mc){
 	int dim = 16;
 	int variations = 1; 
 	
@@ -136,24 +139,34 @@ void kernel_RRT_PLL(vector<Monitor*> monitors, bool generatePlot, string outputF
 	for(int i=0;i<dim-1;i++){
 		rrt.setBound(i, -1, +1);
 	}
-	rrt.setVariationBound(0, -0.001, 0.001);	//p0, v = 300mv +- p0
-
+	rrt.setVariationBound(0, -0.001, 0.001);
+	
 	rrt.setdt(dt);
 	rrt.setSystem(circuit);
-	cout << "RRT Init." << endl ;
-	rrt.build(initialState);
-	cout << "RRT Constructed" << endl ;
+	
+	if (mc){
+		rrt.simulate(initialState);  //for just simulating the circuit
+	}
+	else{
+		rrt.build(initialState);
+	}
 	rrt.save(outputFileName);
-	cout << "RRT Saved" << endl ;
 	if(generatePlot)  plotter->plotTrace(rrt, pll_e, pll_eb, pll_time, simulationTime, dt);
-	//plotter->plotTrace(rrt, pll_e, -1, pll_time, simulationTime, dt);
 }
 
 void kernel_RRT(vector<Monitor*> monitors, int mode, bool generatePlot,string inputFileName, string outputFileName, Plotter* plotter){
 	if(mode==NEW_RRT_TDO){
-		kernel_RRT_TDO(monitors, generatePlot, outputFileName, plotter, 100, 1e-5, 5e-9, false);
+		int iterations = 10000; 
+		double simTime = 2e-6;
+		double dt = 5e-9; //hard-coded in hspice code
+		bool monteCarlo = false; //true for rrt, false for mc
+		kernel_RRT_TDO(monitors, generatePlot, outputFileName, plotter, iterations, simTime, dt, monteCarlo);
 	}else if(mode == NEW_RRT_PLL){
-		kernel_RRT_PLL(monitors, generatePlot, outputFileName, plotter, 10, 100e-6, 0.01e-6);
+		int iterations = 10000;
+		double simTime = 100e-6;
+		double dt = 0.01e-6; //hard-coded in hspice code
+		bool monteCarlo = false; //true for rrt, false for mc
+		kernel_RRT_PLL(monitors, generatePlot, outputFileName, plotter, iterations, simTime, dt, monteCarlo);
 	}else if(mode == LOAD_RRT_PLL){
 		TimedRRT rrt = TimedRRT(inputFileName);
 		if(generatePlot)  plotter->plotTrace(rrt, pll_e, pll_eb, pll_time, 100e-6, 0.01e-6);
@@ -161,20 +174,29 @@ void kernel_RRT(vector<Monitor*> monitors, int mode, bool generatePlot,string in
 		TimedRRT rrt = TimedRRT(inputFileName);
 		if(generatePlot) plotter->plotRRT("lines", rrt.getName().c_str(), "test", rrt,  "v_C", "i_L", "t");
 	}else if (mode == NEW_RRT_INV){
-		kernel_RRT_INV(monitors, generatePlot, outputFileName, plotter, 100, 1e-9, 5e-12);
-	}
-	else if (mode == SIM_TDO){
-		kernel_RRT_TDO(monitors, generatePlot, outputFileName, plotter, -1, 5e-6, 5e-9, true);
+		kernel_RRT_INV(monitors, generatePlot, outputFileName, plotter, 100, 1e-9, 5e-12, false);
+	}else if (mode == SIM_TDO){
+		int iterations = -1;
+		double simTime = 5e-6;
+		double dt = 5e-9; //hard-coded in hspice code
+		bool monteCarlo = true; //true for rrt, false for mc
+		kernel_RRT_TDO(monitors, generatePlot, outputFileName, plotter, iterations, simTime, dt, monteCarlo);
+	}else if (mode == SIM_PLL){
+		int iterations = 10000;
+		double simTime = 1e-4;
+		double dt = 1e-7;
+		bool monteCarlo = true; //true for rrt, false for mc
+		kernel_RRT_PLL(monitors, generatePlot, outputFileName, plotter, iterations, simTime, dt, monteCarlo);
 	}
 }
 
 void date_2013_experiments(){
 	vector<Monitor*> monitors;	//for this experiment, the monitors are empty. 
 	Plotter* plotter = new Plotter("C:\\opt\\gnuplot\\bin\\gnuplot.exe -persist");
-	int mode = SIM_TDO;
+	int mode = SIM_PLL;
 	bool generatePlot = true ;
 	string inputFileName = "test2.rrt";
-	string outputFileName = "tdo_sim_bad.rrt" ;
+	string outputFileName = "pll_sim_ok.rrt" ;
 	//the new kernel has the monitors argument
 	kernel_RRT(monitors, mode, generatePlot, inputFileName, outputFileName, plotter);
 }

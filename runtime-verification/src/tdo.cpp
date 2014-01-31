@@ -32,8 +32,8 @@ vector<double>  TDO::simulate(double* ic, vector<double> param, vector<string> s
 
 	fprintf(netList, "TDO - TUNNEL DIODE OSCILLATOR	\n");
 	fprintf(netList, "VIN	3	0	%f\n", 0.3 + dvin);
-	fprintf(netList, "R1	2	3	0.2\n");	//For oscillation result
-	//fprintf (netList, "R1	2	3	0.5\n");	//For No oscillation result
+	//fprintf(netList, "R1	2	3	0.2\n");	//For oscillation result
+	fprintf (netList, "R1	2	3	0.5\n");	//For No oscillation result
 	fprintf(netList, "LS  2 	1 	1UH	 IC=%f \n", i0);
 	fprintf(netList, "CS  1 	0 	1000PF\n");
 	fprintf(netList, "G1 1 0 	POLY(1)	1 0 %f 0.6 -1.5 1 	\n", dId);

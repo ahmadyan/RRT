@@ -6,22 +6,114 @@
     C:\synopsys\Hspice_A-2008.03\license.warn
   Use of this program is your acceptance to be bound by this 
   license agreement. HSPICE is the trademark of Synopsys, Inc.
-  Input File: tdo.sp                                                            
+  Input File: pll_netlist.sp                                                    
  Init: read install configuration file: C:\synopsys\Hspice_A-2008.03\meta.cfg
  Init: hspice initialization file: C:\synopsys\Hspice_A-2008.03\hspice.ini
 
 
 
 
- vin	3	0	0.308940
- r1	2	3	0.2
- ls  2 	1 	1uh	 ic=0.056667 
- cs  1 	0 	1000pf
- g1 1 0 	poly(1)	1 0 -0.000951 0.6 -1.5 1 	
- .ic v(1)=0.127145
- .tran 1ns 5ns uic
- .print v(1) i(ls) i(vin)
- .opt brief numdgt=10
+
+ .option  probe acct
+ .option relv=1e-5
+ *
+ * wideband fm example, grebene gives:
+ *  f0=1meg kf=250khz/v
+ *  kd=0.1 v/rad
+ *  r=10k c=1000p
+ *  f_lock = kf*kd*pi/2 = 39khz, v_lock = kd*pi/2 = 0.157
+ *  f_capture/f_lock ~= 1/sqrt(2*pi*r*c*f_lock)
+ *                    = 0.63,    v_capture ~= 0.100
+
+ *******************
+ * input waveforms *
+ *******************
+
+ * these are the input sinusoids at different frequencies
+ * hint: you can use the .alter statement to do three versions
+ * of the transient analysis in one run.
+
+ *vin in inb sin(0 0.6 1.00x)
+ vin in inb sin(0 0.6 1.02x)
+ *vin in inb sin(0 0.6 0.95x)
+ .tran 0.1u 1e-007 uic 
+ .save type=ic file=ic_1.ic level=all time=1e-007
+ .load file=ic_0.ic
+ 	+ gmindc=   1.0000p       
+ 	.nodeset	
+ 	+ e =  -3.500000   
+ 	+ eb =  -3.300000       
+ 	+ in =   0.000000            
+ 	+ inb =   0.000000            
+ 	+ mout =  -3.500000        
+ 	+ moutb =  -3.500000        
+ 	+ osc = -0.999755       
+ 	+ oscb =  -1.000200        
+ 	+ out =  -3.500000        
+ 	+ outb =  -3.300000        
+ 	+ xvco.c =   1.000000        
+ 	+ xvco.s =  0.000061       
+ 	+ xvco.s_clip =  0.000082       
+ 	+ xpd.clip1 =   0.000000            
+ 	+ xpd.clip2 = 0.000653       
+ 	+ xpd.n1 =   0.000000            
+
+ *.ic v(e)=-3.5 v(eb)=-3.3
+
+ * fm signal for demodulation
+ *vin in inb sffm(0 0.6 1.0x 1 10k)
+ *.tran 0.1u 1000u
+
+ ******************************************
+ *************
+ * vco model *
+ *************
+ xvco e eb osc oscb vco f0=1x kf=125k phi=0 out_off=-1 out_amp=0.3
+
+ ************************
+ * phase detector model *
+ ************************
+ xpd in inb osc oscb mout moutb pd kd=0.1 out_off=-3.5
+
+ **********
+ * filter *
+ **********
+
+ rf mout e 10k
+ cf  e   0 1000p
+ rfb moutb eb 10k
+ cfb eb   0 1000p
+
+ ****************
+ * final output *
+ ****************
+ rout out e 100k
+ cout out 0 100p
+ routb outb eb 100k
+ coutb outb 0 100p
+
+
+ .macro vco in inb out outb f0=100k kf=50k phi=0.0 out_off=0.0 out_amp=1.0
+ gs 0 s poly(2) c 0 in inb    0 '6.2832e-9*f0' 0 0 '6.2832e-9*kf'
+ gc c 0 poly(2) s 0 in inb    0 '6.2832e-9*f0' 0 0 '6.2832e-9*kf'
+ cs s 0 1e-9
+ cc c 0 1e-9
+ e1 s_clip 0 pwl(1) s 0  -0.1,-0.1 0.1,0.1
+ e out 0 s_clip 0 out_off '10*out_amp'
+ eb outb 0 s_clip 0 out_off '-10*out_amp'2
+ .eom
+
+ .macro pd in inb in2 in2b out outb kd=0.1 out_off=0
+ e1 clip1 0 pwl(1) in inb  -0.1,-0.1 0.1,0.1
+ e2 clip2 0 pwl(1) in2 in2b  -0.1,-0.1 0.1,0.1
+ *e3 n1 0 poly(2) clip1 0 clip2 0    0 0 0 0 '78.6*kd'
+ e3 n1 0 poly(2) clip1 0 clip2 0    0.000624928 0 0 0 '78.6*kd'
+ e4 outb 0 n1 0  out_off 1
+ e5 out 0 n1 0  out_off -1
+ .eom
+
+ .option post delmax=0.01u interp
+ .end
 
  ***********************************************************************
  ** runlvl is invoked, you can disable it by:
@@ -43,52 +135,76 @@
           relq  chgtol    dvtr    imin    itl3    rmax
 
  ** runlvl is invoked, actual option value used by HSPICE are:
-       runlvl= 3       bypass= 2      mbypass=   2.00   bytol= 100.00u
+       runlvl= 3       bypass= 2      mbypass=   2.00   bytol=  10.00u
  ***********************************************************************
 
- 
-      
+1****** HSPICE -- A-2008.03 32-BIT (Feb 26 2008) winnt ******                   
  ******  
- tdo - tunnel diode oscillator	                                                 
-  ******  transient analysis               tnom=  25.000 temp=  25.000          
+ phase-locked loop                                                              
+  ******  circuit name directory                                                
  ******  
-x
+ circuit number to circuit name directory
+   number circuitname                     definition         multiplier
+        0 main circuit
+        1 xvco.                           vco                1.00 
+        2 xpd.                            pd                 1.00 
 
-            time    voltage          current          current        
-                         1               ls               vin        
-    0.              127.1450000000m    0.               0.           
-    1.0000000000n   130.2711559984m   56.8355600377m  -56.8355600356m
-    2.0000000000n   132.7153935934m   57.0005402189m  -57.0005396010m
-    3.0000000000n   134.9853404841m   57.1645761296m  -57.1645746649m
-    4.0000000000n   136.8834579443m   57.3263822541m  -57.3263808992m
-    5.0000000000n   138.5219221445m   57.4866312905m  -57.4866307133m
-y
+ **warning** dc voltage reset to initial transient source value
+             in source        0:vin                 new dc=  0.0000D+00
+
+ 
+
+
+
+ **warning**  no dc path to ground from node        1:c                defined in subckt vco             now it is connected with gdcpath
+
+
+      
+  Opening plot unit= 79
+ file=pll_netlist.pa0                                                          
+
+ **warning** no probe statements specified, thus .tr# omitted
+1****** HSPICE -- A-2008.03 32-BIT (Feb 26 2008) winnt ******                   
+ ******  
+ phase-locked loop                                                              
+  ******  operating point information      tnom=  25.000 temp=  25.000          
+ ******  
+ ***** operating point status is voltage   simulation time is   100.0000n
+    node    =voltage      node    =voltage      node    =voltage
+
+ +0:e       =  -3.5007  0:eb      =  -3.3013  0:in      = 358.7430m
+ +0:inb     =   0.      0:mout    =  -3.5792  0:moutb   =  -3.4208 
+ +0:osc     =-700.0000m 0:oscb    =  -1.2800  0:out     =  -3.5000 
+ +0:outb    =  -3.3000  1:c       = 818.0755m 1:s       = 575.0089m
+ +1:s_clip  = 100.0000m 2:clip1   = 100.0000m 2:clip2   = 100.0000m
+ +2:n1      =  79.2249m
+
 
           ***** job concluded
- ****** HSPICE -- A-2008.03 32-BIT (Feb 26 2008) winnt ******                   
+1****** HSPICE -- A-2008.03 32-BIT (Feb 26 2008) winnt ******                   
  ******  
- tdo - tunnel diode oscillator	                                                 
+ phase-locked loop                                                              
   ******  job statistics summary           tnom=  25.000 temp=  25.000          
  ******  
 
-           total memory used         24 kbytes
+           total memory used        168 kbytes
 
-  # nodes =       4 # elements=       5
+  # nodes =      17 # elements=      21
   # diodes=       0 # bjts    =       0 # jfets   =       0 # mosfets =       0
   # va device =       0
 
     analysis           time    # points   tot. iter  conv.iter
 
     op point           0.00           1           0
-    transient          0.00           6          19           9 rev=         1
+    transient          0.00           2          49          23 rev=         0
     readin             0.00
     errchk             0.00
     setup              0.00
     output             0.00
            total cpu time          0.00 seconds
            total elapsed time         1 seconds
-               job started at  16:43:08 01/29/2014
-               job ended   at  16:43:08 01/29/2014
+               job started at  17:47:33 01/31/2014
+               job ended   at  17:47:33 01/31/2014
 
 
 >info:         ***** hspice job concluded

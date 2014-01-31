@@ -6,68 +6,30 @@ vector<double>  PLL::simulate(double* nodeset, vector<double> variation, vector<
 	vector<double> result;
 	//	double dt = 5e-6;
 	result.push_back(dt);
-	FILE * ic;
-	string aString;
-	double rise, fall, delay;
-	char nextString[80];
-	ic = fopen("pll.ic0", "w");
-
-	fprintf(ic, ".option \n");
-	fprintf(ic, "	+ gmindc=   1.0000p       \n");
-	fprintf(ic, "	.nodeset	\n");
-	fprintf(ic, "	+ e =  %f   \n", nodeset[pll_e]);
-	fprintf(ic, "	+ eb =  %f       \n", nodeset[pll_eb]);
-	fprintf(ic, "	+ in =   %f            \n", nodeset[pll_in]);
-	fprintf(ic, "	+ inb =   %f            \n", nodeset[pll_inb]);
-	fprintf(ic, "	+ mout =  %f        \n", nodeset[pll_mout]);
-	fprintf(ic, "	+ moutb =  %f        \n", nodeset[pll_moutb]);
-	fprintf(ic, "	+ osc = %f       \n", nodeset[pll_osc]);
-	fprintf(ic, "	+ oscb =  %f        \n", nodeset[pll_oscb]);
-	fprintf(ic, "	+ out =  %f        \n", nodeset[pll_out]);
-	fprintf(ic, "	+ outb =  %f        \n", nodeset[pll_outb]);
-	fprintf(ic, "	+ xvco.c =   %f        \n", nodeset[pll_xvco_c]);
-	fprintf(ic, "	+ xvco.s =  %f       \n", nodeset[pll_xvco_s]);
-	fprintf(ic, "	+ xvco.s_clip =  %f       \n", nodeset[pll_xvco_s_clip]);
-	fprintf(ic, "	+ xpd.clip1 =   %f            \n", nodeset[pll_xpd_clip1]);
-	fprintf(ic, "	+ xpd.clip2 = %f       \n", nodeset[pll_xpd_clip2]);
-	fprintf(ic, "	+ xpd.n1 =   %f            \n", nodeset[pll_xpd_n1]);
-
-	fclose(ic);
-	ic = fopen("param.sp", "w");
-	fprintf(ic, ".param var=%f\n", variation);
-	fclose(ic);
-
-	system("hspice pll.sp > Sim.txt");
-
-	string line;
-	ifstream simResult("pll.ic0");
-
-	if (simResult.good()){
-		for (int i = 0; i<12; i++)
-			getline(simResult, line);
-
-		for (int i = 0; i<16; i++){
-			getline(simResult, line);
-			line = line.substr(line.find_first_of("=") + 1, line.length());
-			double d;
-			stringstream ss(line);
-			ss >> d;
-			line.erase(line.find_last_not_of(" \n\r\t") + 1);
-			char c = line.c_str()[line.length() - 1];
-			d = d*System::unit(c);
-			result.push_back(d);
-		}
+	
+	stringstream sed;
+	sed << "cat pll_template.sp | sed ";
+	for (int i = 0; i < variation.size(); i++){
+		sed << "-e s/$PARAM_" << i << "/" << variation[i] << "/ ";
 	}
-	simResult.close();
+	sed << "-e s/$DT/" << dt << "/ ";
+	sed << "-e s/$SAVE_FILE/" << settings[0] << "/ ";
+	sed << "-e s/$LOAD_FILE/" << settings[1] << "/ ";
+	sed << " > pll_netlist.sp" << endl;
 
+	cout << sed.str() << endl;
+	system(sed.str().c_str());
+	
+	generateICFile(nodeset, settings[1]);
+
+	system("hspice pll_netlist.sp > Sim.txt");
+	parseICFile(settings[0], result);
 	return result;
+	
 }
-
-
 
 void  PLL::setInitialPLLState(double* state){
 	/*
-	*
 	* .nodeset
 	+ e =  -3.5000
 	+ eb =  -3.3000
@@ -106,3 +68,51 @@ void  PLL::setInitialPLLState(double* state){
 	state[pll_time] = 0;
 }
 
+void PLL::parseICFile(string fileName, vector<double> result){
+	string line;
+	ifstream simResult(fileName);
+
+	if (simResult.good()){
+		for (int i = 0; i<12; i++)
+			getline(simResult, line);
+
+		for (int i = 0; i<16; i++){
+			getline(simResult, line);
+			line = line.substr(line.find_first_of("=") + 1, line.length());
+			double d;
+			stringstream ss(line);
+			ss >> d;
+			line.erase(line.find_last_not_of(" \n\r\t") + 1);
+			char c = line.c_str()[line.length() - 1];
+			d = d*System::unit(c);
+			result.push_back(d);
+		}
+	}
+	simResult.close();
+}
+
+void PLL::generateICFile(double* nodeset, string fileName){
+	FILE *ic = fopen(fileName.c_str(), "w");
+
+	fprintf(ic, ".option \n");
+	fprintf(ic, "	+ gmindc=   1.0000p       \n");
+	fprintf(ic, "	.nodeset	\n");
+	fprintf(ic, "	+ e =  %f   \n", nodeset[pll_e]);
+	fprintf(ic, "	+ eb =  %f       \n", nodeset[pll_eb]);
+	fprintf(ic, "	+ in =   %f            \n", nodeset[pll_in]);
+	fprintf(ic, "	+ inb =   %f            \n", nodeset[pll_inb]);
+	fprintf(ic, "	+ mout =  %f        \n", nodeset[pll_mout]);
+	fprintf(ic, "	+ moutb =  %f        \n", nodeset[pll_moutb]);
+	fprintf(ic, "	+ osc = %f       \n", nodeset[pll_osc]);
+	fprintf(ic, "	+ oscb =  %f        \n", nodeset[pll_oscb]);
+	fprintf(ic, "	+ out =  %f        \n", nodeset[pll_out]);
+	fprintf(ic, "	+ outb =  %f        \n", nodeset[pll_outb]);
+	fprintf(ic, "	+ xvco.c =   %f        \n", nodeset[pll_xvco_c]);
+	fprintf(ic, "	+ xvco.s =  %f       \n", nodeset[pll_xvco_s]);
+	fprintf(ic, "	+ xvco.s_clip =  %f       \n", nodeset[pll_xvco_s_clip]);
+	fprintf(ic, "	+ xpd.clip1 =   %f            \n", nodeset[pll_xpd_clip1]);
+	fprintf(ic, "	+ xpd.clip2 = %f       \n", nodeset[pll_xpd_clip2]);
+	fprintf(ic, "	+ xpd.n1 =   %f            \n", nodeset[pll_xpd_n1]);
+
+	fclose(ic);
+}
