@@ -1,12 +1,10 @@
-
 #include <stdio.h>
 #include <fstream>
 #include "pll.h"
+
 vector<double>  PLL::simulate(double* nodeset, vector<double> variation, vector<string> settings, double dt){
 	vector<double> result;
-	//	double dt = 5e-6;
 	result.push_back(dt);
-	
 	stringstream sed;
 	sed << "cat pll_template.sp | sed ";
 	for (int i = 0; i < variation.size(); i++){
@@ -16,16 +14,12 @@ vector<double>  PLL::simulate(double* nodeset, vector<double> variation, vector<
 	sed << "-e s/$SAVE_FILE/" << settings[0] << "/ ";
 	sed << "-e s/$LOAD_FILE/" << settings[1] << "/ ";
 	sed << " > pll_netlist.sp" << endl;
-
 	cout << sed.str() << endl;
 	system(sed.str().c_str());
-	
 	generateICFile(nodeset, settings[1]);
-
 	system("hspice pll_netlist.sp > Sim.txt");
-	parseICFile(settings[0], result);
+	parseICFile(settings[0], &result);
 	return result;
-	
 }
 
 void  PLL::setInitialPLLState(double* state){
@@ -68,9 +62,9 @@ void  PLL::setInitialPLLState(double* state){
 	state[pll_time] = 0;
 }
 
-void PLL::parseICFile(string fileName, vector<double> result){
+void PLL::parseICFile(string fileName, vector<double> *result){
 	string line;
-	ifstream simResult(fileName);
+	ifstream simResult(fileName + "0"); //hspice adds a 0 to the end of each file
 
 	if (simResult.good()){
 		for (int i = 0; i<12; i++)
@@ -85,7 +79,7 @@ void PLL::parseICFile(string fileName, vector<double> result){
 			line.erase(line.find_last_not_of(" \n\r\t") + 1);
 			char c = line.c_str()[line.length() - 1];
 			d = d*System::unit(c);
-			result.push_back(d);
+			result->push_back(d);
 		}
 	}
 	simResult.close();

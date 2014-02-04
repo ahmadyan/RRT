@@ -217,4 +217,28 @@ print ( fig2_4_4, '-painters', '-dpdf', '-r600' , 'tdo_exp2_4_4.pdf' );
 
 
 
+%%-------------------------------------------------------------------------
+% Experiment 4: PLL
+%%-------------------------------------------------------------------------
+pll_e = 3;
+pll_eb = 4;
+pll_in = 5;
+pll_inb = 6;
+pll_mout = 7;
+pll_moutb = 8;
+pll_osc = 9;
+pll_oscb = 10;
+pll_out = 11;
+pll_outb = 12;
+pll_xvco_c = 13;
+pll_xvco_s = 14;
+pll_xvco_s_clip	= 15;
+pll_xpd_clip1 = 16;
+pll_xpd_clip2 = 17;
+pll_xpd_n1 = 18;
+pll_time = 19;
+% Case i: pll MC, low var
+fig_4_1_1=figure(411);
+data41=rrt2mat('pll_sim_ok_10000.rrt');
+drawTrace(data41, pll_e, pll_time, 'pll_e', -1, -1, -1);
 

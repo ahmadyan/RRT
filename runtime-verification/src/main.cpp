@@ -182,9 +182,9 @@ void kernel_RRT(vector<Monitor*> monitors, int mode, bool generatePlot,string in
 		bool monteCarlo = true; //true for rrt, false for mc
 		kernel_RRT_TDO(monitors, generatePlot, outputFileName, plotter, iterations, simTime, dt, monteCarlo);
 	}else if (mode == SIM_PLL){
-		int iterations = 10000;
 		double simTime = 1e-4;
 		double dt = 1e-7;
+		int iterations = simTime / dt;
 		bool monteCarlo = true; //true for rrt, false for mc
 		kernel_RRT_PLL(monitors, generatePlot, outputFileName, plotter, iterations, simTime, dt, monteCarlo);
 	}
@@ -196,7 +196,7 @@ void date_2013_experiments(){
 	int mode = SIM_PLL;
 	bool generatePlot = true ;
 	string inputFileName = "test2.rrt";
-	string outputFileName = "pll_sim_ok.rrt" ;
+	string outputFileName = "pll_sim_ok_10000.rrt" ;
 	//the new kernel has the monitors argument
 	kernel_RRT(monitors, mode, generatePlot, inputFileName, outputFileName, plotter);
 }

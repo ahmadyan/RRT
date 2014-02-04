@@ -22,7 +22,7 @@ Phase-Locked Loop
 *vin in inb sin(0 0.6 1.00x)
 vin in inb sin(0 0.6 1.02x)
 *vin in inb sin(0 0.6 0.95x)
-.tran 0.1u $DT uic 
+.tran 0.01u $DT uic 
 .save type=ic file=$SAVE_FILE level=all time=$DT
 .load file=$LOAD_FILE
 

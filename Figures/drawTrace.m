@@ -21,17 +21,9 @@ function drawTrace(data, index, t, yname, tmax, yaxismin, yaxismax)
     
     hold on
     if(tmax>0),
-        if(yaxismin>0),
-            axis([0 tmax yaxismin yaxismax])
-        else
-            axis([0 tmax min max])
-        end
+        axis([0 tmax yaxismin yaxismax])
     else
-        if(yaxismin>0),
-            axis([0 timeEnvlope yaxismin yaxismax])
-        else
-            axis([0 timeEnvlope min max])
-        end
+        axis([0 timeEnvlope yaxismin yaxismax])
     end
     
     set(gca,'FontSize',16,'fontWeight','demi')
@@ -43,6 +35,7 @@ function drawTrace(data, index, t, yname, tmax, yaxismin, yaxismax)
     
     for i=2:size(data, 2),
         p=data(2, i);
+        
         px=data(index, p);
         pt=data(t, p);
         cx=data(index,i);

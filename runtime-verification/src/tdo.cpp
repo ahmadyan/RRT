@@ -60,7 +60,6 @@ vector<double>  TDO::simulate(double* ic, vector<double> param, vector<string> s
 		}
 	}
 	simResult.close();
-	cout << "Here! " << endl;
 	cout << result.size() << endl;
 	return result;
 

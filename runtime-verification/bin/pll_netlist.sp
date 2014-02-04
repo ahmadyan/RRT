@@ -22,9 +22,9 @@ Phase-Locked Loop
 *vin in inb sin(0 0.6 1.00x)
 vin in inb sin(0 0.6 1.02x)
 *vin in inb sin(0 0.6 0.95x)
-.tran 0.1u 1e-007 uic 
-.save type=ic file=ic_1.ic level=all time=1e-007
-.load file=ic_0.ic
+.tran 0.01u 1e-007 uic 
+.save type=ic file=pll_ic_save.ic level=all time=1e-007
+.load file=pll_ic_load.ic
 
 *.ic v(e)=-3.5 v(eb)=-3.3
 
@@ -75,7 +75,7 @@ eb outb 0 s_clip 0 out_off '-10*out_amp'2
 e1 clip1 0 pwl(1) in inb  -0.1,-0.1 0.1,0.1
 e2 clip2 0 pwl(1) in2 in2b  -0.1,-0.1 0.1,0.1
 *e3 n1 0 poly(2) clip1 0 clip2 0    0 0 0 0 '78.6*kd'
-e3 n1 0 poly(2) clip1 0 clip2 0    0.000624928 0 0 0 '78.6*kd'
+e3 n1 0 poly(2) clip1 0 clip2 0    -0.000510788 0 0 0 '78.6*kd'
 e4 outb 0 n1 0  out_off 1
 e5 out 0 n1 0  out_off -1
 .eom

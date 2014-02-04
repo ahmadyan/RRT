@@ -109,12 +109,11 @@ void TimedRRT::build(double* initialState){
 
 void TimedRRT::simulate(double* initialState){
 	root = new node(d);
-    root->set(initialState);
+	root->set(initialState);
 	root->setRoot();
 	nodes.push_back(root);
 	root->setIndex(0);
-
-    for(int i=1;i<k; i++){
+	for(int i=1;i<k; i++){
     	cout <<"[s] #### " << i << endl ;
 		node* q_near = nodes[ nodes.size()-1 ]; //last inserted node for the linear simulation
         double* state_near = q_near->get() ;
@@ -129,8 +128,8 @@ void TimedRRT::simulate(double* initialState){
 		}
 
 		vector<string> settings;
-		stringstream icInputFileName; icInputFileName << "ic_" << q_near->getIndex() << ".ic";
-		stringstream icOutputFileName; icOutputFileName << "ic_" << i << ".ic";
+		stringstream icInputFileName; icInputFileName << "pll_ic_load.ic" ; //icInputFileName << "ic_" << q_near->getIndex() << ".ic";
+		stringstream icOutputFileName; icOutputFileName << "pll_ic_save.ic"  ;//icOutputFileName << "ic_" << i << ".ic";
 		settings.push_back(icOutputFileName.str());
 		settings.push_back(icInputFileName.str());
 
@@ -144,7 +143,7 @@ void TimedRRT::simulate(double* initialState){
         q_new->set(result);
         q_near->addChildren(q_new);		//add the new node to the tree
 		q_new->setParent(q_near);		//We only make the parent-child releation ship during the tree build
-
+		q_new->setIndex(i);
 		nodes.push_back(q_new);
 
 		for(int i=0;i<monitors.size();i++){
