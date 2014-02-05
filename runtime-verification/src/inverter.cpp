@@ -3,7 +3,11 @@
 #include <iostream>
 #include <sstream>
 
-vector<double>  Inverter::simulate(double* ic, vector<double> param, vector<string> setting, double dt){
+Inverter::Inverter(){
+	System::simulator = SPICE;
+}
+
+vector<double>  Inverter::simulate(double* ic, vector<double> param, vector<string> setting, double t0, double dt){
 	vector<double> result;
 	
 	stringstream sed; 

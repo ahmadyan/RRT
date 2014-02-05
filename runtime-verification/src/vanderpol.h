@@ -9,5 +9,5 @@ class Vanderpol: public System {
 	double mu;
 public:
 	Vanderpol();
-	vector<double> simulate(double* ic, vector<double> parameters, vector<string> settings, double dt);
+	vector<double> simulate(double* ic, vector<double> parameters, vector<string> settings, double t0, double dt);
 };

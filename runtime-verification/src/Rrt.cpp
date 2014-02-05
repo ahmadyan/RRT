@@ -86,7 +86,7 @@ void RRT::build(double* initialState){
 			param.push_back(unifRand(0.29, 0.31));
 		}
 		vector<string> settings;
-		vector<double> result = system->simulate(ic, param, settings, delta);
+		vector<double> result = system->simulate(ic, param, settings, 0, delta);
 
 		double* state = new double[d];
 		for (int i = 0; i < d; i++){

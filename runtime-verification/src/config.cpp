@@ -74,3 +74,12 @@ void Configuration::getParameter(string parameter, double* result){
 void Configuration::setParameter(string key, string value){
     db[key] = value ;
 }
+
+bool Configuration::checkParameter(string key, string value){
+	if (strcmp(db[key].c_str(), value.c_str()) == 0){
+		return true;
+	}
+	else{
+		return false;
+	}
+}

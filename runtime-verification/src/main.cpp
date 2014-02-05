@@ -9,18 +9,22 @@
 
 #include "config.h"
 #include "Monitor.h"
-#include "System.h"
 #include "RRT.h"
 #include "TimedRRT.h"
 #include "Plotter.h"
 #include "OdeSolver.h"
 #include "transient.h"
-#include "pll.h"
-#include "tdo.h"
+
 #include "Monitor.h"
 #include "Frequency.h"
 #include "kdtree.h"
+
+#include "System.h"
+#include "vanderpol.h"
+#include "pll.h"
+#include "tdo.h"
 #include "inverter.h"
+
 using namespace std;
 
 #define NEW_RRT_TDO		0
@@ -191,15 +195,92 @@ void kernel_RRT(vector<Monitor*> monitors, int mode, bool generatePlot,string in
 	}
 }
 
-void date_2013_experiments(){
-	vector<Monitor*> monitors;	//for this experiment, the monitors are empty. 
-	Plotter* plotter = new Plotter("C:\\opt\\gnuplot\\bin\\gnuplot.exe -persist");
-	int mode = SIM_PLL;
-	bool generatePlot = true ;
-	string inputFileName = "test2.rrt";
-	string outputFileName = "pll_sim_ok_10000.rrt" ;
-	//the new kernel has the monitors argument
-	kernel_RRT(monitors, mode, generatePlot, inputFileName, outputFileName, plotter);
+void kernel_RRT_VDP(Configuration* config){
+	string outputFileName;  config->getParameter("edu.uiuc.crhc.core.options.outputFileName", &outputFileName);
+	string inputFileName;  config->getParameter("edu.uiuc.crhc.core.options.inputFileName", &inputFileName);
+
+	double simulationTime; config->getParameter("edu.uiuc.csl.core.simulation.simulationTime", &simulationTime);
+	double dt; config->getParameter("edu.uiuc.csl.core.simulation.dt", &dt);
+	int mc = 0; config->getParameter("edu.uiuc.csl.core.simulation.MonteCarlo", &mc);
+	string name; config->getParameter("edu.uiuc.csl.system.name", &name);
+
+	int dim; config->getParameter("edu.uiuc.csl.system.dimension", &dim);
+	int param; config->getParameter("edu.uiuc.csl.system.parameters", &param);
+	double* initialState = new double[dim+1]; // counting the time-augmentation as another dimension
+
+	Vanderpol* circuit = new Vanderpol();	//todo: use a switch case or something? 
+	//For oscillation:
+	initialState[0] = -3;			//This initial condition, under low variation parameters are indicator of 
+	initialState[1] = 3.4;		//correct circuit that will start a healty oscillation
+	initialState[2] = 0;
+
+	int iter = 0;
+	if (mc==1){
+		iter = simulationTime / dt;
+	}else{
+		config->getParameter("edu.uiuc.csl.core.sampling.iteration", &iter);
+	}
+
+	//todo: add this throught logbook
+	cout << "----------------------------------------------" << endl;
+	cout << "RRT Options: " << endl;
+	cout << "Iter=" << iter << endl;
+	cout << "sim-time=" << simulationTime << endl;
+	cout << "dt=" << dt << endl;
+
+	cout << "----------------------------------------------" << endl;
+	TimedRRT rrt = TimedRRT( dim, iter, param, simulationTime, name);
+
+	//for (int i = 0; i<(int)(monitors.size()); i++){
+	//	rrt.addMonitor(monitors[i]);
+	//}
+	for (int i = 0; i < dim; i++){
+		rrt.setBound(i, -6, +6);
+	}
+	for (int i = 0; i < param; i++){
+		//rrt.setVariationBound(i, -0.005, 005);
+		rrt.setVariationBound(i, -0.00, 00);
+	}
+	rrt.setdt(dt);
+
+	rrt.setSystem(circuit);
+	
+	if (mc){
+		rrt.simulate(initialState);  //for just simulating the circuit
+	}
+	else{
+		rrt.build(initialState);
+	}
+	rrt.save(outputFileName);
+
+	int plot; config->getParameter("edu.uiuc.crhc.core.options.plot", &plot);
+	if (plot == 1){
+		Plotter* plotter = new Plotter("C:\\opt\\gnuplot\\bin\\gnuplot.exe -persist");
+		plotter->plotRRT("lines", rrt.getName().c_str(), "test", rrt, "v_C", "i_L", "t");
+	}
+}
+
+void rrt_experiments(Configuration* config){
+
+	if (config->checkParameter("edu.uiuc.csl.system.name", "Vanderpol")){
+		kernel_RRT_VDP(config);
+	}
+	else{
+		vector<Monitor*> monitors;	//for this experiment, the monitors are empty. 
+		Plotter* plotter = new Plotter("C:\\opt\\gnuplot\\bin\\gnuplot.exe -persist");
+		int mode = SIM_PLL;
+		bool generatePlot = true;
+		string inputFileName = "test2.rrt";
+		string outputFileName = "pll_sim_ok_10000.rrt";
+		//the new kernel has the monitors argument
+		kernel_RRT(monitors, mode, generatePlot, inputFileName, outputFileName, plotter);
+		
+	}
+
+
+
+
+
 }
 
 //	Computing the joint time-frequency space instead of only time-augmented RRT
@@ -312,12 +393,12 @@ int main (int argc, const char * argv[]){
 	char full[_MAX_PATH];
 	_fullpath(full, ".\\", _MAX_PATH);
 	cout << "Current working directory is:" << full << endl;
-	string configFile = string(full) + "test.conf";
+	string configFile = string(full) + "vanderpol.conf";
 	Configuration* config = new Configuration(configFile);
 	//fft_experiments();
 	//kdtree_experiment();
 	//MonitorExperiment();
-	date_2013_experiments();
+	rrt_experiments(config);
 	system("PAUSE");
 	return 0;
 }

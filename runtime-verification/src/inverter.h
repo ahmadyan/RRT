@@ -6,5 +6,6 @@ using namespace std;
 
 class Inverter: public System {
 public:
-	vector<double> simulate(double* ic, vector<double> parameters, vector<string> settings, double dt);
+	Inverter();
+	vector<double> simulate(double* ic, vector<double> parameters, vector<string> settings, double t0, double dt);
 };

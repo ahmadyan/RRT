@@ -3,6 +3,11 @@
 #include <iostream>
 
 
+
+TDO::TDO(){
+	System::simulator = SPICE;
+}
+
 /* Sample Netlist:
 TDO - TUNNEL DIODE OSCILLATOR
 VIN	3	0	300mv
@@ -18,7 +23,8 @@ G1 1 0 	POLY(1)	1 0 0 0.6 -1.5 1
 .OPT LIST NODE OPTS  numdgt=10 post
 .END
 */
-vector<double>  TDO::simulate(double* ic, vector<double> param, vector<string> setting, double dt){
+
+vector<double>  TDO::simulate(double* ic, vector<double> param, vector<string> setting, double t0, double dt){
 	double v0 = ic[0];
 	double i0 = ic[1]; 
 	double dvin = param[0];

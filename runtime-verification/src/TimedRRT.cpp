@@ -64,7 +64,7 @@ void TimedRRT::build(double* initialState){
 
 
 		double t_init = ic[d - 1];
-		vector<double> result = system->simulate(ic, param, settings, dt);
+		vector<double> result = system->simulate(ic, param, settings, 0, dt);
 
 
 		result[0] += t_init;		//result[0] contains the time-stamp, in the simulation it is stamped as dt, however we have to add the time of the parrent node as well.
@@ -135,11 +135,16 @@ void TimedRRT::simulate(double* initialState){
 
 
 		double t_init = state[d - 1];
-		vector<double> result = system->simulate(state, param, settings, dt);
+		vector<double> result = system->simulate(state, param, settings, 0, dt);
 		result[0] += t_init;		//result[0] contains the time-stamp, in the simulation it is stamped as dt, however we have to add the time of the parrent node as well.
 
 
 		node* q_new = new node(d);
+
+		for (int j = 0; j < d; j++){
+			cout << j << "->" << result[j] << endl;
+		}
+
         q_new->set(result);
         q_near->addChildren(q_new);		//add the new node to the tree
 		q_new->setParent(q_near);		//We only make the parent-child releation ship during the tree build

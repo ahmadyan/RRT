@@ -2,7 +2,13 @@
 #include <fstream>
 #include "pll.h"
 
-vector<double>  PLL::simulate(double* nodeset, vector<double> variation, vector<string> settings, double dt){
+
+PLL::PLL(){
+	System::simulator = SPICE;
+}
+
+
+vector<double>  PLL::simulate(double* nodeset, vector<double> variation, vector<string> settings, double t0, double dt){
 	vector<double> result;
 	result.push_back(dt);
 	stringstream sed;

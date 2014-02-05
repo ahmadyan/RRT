@@ -22,7 +22,7 @@ void System::setSystem(int _d,int (*f)(double t, const double y[], double f[], v
 //		return integareODE(initialState, param, dt);
 //}
 
-//double System::integareODE(double* initialState, double* param, double dt){
+double System::integareODE(double* initialState, double* param, double dt){
 /*     double mu = param;
     gsl_odeiv2_system dynamic = {function, jacobian, d , &mu};  // {vector-element, vector-of-derivative, system-dimension, arbitrary-parameters}
     gsl_odeiv2_driver * d = gsl_odeiv2_driver_alloc_y_new (&dynamic, gsl_odeiv2_step_rk8pd, 1e-6, 1e-6, 0.0);
@@ -35,8 +35,8 @@ void System::setSystem(int _d,int (*f)(double t, const double y[], double f[], v
     cout <<  t  << " " << initialState[0] << " " <<  initialState[1] << endl ;
     gsl_odeiv2_driver_free (d);
     return t;*/
-//	return 0 ;
-//}
+	return 0 ;
+}
 
 //double System::runSPICE(double* initialState, double* param, double dt){
 	/*spice hspice;
