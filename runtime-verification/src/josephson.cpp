@@ -1,4 +1,4 @@
-#include "vanderpol.h"
+#include "josephson.h"
 #include <fstream>
 #include <iostream>
 
@@ -10,22 +10,35 @@
 #include <gsl/gsl_linalg.h>
 #include <gsl/gsl_ieee_utils.h>
 
-Vanderpol::Vanderpol(){
+Josephson::Josephson(){
 
 }
 
 //Func will define the dynamics of the system. This is Van der Pol Oscillator
-int vanderpol_func(double t, const double y[], double f[], void *params){
+int Josephson_func(double t, const double x[], double dxdt[], void *params){
 	vector<double> p = *(vector<double>*)params;
-	double p0 = p.at(0);   
-	double p1 = p.at(1);   
-	double mu = 2;
-	f[0] = y[1] + p0;
-	f[1] = -(y[0] + p1) - mu*y[1] * (y[0] * y[0] - 1);
+		
+	double Is = p.at(0);   
+	double PV = p.at(1);   
+	
+	double C = 1;	//pF
+	double G = 0.25; //uH
+	double I0 = 1;	//kOhm
+	double k = 1;	//v
+
+	double vc = x[0];
+	double phi_L = x[1];
+
+	double dvcdt = (1 / C)*(-G*vc - I0*sin(k*(phi_L + PV)) + Is);
+	double dphi_Ldt = vc;
+	
+	dxdt[0] = dvcdt;
+	dxdt[1] = dphi_Ldt;
+
 	return GSL_SUCCESS;
 }
 
-int vanderpol_jac(double t, const double y[], double *dfdy, double dfdt[], void *params){
+int Josephson_jac(double t, const double y[], double *dfdy, double dfdt[], void *params){
 	vector<double> p = *(vector<double>*)params;
 	double p0 = p.at(0);   
 	double p1 = p.at(1);   
@@ -41,12 +54,12 @@ int vanderpol_jac(double t, const double y[], double *dfdy, double dfdt[], void 
 	return GSL_SUCCESS;
 }
 
-vector<double>  Vanderpol::simulate(double* ic, vector<double> param, vector<string> setting, double t0, double dt){
+vector<double>  Josephson::simulate(double* ic, vector<double> param, vector<string> setting, double t0, double dt){
 	vector<double> result;
 	double t = t0;
 	double tf = t0 + dt;
 	result.push_back(tf);
-	gsl_odeiv2_system sys = { vanderpol_func, vanderpol_jac, 2, &param };
+	gsl_odeiv2_system sys = { Josephson_func, Josephson_jac, 2, &param };
 	double y[2];
 	for (int i = 0; i<2; i++) 
 		y[i] = ic[i];

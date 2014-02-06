@@ -20,6 +20,7 @@ public:
     Configuration(string);
     void getParameter(string, string*);
     void getParameter(string, double*);
+	void getParameter(string, int, double*);
     void getParameter(string parameter, int* result);
     void setParameter(string, string);
 	bool checkParameter(string key, string value);

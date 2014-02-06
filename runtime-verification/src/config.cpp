@@ -67,6 +67,19 @@ void Configuration::getParameter(string parameter, double* result){
 	try{
 	    *result = boost::lexical_cast<double>(db[parameter]);
 	}catch (const std::exception&){
+		cout << "Variable " << parameter << " not found";
+		*result = 0;
+	}
+}
+
+void Configuration::getParameter(string parameter, int i, double* result){
+	try{
+		stringstream ss;
+		ss << parameter << "[" << i << "]";
+		*result = boost::lexical_cast<double>(db[ss.str()]);
+	}
+	catch (const std::exception&){
+		cout << "Variable " << parameter << "@" << i <<" not found";
 		*result = 0;
 	}
 }

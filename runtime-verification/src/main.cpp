@@ -24,6 +24,7 @@
 #include "pll.h"
 #include "tdo.h"
 #include "inverter.h"
+#include "josephson.h"
 
 using namespace std;
 
@@ -195,7 +196,37 @@ void kernel_RRT(vector<Monitor*> monitors, int mode, bool generatePlot,string in
 	}
 }
 
-void kernel_RRT_VDP(Configuration* config){
+System* systemSelector(Configuration* config){
+	System* circuit;
+	if (config->checkParameter("edu.uiuc.csl.system.name", "Vanderpol")){
+		circuit = new Vanderpol();
+	}
+	else if (config->checkParameter("edu.uiuc.csl.system.name", "Josephson")){
+		circuit = new Josephson();
+	}
+	else if (config->checkParameter("edu.uiuc.csl.system.name", "Inverter")){
+		circuit = new Inverter();
+	}
+	else if (config->checkParameter("edu.uiuc.csl.system.name", "TDO")){
+		circuit = new TDO();
+	}
+	else if (config->checkParameter("edu.uiuc.csl.system.name", "PLL")){
+		circuit = new PLL();
+	}
+	else if (config->checkParameter("edu.uiuc.csl.system.name", "Josephson")){
+		circuit = new Josephson();
+	}
+	else if (config->checkParameter("edu.uiuc.csl.system.name", "Josephson")){
+		circuit = new Josephson();
+	}
+	else{
+		string name; config->getParameter("edu.uiuc.csl.system.name", &name);
+		cout << "System " << name << " is not supported. " << endl;
+	}
+	return circuit;
+}
+
+void kernel_RRT(Configuration* config){
 	string outputFileName;  config->getParameter("edu.uiuc.crhc.core.options.outputFileName", &outputFileName);
 	string inputFileName;  config->getParameter("edu.uiuc.crhc.core.options.inputFileName", &inputFileName);
 
@@ -206,13 +237,15 @@ void kernel_RRT_VDP(Configuration* config){
 
 	int dim; config->getParameter("edu.uiuc.csl.system.dimension", &dim);
 	int param; config->getParameter("edu.uiuc.csl.system.parameters", &param);
-	double* initialState = new double[dim+1]; // counting the time-augmentation as another dimension
-
-	Vanderpol* circuit = new Vanderpol();	//todo: use a switch case or something? 
-	//For oscillation:
-	initialState[0] = -3;			//This initial condition, under low variation parameters are indicator of 
-	initialState[1] = 3.4;		//correct circuit that will start a healty oscillation
-	initialState[2] = 0;
+	
+	System* circuit = systemSelector(config);
+	
+	double* initialState = new double[dim + 1]; // counting the time-augmentation as another dimension
+	initialState[dim] = 0;	//time always begins at 0
+	for (int i = 0; i < dim; i++){
+		double ic; config->getParameter("edu.uiuc.csl.system.var.ic", i, &ic);
+		initialState[i] = ic;
+	}
 
 	int iter = 0;
 	if (mc==1){
@@ -234,21 +267,25 @@ void kernel_RRT_VDP(Configuration* config){
 	//for (int i = 0; i<(int)(monitors.size()); i++){
 	//	rrt.addMonitor(monitors[i]);
 	//}
+
 	for (int i = 0; i < dim; i++){
-		rrt.setBound(i, -6, +6);
+		double min; config->getParameter("edu.uiuc.csl.system.var.min", i, &min);
+		double max; config->getParameter("edu.uiuc.csl.system.var.max", i, &max);
+		rrt.setBound(i, min, max);
 	}
+
 	for (int i = 0; i < param; i++){
 		//rrt.setVariationBound(i, -0.005, 005);
-		rrt.setVariationBound(i, -0.00, 00);
+		double min; config->getParameter("edu.uiuc.csl.system.param.min", i, &min);
+		double max; config->getParameter("edu.uiuc.csl.system.param.max", i, &max);
+		rrt.setVariationBound(i, min, max);
 	}
 	rrt.setdt(dt);
-
 	rrt.setSystem(circuit);
 	
 	if (mc){
 		rrt.simulate(initialState);  //for just simulating the circuit
-	}
-	else{
+	}else{
 		rrt.build(initialState);
 	}
 	rrt.save(outputFileName);
@@ -256,14 +293,13 @@ void kernel_RRT_VDP(Configuration* config){
 	int plot; config->getParameter("edu.uiuc.crhc.core.options.plot", &plot);
 	if (plot == 1){
 		Plotter* plotter = new Plotter("C:\\opt\\gnuplot\\bin\\gnuplot.exe -persist");
-		plotter->plotRRT("lines", rrt.getName().c_str(), "test", rrt, "v_C", "i_L", "t");
+		plotter->plotRRT("lines", rrt.getName().c_str(), "test", rrt, "x_1", "x_2", "t");
 	}
 }
 
 void rrt_experiments(Configuration* config){
-
-	if (config->checkParameter("edu.uiuc.csl.system.name", "Vanderpol")){
-		kernel_RRT_VDP(config);
+	if (config->checkParameter("edu.uiuc.crhc.core.mode", "rrt")){
+		kernel_RRT(config);
 	}
 	else{
 		vector<Monitor*> monitors;	//for this experiment, the monitors are empty. 
@@ -274,13 +310,7 @@ void rrt_experiments(Configuration* config){
 		string outputFileName = "pll_sim_ok_10000.rrt";
 		//the new kernel has the monitors argument
 		kernel_RRT(monitors, mode, generatePlot, inputFileName, outputFileName, plotter);
-		
 	}
-
-
-
-
-
 }
 
 //	Computing the joint time-frequency space instead of only time-augmented RRT
@@ -393,8 +423,9 @@ int main (int argc, const char * argv[]){
 	char full[_MAX_PATH];
 	_fullpath(full, ".\\", _MAX_PATH);
 	cout << "Current working directory is:" << full << endl;
-	string configFile = string(full) + "vanderpol.conf";
+	string configFile = string(full) + "config\\inverter.conf";
 	Configuration* config = new Configuration(configFile);
+
 	//fft_experiments();
 	//kdtree_experiment();
 	//MonitorExperiment();
