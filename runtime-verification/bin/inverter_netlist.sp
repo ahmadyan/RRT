@@ -5,13 +5,13 @@ Cmos inverter
 
 xinv	vdd 	vss 	vin 	vout	INV_X1
 cl		vout 	vss		10f
-vsource		vdd		0		1.0593v
-vground		vss		0		0.0649648v
-vinput		vin 	0		0.932194v
+vsource		vdd		0		0.978353v
+vground		vss		0		-0.0678091v
+vinput		vin 	0		0.0752007v
 
 .tran 1fs 1e-012 uic
-.save type=ic file=ic_1009.ic level=all time=1e-012
-.load file=ic_1008.ic0
+.save type=ic file=ic_1999.ic level=all time=1e-012
+.load file=ic_1954.ic0
 
 .option post 
 .print vout

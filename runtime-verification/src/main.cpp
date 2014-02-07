@@ -192,7 +192,6 @@ void kernel_RRT(Configuration* config){
 
 	double simulationTime; config->getParameter("edu.uiuc.csl.core.simulation.simulationTime", &simulationTime);
 	double dt; config->getParameter("edu.uiuc.csl.core.simulation.dt", &dt);
-	int mc = 0; config->getParameter("edu.uiuc.csl.core.simulation.MonteCarlo", &mc);
 	string name; config->getParameter("edu.uiuc.csl.system.name", &name);
 
 	int dim; config->getParameter("edu.uiuc.csl.system.dimension", &dim);
@@ -208,7 +207,7 @@ void kernel_RRT(Configuration* config){
 	}
 
 	int iter = 0;
-	if (mc==1){
+	if (config->checkParameter("edu.uiuc.crhc.core.mode", "mc")){
 		iter = simulationTime / dt;
 	}else{
 		config->getParameter("edu.uiuc.csl.core.sampling.iteration", &iter);
@@ -243,10 +242,12 @@ void kernel_RRT(Configuration* config){
 	rrt.setdt(dt);
 	rrt.setSystem(circuit);
 	
-	if (mc){
+	if (config->checkParameter("edu.uiuc.crhc.core.mode", "mc")){
 		rrt.simulate(initialState);  //for just simulating the circuit
-	}else{
+	}else if(config->checkParameter("edu.uiuc.crhc.core.mode", "rrt")){
 		rrt.build(initialState);
+	}else{
+		cout << "Uknown operation mode: " << config->get("edu.uiuc.crhc.core.mode") << endl;
 	}
 	rrt.save(outputFileName);
 

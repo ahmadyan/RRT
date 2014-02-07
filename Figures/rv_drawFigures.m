@@ -242,3 +242,35 @@ fig_4_1_1=figure(411);
 data41=rrt2mat('pll_sim_ok_10000.rrt');
 drawTrace(data41, pll_e, pll_time, 'pll_e', -1, -1, -1);
 
+
+
+
+
+%%-------------------------------------------------------------------------
+% Experiment 5: INV
+%%-------------------------------------------------------------------------
+
+
+inv_vdd= 3;
+inv_vin= 4;
+inv_vout=5;
+inv_gnd=6;
+inv_time=31; 
+%Case 1: MC
+
+%Case 2: RRT, with variation on input and supply
+data52=rrt2mat('inv_rrt_2000.rrt');
+Fig_5_2_1 = figure(511);
+drawTrace(data52, inv_vout, inv_time, 'v_out', -1, -0.2, 1.2);
+
+Fig_5_2_2 = figure(512);
+drawTree2D( data52 , inv_vin, inv_vout, 'vin', 'vout', -0.2, 1.2, -0.2, 1.2)
+
+
+for i=1:size(data52, 2),
+    data52(inv_vin,i)
+    if( abs(data52(inv_vin,i))<0.01 && abs(data52(inv_vout, i ))<0.01)
+        
+        i
+    end
+end
