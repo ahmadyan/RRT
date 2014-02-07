@@ -9,6 +9,7 @@
 #include <cstdio>
 #include <stdio.h>
 #include <vector>
+#include "config.h"
 //#include <gsl/gsl_errno.h>
 //#include <gsl/gsl_matrix.h>
 //#include <gsl/gsl_odeiv2.h>
@@ -45,4 +46,6 @@ public:
     //double simulate(double* initialState, double* param, double);
 	double integareODE(double* initialState, double* param, double);
 	//double runSPICE(double* initialState, double* param, double);
+
+	double* parseICFile(string fileName);
 };

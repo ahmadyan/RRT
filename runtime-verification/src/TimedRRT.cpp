@@ -54,13 +54,12 @@ void TimedRRT::build(double* initialState){
 			param.push_back(unifRand(variationMin[j], variationMax[j]));
 		}
 
-
-
 		vector<string> settings;
 		stringstream icInputFileName; icInputFileName << "ic_" << q_near->getIndex();
 		stringstream icOutputFileName; icOutputFileName << "ic_" << i;
 		settings.push_back(icOutputFileName.str());
 		settings.push_back(icInputFileName.str());
+		settings.push_back("transient"); // or settings.push_back("dc");
 
 
 		double t_init = ic[d - 1];
@@ -128,11 +127,11 @@ void TimedRRT::simulate(double* initialState){
 		}
 
 		vector<string> settings;
-		stringstream icInputFileName; icInputFileName << "pll_ic_load.ic" ; //icInputFileName << "ic_" << q_near->getIndex() << ".ic";
-		stringstream icOutputFileName; icOutputFileName << "pll_ic_save.ic"  ;//icOutputFileName << "ic_" << i << ".ic";
+		stringstream icInputFileName; icInputFileName << "ic_" << q_near->getIndex() << ".ic0";
+		stringstream icOutputFileName; icOutputFileName << "ic_" << i << ".ic";
 		settings.push_back(icOutputFileName.str());
 		settings.push_back(icInputFileName.str());
-
+		settings.push_back("transient");
 
 		double t_init = state[d - 1];
 		vector<double> result = system->simulate(state, param, settings, 0, dt);

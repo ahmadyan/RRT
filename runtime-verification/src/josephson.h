@@ -8,6 +8,6 @@ using namespace std;
 class Josephson: public System {
 	double mu;
 public:
-	Josephson();
+	Josephson(Configuration* config);
 	vector<double> simulate(double* ic, vector<double> parameters, vector<string> settings, double t0, double dt);
 };

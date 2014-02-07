@@ -244,7 +244,7 @@ void Plotter::plotRRT(string name, string title, string output, RRT rrt, string 
 //This method can draw the trace for one signal or the difference between two signals. 
 //Usage drawTrace(rrt, v1, v2, ...) draws v1-v2 w.r.t. time
 //		drawTrace(rrt, v1, -1, ...) draws v1    w.r.t. time
-void Plotter::plotTrace(RRT rrt, int v1, int v2, int tdim, double simTime, double dt){
+void Plotter::plotTrace(RRT rrt, int v1, int v2, int tdim, double simTime, double dt, string title){
 	ofstream out("plot.txt");
 	FILE *gnuplotPipe = _popen(gnuPlotPath.c_str(),"w");
 	string buffer ;
@@ -257,7 +257,8 @@ void Plotter::plotTrace(RRT rrt, int v1, int v2, int tdim, double simTime, doubl
 		min[i]=+1;
 		max[i]=-1;
 	}
-	emptyPlot("test", -1e-7, 100e-6, -0.5, 0.5  );
+		
+	emptyPlot(title, 0, simTime, rrt.getMin(v1), rrt.getMax(v1));
 	
 	queue<node*> q ; 
 	q.push(rrt.getRoot());

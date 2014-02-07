@@ -39,42 +39,7 @@ using namespace std;
 #define SIM_PLL			8
 #define SIM_INV			9
 #define SIM_RING		10
-
-void kernel_RRT_INV(vector<Monitor*> monitors, bool generatePlot, string outputFileName, Plotter* plotter, int iterations, double simulationTime, double dt, bool mc){
-	double* initialState = new double[3];
-	int variations = 3;
-	//For oscillation:
-	initialState[0] = 0.8;			//This initial condition, under low variation parameters are indicator of 
-	initialState[1] = 0.04e-3;		//correct circuit that will start a healty oscillation
-	initialState[2] = 0;
-	
-	Inverter* circuit = new Inverter();
-
-	TimedRRT rrt = TimedRRT(
-		2, //dimension
-		iterations, //k
-		variations,
-		simulationTime, //Simulation Time
-		"CMOS inverter");
-
-	for (int i = 0; i<(int)(monitors.size()); i++){
-		rrt.addMonitor(monitors[i]);
-	}
-	rrt.setBound(0, -0.2, 1.2);	
-	rrt.setBound(1, -0.2, 1.2); 
-
-	rrt.setVariationBound(0, -0.1, 0.1);	//p0, v = 300mv +- p0
-	rrt.setVariationBound(1, -0.1, 0.1);	//p0, v = 300mv +- p0
-	rrt.setVariationBound(2, -0.1, 0.1);	//p0, v = 300mv +- p0
-	
-
-	rrt.setdt(dt);
-	rrt.setSystem(circuit);
-	rrt.build(initialState );
- 	rrt.save(outputFileName);
-	if (generatePlot) plotter->plotRRT("lines", rrt.getName().c_str(), "test", rrt, "v_C", "i_L", "t");
-}
-
+/*
 void kernel_RRT_TDO(vector<Monitor*> monitors, bool generatePlot, string outputFileName, Plotter* plotter, int iterations, double simulationTime, double dt, bool mc){
 	double* initialState = new double[3];
 	int variations = 2 ;
@@ -160,6 +125,7 @@ void kernel_RRT_PLL(vector<Monitor*> monitors, bool generatePlot, string outputF
 	if(generatePlot)  plotter->plotTrace(rrt, pll_e, pll_eb, pll_time, simulationTime, dt);
 }
 
+
 void kernel_RRT(vector<Monitor*> monitors, int mode, bool generatePlot,string inputFileName, string outputFileName, Plotter* plotter){
 	if(mode==NEW_RRT_TDO){
 		int iterations = 10000; 
@@ -195,31 +161,25 @@ void kernel_RRT(vector<Monitor*> monitors, int mode, bool generatePlot,string in
 		kernel_RRT_PLL(monitors, generatePlot, outputFileName, plotter, iterations, simTime, dt, monteCarlo);
 	}
 }
+*/
 
 System* systemSelector(Configuration* config){
 	System* circuit;
 	if (config->checkParameter("edu.uiuc.csl.system.name", "Vanderpol")){
-		circuit = new Vanderpol();
-	}
-	else if (config->checkParameter("edu.uiuc.csl.system.name", "Josephson")){
-		circuit = new Josephson();
-	}
-	else if (config->checkParameter("edu.uiuc.csl.system.name", "Inverter")){
-		circuit = new Inverter();
-	}
-	else if (config->checkParameter("edu.uiuc.csl.system.name", "TDO")){
-		circuit = new TDO();
-	}
-	else if (config->checkParameter("edu.uiuc.csl.system.name", "PLL")){
-		circuit = new PLL();
-	}
-	else if (config->checkParameter("edu.uiuc.csl.system.name", "Josephson")){
-		circuit = new Josephson();
-	}
-	else if (config->checkParameter("edu.uiuc.csl.system.name", "Josephson")){
-		circuit = new Josephson();
-	}
-	else{
+		circuit = new Vanderpol(config);
+	}else if (config->checkParameter("edu.uiuc.csl.system.name", "Josephson")){
+		circuit = new Josephson(config);
+	}else if (config->checkParameter("edu.uiuc.csl.system.name", "Inverter")){
+		circuit = new Inverter(config);
+	}else if (config->checkParameter("edu.uiuc.csl.system.name", "TDO")){
+		circuit = new TDO(config);
+	}else if (config->checkParameter("edu.uiuc.csl.system.name", "PLL")){
+		circuit = new PLL(config);
+	}else if (config->checkParameter("edu.uiuc.csl.system.name", "Josephson")){
+		circuit = new Josephson(config);
+	}else if (config->checkParameter("edu.uiuc.csl.system.name", "Josephson")){
+		circuit = new Josephson(config);
+	}else{
 		string name; config->getParameter("edu.uiuc.csl.system.name", &name);
 		cout << "System " << name << " is not supported. " << endl;
 	}
@@ -292,8 +252,20 @@ void kernel_RRT(Configuration* config){
 
 	int plot; config->getParameter("edu.uiuc.crhc.core.options.plot", &plot);
 	if (plot == 1){
-		Plotter* plotter = new Plotter("C:\\opt\\gnuplot\\bin\\gnuplot.exe -persist");
-		plotter->plotRRT("lines", rrt.getName().c_str(), "test", rrt, "x_1", "x_2", "t");
+		string plotPath; config->getParameter("edu.uiuc.crhc.core.options.plot.path", &plotPath);
+		Plotter* plotter = new Plotter(plotPath);
+		if (config->checkParameter("edu.uiuc.crhc.core.options.plot.type", "trace")){
+			int v1; config->getParameter("edu.uiuc.crhc.core.options.plot.var[0]", &v1);
+			string title = config->get("edu.uiuc.crhc.core.options.plot.title");
+			plotter->plotTrace(rrt, v1, -1, dim , simulationTime, dt, title);
+		}
+		else if (config->checkParameter("edu.uiuc.crhc.core.options.plot.type", "rrt")){
+			plotter->plotRRT("lines", rrt.getName().c_str(), "test", rrt, "x_1", "x_2", "t");
+		}
+		else{
+			cout << "Uknown plot command: [edu.uiuc.crhc.core.options.plot.type] " << config->get("edu.uiuc.crhc.core.options.plot.type") << endl;
+		}
+		
 	}
 }
 
@@ -309,7 +281,7 @@ void rrt_experiments(Configuration* config){
 		string inputFileName = "test2.rrt";
 		string outputFileName = "pll_sim_ok_10000.rrt";
 		//the new kernel has the monitors argument
-		kernel_RRT(monitors, mode, generatePlot, inputFileName, outputFileName, plotter);
+		//kernel_RRT(monitors, mode, generatePlot, inputFileName, outputFileName, plotter);
 	}
 }
 
@@ -410,7 +382,7 @@ void MonitorExperiment(){
 	bool generatePlot = true ;//true ;
 	string inputFileName = "test2.rrt";
 	string outputFileName = "test.rrt" ;
-	kernel_RRT(monitors, mode, generatePlot, inputFileName, outputFileName, plotter);
+	//kernel_RRT(monitors, mode, generatePlot, inputFileName, outputFileName, plotter);
 
 
 	//pt->parseFormula("");
@@ -419,6 +391,15 @@ void MonitorExperiment(){
 }
 
 int main (int argc, const char * argv[]){
+
+
+	//for (int i = 0; i < 28; i++){
+	//	cout << "edu.uiuc.csl.system.var.name["<< i << "]=v" << i << endl;
+	//	cout << "edu.uiuc.csl.system.var.ic[" << i << "]=0" << endl;
+	//	cout << "edu.uiuc.csl.system.var.min[" << i  << "]=-0.2" << endl;
+	//	cout << "edu.uiuc.csl.system.var.max[" << i<< "]=1.2" << endl;
+	//}
+
 	srand((unsigned int)time(0));
 	char full[_MAX_PATH];
 	_fullpath(full, ".\\", _MAX_PATH);

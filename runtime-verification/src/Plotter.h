@@ -33,7 +33,7 @@ public:
     void plot();
     void plotRRT(string name, string title, string output, RRT rrt, string, string, string);
     void plot2D(string name, string title, string output, vector<transient> simData);
-    void plotTrace(RRT rrt, int v1, int v2, int, double, double);
+	void plotTrace(RRT rrt, int v1, int v2, int, double, double, string);
     void wait_for_key();
     void drawTrace(vector<double>, double t);
 

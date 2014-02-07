@@ -3,10 +3,10 @@
 #include "pll.h"
 
 
-PLL::PLL(){
+PLL::PLL(Configuration* config){
+	config->getParameter("edu.uiuc.csl.system.dimension", &d);
 	System::simulator = SPICE;
 }
-
 
 vector<double>  PLL::simulate(double* nodeset, vector<double> variation, vector<string> settings, double t0, double dt){
 	vector<double> result;
@@ -24,7 +24,11 @@ vector<double>  PLL::simulate(double* nodeset, vector<double> variation, vector<
 	system(sed.str().c_str());
 	generateICFile(nodeset, settings[1]);
 	system("hspice pll_netlist.sp > Sim.txt");
-	parseICFile(settings[0], &result);
+	double* tmp = parseICFile(settings[0] + "0");
+	for (int i = 0; i < getDimension(); i++){
+		result.push_back(tmp[i]);
+	}
+	delete tmp;
 	return result;
 }
 
@@ -68,28 +72,6 @@ void  PLL::setInitialPLLState(double* state){
 	state[pll_time] = 0;
 }
 
-void PLL::parseICFile(string fileName, vector<double> *result){
-	string line;
-	ifstream simResult(fileName + "0"); //hspice adds a 0 to the end of each file
-
-	if (simResult.good()){
-		for (int i = 0; i<12; i++)
-			getline(simResult, line);
-
-		for (int i = 0; i<16; i++){
-			getline(simResult, line);
-			line = line.substr(line.find_first_of("=") + 1, line.length());
-			double d;
-			stringstream ss(line);
-			ss >> d;
-			line.erase(line.find_last_not_of(" \n\r\t") + 1);
-			char c = line.c_str()[line.length() - 1];
-			d = d*System::unit(c);
-			result->push_back(d);
-		}
-	}
-	simResult.close();
-}
 
 void PLL::generateICFile(double* nodeset, string fileName){
 	FILE *ic = fopen(fileName.c_str(), "w");

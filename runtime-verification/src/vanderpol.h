@@ -8,6 +8,6 @@ using namespace std;
 class Vanderpol: public System {
 	double mu;
 public:
-	Vanderpol();
+	Vanderpol(Configuration* config);
 	vector<double> simulate(double* ic, vector<double> parameters, vector<string> settings, double t0, double dt);
 };

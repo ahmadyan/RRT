@@ -18,6 +18,7 @@ class Configuration{
 
 public:
     Configuration(string);
+	string get(string);
     void getParameter(string, string*);
     void getParameter(string, double*);
 	void getParameter(string, int, double*);

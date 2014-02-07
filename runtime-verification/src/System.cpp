@@ -151,3 +151,30 @@ vector<double> System::parse(string s){
 	}
 	return result;
 }
+
+
+double* System::parseICFile(string fileName){
+	double* result = new double[getDimension()];
+	string line;
+	ifstream simResult(fileName);
+
+	if (simResult.good()){
+		do{
+			getline(simResult, line);	//skip the headers (usually 12 lines)
+		} while (line.compare(".ic") != 0);
+
+		for (int i = 0; i<getDimension(); i++){
+			getline(simResult, line);
+			line = line.substr(line.find_first_of("=") + 1, line.length());
+			double value;
+			stringstream ss(line);
+			ss >> value;
+			line.erase(line.find_last_not_of(" \n\r\t") + 1);
+			char c = line.c_str()[line.length() - 1];
+			value = value*System::unit(c);
+			result[i] = value; 
+		}
+	}
+	simResult.close();
+	return result;
+}

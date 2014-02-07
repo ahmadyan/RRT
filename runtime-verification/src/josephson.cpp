@@ -10,8 +10,8 @@
 #include <gsl/gsl_linalg.h>
 #include <gsl/gsl_ieee_utils.h>
 
-Josephson::Josephson(){
-
+Josephson::Josephson(Configuration* config){
+	config->getParameter("edu.uiuc.csl.system.dimension", &d);
 }
 
 //Func will define the dynamics of the system. This is Van der Pol Oscillator

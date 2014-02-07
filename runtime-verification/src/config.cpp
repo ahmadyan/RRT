@@ -79,7 +79,7 @@ void Configuration::getParameter(string parameter, int i, double* result){
 		*result = boost::lexical_cast<double>(db[ss.str()]);
 	}
 	catch (const std::exception&){
-		cout << "Variable " << parameter << "@" << i <<" not found";
+		cout << "Variable " << parameter << "@" << i <<" not found" << endl ;
 		*result = 0;
 	}
 }
@@ -95,4 +95,16 @@ bool Configuration::checkParameter(string key, string value){
 	else{
 		return false;
 	}
+}
+
+string Configuration::get(string key){
+	try{
+		return db[key];
+	}
+	catch (const std::exception&){
+		stringstream ss; 
+		ss << "The key " << key << " not found in configuration file" << endl;
+		return ss.str();
+	}
+	
 }

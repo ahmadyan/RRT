@@ -28,9 +28,8 @@ using namespace std;
 
 class PLL : public System {
 public:
-	PLL();
+	PLL(Configuration* config);
 	vector<double> simulate(double* ic, vector<double> parameters, vector<string> settings, double t0, double dt);
 	void setInitialPLLState(double* state);
 	void generateICFile(double* nodeset, string fileName);
-	void parseICFile(string fileName, vector<double>*);
 };

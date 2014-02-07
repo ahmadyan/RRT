@@ -4,7 +4,8 @@
 
 
 
-TDO::TDO(){
+TDO::TDO(Configuration* config){
+	config->getParameter("edu.uiuc.csl.system.dimension", &d);
 	System::simulator = SPICE;
 }
 
