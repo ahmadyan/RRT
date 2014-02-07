@@ -277,52 +277,52 @@
 
  xinv	vdd 	vss 	vin 	vout	inv_x1
  cl		vout 	vss		10f
- vsource		vdd		0		-0.00804498v
- vground		vss		0		0.00449995v
- vinput		vin 	0		0.514653v
+ vsource		vdd		0		1.0593v
+ vground		vss		0		0.0649648v
+ vinput		vin 	0		0.932194v
 
- .tran 1fs 5e-009 uic
- .save type=ic file=ic_19.ic level=all time=5e-009
- .load file=ic_18.ic0
+ .tran 1fs 1e-012 uic
+ .save type=ic file=ic_1009.ic level=all time=1e-012
+ .load file=ic_1008.ic0
  * "version" "a-2008.03 32-bit"
  * "format" "hsp"
- * "rundate" "15:42:05 02/07/2014 "
+ * "rundate" "16:55:14 02/07/2014 "
  * "netlist" "inverter_netlist.sp "
  * "runtitle" "cmos inverter"
- * time =    5.0000n       
+ * time =    1.0000p       
  * temperature =   25.0000        
  *** begin: saved operating point ***                     
  .option 
  + gmindc=   1.0000p       
  .ic
- + vdd =  -9.6875m       
- + vin = 647.5920m       
- + vout =   5.9834m       
- + vss =   5.9801m       
- + xinv.n_a_m0_g = 647.6600m       
- + xinv.n_a_m1_g = 647.6493m       
- + xinv.n_vdd_m0_s =  -9.6875m       
- + xinv.n_vss_m1_s =   5.9797m       
- + xinv.n_zn_m0_d =   5.9831m       
- + xinv.n_zn_m1_d =   5.9831m       
- + xinv.x_pm_inv_x1%vss_8 =   5.9801m       
- + xinv.x_pm_inv_x1%vss_29 =   5.9801m       
- + xinv.x_pm_inv_x1%vdd_31 =  -9.6875m       
- + xinv.x_pm_inv_x1%vdd_19 =  -9.6875m       
- + xinv.x_pm_inv_x1%vdd_18 =  -9.6875m       
- + xinv.x_pm_inv_x1%vdd_12 =  -9.6875m       
- + xinv.x_pm_inv_x1%vdd_11 =  -9.6875m       
- + xinv.x_pm_inv_x1%vdd_8 =  -9.6868m       
- + xinv.x_pm_inv_x1%vdd_28 =  -9.6875m       
- + xinv.x_pm_inv_x1%vss_18 =   5.9801m       
- + xinv.x_pm_inv_x1%vss_17 =   5.9801m       
- + xinv.x_pm_inv_x1%vss_10 =   5.9799m       
- + xinv.x_pm_inv_x1%vss_9 =   5.9801m       
- + xinv.x_pm_inv_x1%a_1 = 647.6266m       
- + xinv.x_pm_inv_x1%a_11 = 647.6210m       
- + xinv.x_pm_inv_x1%a_18 = 647.6255m       
- + xinv.x_pm_inv_x1%a_5 = 647.6266m       
- + xinv.x_pm_inv_x1%a_9 = 647.5922m       
+ + vdd = 903.7290m       
+ + vin = 731.1840m       
+ + vout = 918.2915m       
+ + vss = -47.4349m       
+ + xinv.n_a_m0_g = 730.2117m       
+ + xinv.n_a_m1_g = 730.6230m       
+ + xinv.n_vdd_m0_s = 903.7157m       
+ + xinv.n_vss_m1_s = -46.8561m       
+ + xinv.n_zn_m0_d = 918.3408m       
+ + xinv.n_zn_m1_d = 917.9204m       
+ + xinv.x_pm_inv_x1%vss_8 = -47.4349m       
+ + xinv.x_pm_inv_x1%vss_29 = -47.3803m       
+ + xinv.x_pm_inv_x1%vdd_31 = 903.7283m       
+ + xinv.x_pm_inv_x1%vdd_19 = 903.7253m       
+ + xinv.x_pm_inv_x1%vdd_18 = 903.7254m       
+ + xinv.x_pm_inv_x1%vdd_12 = 903.7289m       
+ + xinv.x_pm_inv_x1%vdd_11 = 903.7257m       
+ + xinv.x_pm_inv_x1%vdd_8 = 903.7290m       
+ + xinv.x_pm_inv_x1%vdd_28 = 903.7252m       
+ + xinv.x_pm_inv_x1%vss_18 = -47.3964m       
+ + xinv.x_pm_inv_x1%vss_17 = -47.4349m       
+ + xinv.x_pm_inv_x1%vss_10 = -47.4349m       
+ + xinv.x_pm_inv_x1%vss_9 = -47.4349m       
+ + xinv.x_pm_inv_x1%a_1 = 730.7812m       
+ + xinv.x_pm_inv_x1%a_11 = 730.8420m       
+ + xinv.x_pm_inv_x1%a_18 = 730.7889m       
+ + xinv.x_pm_inv_x1%a_5 = 730.7698m       
+ + xinv.x_pm_inv_x1%a_9 = 731.1822m       
  ***   end: saved operating point ***                     
 
  .option post 
@@ -923,19 +923,19 @@ Model Name: nmos_vtl
  cmos inverter                                                                  
   ******  operating point information      tnom=  25.000 temp=  25.000          
  ******  
- ***** operating point status is voltage   simulation time is     5.0000n
+ ***** operating point status is voltage   simulation time is     1.0000p
     node    =voltage      node    =voltage      node    =voltage
 
- +0:vdd     =  -8.0450m 0:vin     = 514.6530m 0:vout    =   4.5000m
- +0:vss     =   4.5000m 1:n_a_m0_g= 514.6530m 1:n_a_m1_g= 514.6530m
- +1:n_vdd_m0=  -8.0450m 1:n_vss_m1=   4.5000m 1:n_zn_m0_=   4.5000m
- +1:n_zn_m1_=   4.5000m 1:x_pm_inv=   4.5000m 1:x_pm_inv=   4.5000m
- +1:x_pm_inv=  -8.0450m 1:x_pm_inv=  -8.0450m 1:x_pm_inv=  -8.0450m
- +1:x_pm_inv=  -8.0450m 1:x_pm_inv=  -8.0450m 1:x_pm_inv=  -8.0450m
- +1:x_pm_inv=  -8.0450m 1:x_pm_inv=   4.5000m 1:x_pm_inv=   4.5000m
- +1:x_pm_inv=   4.5000m 1:x_pm_inv=   4.5000m 1:x_pm_inv= 514.6530m
- +1:x_pm_inv= 514.6530m 1:x_pm_inv= 514.6530m 1:x_pm_inv= 514.6530m
- +1:x_pm_inv= 514.6530m
+ +0:vdd     =   1.0593  0:vin     = 932.1940m 0:vout    = 889.8168m
+ +0:vss     =  64.9648m 1:n_a_m0_g= 931.2517m 1:n_a_m1_g= 931.5318m
+ +1:n_vdd_m0=   1.0593  1:n_vss_m1=  65.6432m 1:n_zn_m0_= 889.8574m
+ +1:n_zn_m1_= 889.3934m 1:x_pm_inv=  64.9671m 1:x_pm_inv=  65.0289m
+ +1:x_pm_inv=   1.0593  1:x_pm_inv=   1.0593  1:x_pm_inv=   1.0593 
+ +1:x_pm_inv=   1.0593  1:x_pm_inv=   1.0593  1:x_pm_inv=   1.0593 
+ +1:x_pm_inv=   1.0593  1:x_pm_inv=  65.0099m 1:x_pm_inv=  64.9649m
+ +1:x_pm_inv=  64.9648m 1:x_pm_inv=  64.9649m 1:x_pm_inv= 931.7741m
+ +1:x_pm_inv= 931.8407m 1:x_pm_inv= 931.7858m 1:x_pm_inv= 931.7681m
+ +1:x_pm_inv= 932.1923m
 
 
           ***** job concluded
@@ -954,15 +954,15 @@ Model Name: nmos_vtl
     analysis           time    # points   tot. iter  conv.iter
 
     op point           0.00           1           0
-    transient          0.08     5000001          72          34 rev=         1
-    readin             0.00
-    errchk             0.01
+    transient          0.00        1001          62          28 rev=         1
+    readin             0.01
+    errchk             0.00
     setup              0.00
     output             0.00
-           total cpu time          0.09 seconds
+           total cpu time          0.01 seconds
            total elapsed time         1 seconds
-               job started at  15:42:05 02/07/2014
-               job ended   at  15:42:05 02/07/2014
+               job started at  16:55:14 02/07/2014
+               job ended   at  16:55:14 02/07/2014
 
 
 >info:         ***** hspice job concluded

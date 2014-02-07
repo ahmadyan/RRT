@@ -32,7 +32,7 @@ vector<double>  Inverter::simulate(double* ic, vector<double> param, vector<stri
 	}
 	sed << " > inverter_netlist.sp" << endl;
 
-	cout << sed.str() << endl;
+	//cout << sed.str() << endl;
 	system(sed.str().c_str());
 	system("hspice inverter_netlist.sp > Sim.txt");
 

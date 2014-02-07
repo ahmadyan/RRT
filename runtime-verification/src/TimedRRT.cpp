@@ -105,7 +105,6 @@ void TimedRRT::build(double* initialState){
 	}
 }
 
-
 void TimedRRT::simulate(double* initialState){
 	root = new node(d);
 	root->set(initialState);
@@ -123,9 +122,41 @@ void TimedRRT::simulate(double* initialState){
 
 		vector<double> param;	//variation or input to the system 
 		for (int j = 0; j < var; j++){
-			param.push_back(unifRand(variationMin[j], variationMax[j]));
+			if (j < 2){
+				param.push_back(unifRand(variationMin[j], variationMax[j]));
+			}
+			else{
+				double tnow = i*dt;
+				double tperiod = 100e-12;	//100ps -> 10GHz
+				double freq = 1 / tperiod;
+				int cycles = ceilf(tnow / tperiod) - 1;
+				double tp = tnow - cycles * tperiod;
+				
+				double vin = 0; int vinIndex = 2;
+				double vdd = 1;
+				double gnd = 0;
+				if (tp < 0.1*tperiod){
+					//pulse rising
+					vin = gnd+ vdd* ((tp/tperiod)/0.1) + unifRand(variationMin[vinIndex], variationMax[vinIndex]);
+				}
+				else if (tp<0.5*tperiod){
+					//pulse is 1
+					vin = vdd - unifRand(variationMin[vinIndex], variationMax[vinIndex]);
+				}
+				else if (tp < 0.6*tperiod){
+					//pulse falling
+					double x=vdd* ( ((tp / tperiod) - 0.5)/0.1); 
+					vin = vdd -x- unifRand(variationMin[vinIndex], variationMax[vinIndex]);
+				}else{
+					//pulse is 0
+					vin = gnd+ unifRand(variationMin[vinIndex], variationMax[vinIndex]);
+				}
+				param.push_back(vin);
+			}
+			
 		}
 
+		
 		vector<string> settings;
 		stringstream icInputFileName; icInputFileName << "ic_" << q_near->getIndex() << ".ic0";
 		stringstream icOutputFileName; icOutputFileName << "ic_" << i << ".ic";
@@ -136,7 +167,6 @@ void TimedRRT::simulate(double* initialState){
 		double t_init = state[d - 1];
 		vector<double> result = system->simulate(state, param, settings, 0, dt);
 		result[0] += t_init;		//result[0] contains the time-stamp, in the simulation it is stamped as dt, however we have to add the time of the parrent node as well.
-
 
 		node* q_new = new node(d);
 
