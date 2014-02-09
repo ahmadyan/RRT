@@ -268,9 +268,9 @@ vector<node*> RRT::getNearestNode(node* q_sample, double errorTolerance, bool ti
 
 	//The inverter case study:
 	vector<node*> results;
-
 	double p = unifRand(0, 1);
 	double progressFactor; config->getParameter("edu.uiuc.csl.core.sampling.progressFactor", &progressFactor);
+
 
 	if (p < progressFactor){
 		//waste this sample on forward progress in time. 
@@ -289,45 +289,51 @@ vector<node*> RRT::getNearestNode(node* q_sample, double errorTolerance, bool ti
 		results.push_back(lastNode);
 	}
 	else{
-
-	}
-
-	return results;
-
-
-
-
-	
-
-	if(errorTolerance <= 0){ 
-		//Searching for the nearest node, 
-		//Usually used for searching for closest node in the RRT from q_sample during the RRT loop
-		double closestDistance= ( timed ? q_sample->timed_distance(nodes[0], min, max) : q_sample->distance(nodes[0], min, max) );
-		int closestNodeIndex=0; 
-		for(int i=0; i<nodes.size();i++){
-			double d= ( timed ? q_sample->timed_distance(nodes[i], min, max) : q_sample->distance(nodes[i], min, max) );
-			if( d<closestDistance ){
-				closestDistance=d;
-				closestNodeIndex=i;
+		double closestDistance = 99999;
+		int closestNodeIndex = -1;
+		for (int i = 0; i<nodes.size(); i++){
+			//Compute distance from an abstraction, not an entire model, 
+			//I don't really care about every variable in the circuits, some are more important than the others (weighted distance model???).
+			double iv = 2;
+			//cout << iv << " " << nodes[i]->get(iv) << " ----> " << q_sample->get(iv) << endl;
+			double d = abs(nodes[i]->get(iv) - q_sample->get(iv));
+			if (d<closestDistance){
+				closestDistance = d;
+				closestNodeIndex = i;
 			}
 		}
 		results.push_back(nodes[closestNodeIndex]);
-	}else{
-		//There is a positive errorTolerance, which means we are searching for the set of close nodes within the errorTolerance epsilon
-		//THis is usually used for the casting searches (i.e. nodes that are within the same state, but possibly different time)
-		for(int i=0; i<nodes.size();i++){
-			double d= ( timed ? q_sample->timed_distance(nodes[i], min, max) : q_sample->distance(nodes[i], min, max) );
-			cout << "Searching for closest neighbors" << endl ;
-			cout << "distance=" << d << endl ;
-			if(d<=errorTolerance){
-				if(nodes[i]->getID()!=q_sample->getID()){
-					results.push_back(nodes[i]);
+		
+			/*
+		if (errorTolerance <= 0){
+			//Searching for the nearest node, 
+			//Usually used for searching for closest node in the RRT from q_sample during the RRT loop
+			double closestDistance = (timed ? q_sample->timed_distance(nodes[0], min, max) : q_sample->distance(nodes[0], min, max));
+			int closestNodeIndex = 0;
+			for (int i = 0; i < nodes.size(); i++){
+				double d = (timed ? q_sample->timed_distance(nodes[i], min, max) : q_sample->distance(nodes[i], min, max));
+				if (d < closestDistance){
+					closestDistance = d;
+					closestNodeIndex = i;
 				}
 			}
+			results.push_back(nodes[closestNodeIndex]);
 		}
+		else{
+			//There is a positive errorTolerance, which means we are searching for the set of close nodes within the errorTolerance epsilon
+			//THis is usually used for the casting searches (i.e. nodes that are within the same state, but possibly different time)
+			for (int i = 0; i < nodes.size(); i++){
+				double d = (timed ? q_sample->timed_distance(nodes[i], min, max) : q_sample->distance(nodes[i], min, max));
+				cout << "Searching for closest neighbors" << endl;
+				cout << "distance=" << d << endl;
+				if (d <= errorTolerance){
+					if (nodes[i]->getID() != q_sample->getID()){
+						results.push_back(nodes[i]);
+					}
+				}
+			}
+		}*/
 	}
-	//normally search for nearest neighbor
-	
 
 	return results;
 }

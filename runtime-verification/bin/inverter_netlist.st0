@@ -3,7 +3,7 @@
  lic:
  lic: FLEXlm: v8.5b
  lic: USER:   adel                 HOSTNAME: adel-PC
- lic: HOSTID: f46d0461a9b8         PID:      43468
+ lic: HOSTID: f46d0461a9b8         PID:      44144
  lic: Using FLEXlm license file:
  lic: c:\flexlm\license.dat
  lic: Checkout 1 hspice
@@ -11,29 +11,29 @@
  lic: NODE LOCKED license on hostid f46d0461a9b8
  lic:
  Init: hspice initialization file: C:\synopsys\Hspice_A-2008.03\hspice.ini
- init: begin read circuit files,  cpu clock=  1.40E-02
+ init: begin read circuit files,  cpu clock=  1.50E-02
        option gmindc   =    1.000E-12
        option post
- init: end read circuit files,  cpu clock=  1.80E-02 memory=    147 kb
- init: begin check errors,  cpu clock=  1.80E-02
- init: end check errors,  cpu clock=  2.30E-02 memory=    148 kb
- init: begin setup matrix, pivot=    10 cpu clock=  2.30E-02
-       establish matrix -- done,  cpu clock=  2.30E-02 memory=    158 kb
-       re-order matrix -- done,  cpu clock=  2.30E-02 memory=    161 kb
- init: end setup matrix,  cpu clock=  2.30E-02 memory=    177 kb
+ init: end read circuit files,  cpu clock=  1.90E-02 memory=    147 kb
+ init: begin check errors,  cpu clock=  1.90E-02
+ init: end check errors,  cpu clock=  2.40E-02 memory=    148 kb
+ init: begin setup matrix, pivot=    10 cpu clock=  2.40E-02
+       establish matrix -- done,  cpu clock=  2.40E-02 memory=    158 kb
+       re-order matrix -- done,  cpu clock=  2.40E-02 memory=    161 kb
+ init: end setup matrix,  cpu clock=  2.50E-02 memory=    177 kb
  output: inverter_netlist.tr0
- sweep: tran tran0    begin, stop_t=  1.00E-11 #sweeps=**** cpu clock=  2.40E-02
- tran: time= 1.1166E-12 tot_iter=      30 conv_iter=      10 cpu clock= 2.40E-02
- tran: time= 2.1166E-12 tot_iter=      34 conv_iter=      12 cpu clock= 2.50E-02
- tran: time= 3.1166E-12 tot_iter=      38 conv_iter=      14 cpu clock= 2.50E-02
- tran: time= 4.1166E-12 tot_iter=      42 conv_iter=      16 cpu clock= 2.50E-02
- tran: time= 5.1166E-12 tot_iter=      46 conv_iter=      18 cpu clock= 2.50E-02
- tran: time= 6.1166E-12 tot_iter=      50 conv_iter=      20 cpu clock= 2.50E-02
- tran: time= 7.1166E-12 tot_iter=      54 conv_iter=      22 cpu clock= 2.50E-02
- tran: time= 8.1166E-12 tot_iter=      58 conv_iter=      24 cpu clock= 2.50E-02
- tran: time= 9.1166E-12 tot_iter=      62 conv_iter=      26 cpu clock= 2.50E-02
- tran: time= 1.0000E-11 tot_iter=      66 conv_iter=      28 cpu clock= 2.50E-02
- sweep: tran tran0    end,  cpu clock=  2.60E-02 memory=    177 kb
+ sweep: tran tran0    begin, stop_t=  1.00E-12 #sweeps=1001 cpu clock=  2.50E-02
+ tran: time= 1.2924E-13 tot_iter=      22 conv_iter=       8 cpu clock= 2.60E-02
+ tran: time= 2.2924E-13 tot_iter=      26 conv_iter=      10 cpu clock= 2.60E-02
+ tran: time= 3.2924E-13 tot_iter=      30 conv_iter=      12 cpu clock= 2.60E-02
+ tran: time= 4.2924E-13 tot_iter=      34 conv_iter=      14 cpu clock= 2.60E-02
+ tran: time= 5.2924E-13 tot_iter=      38 conv_iter=      16 cpu clock= 2.60E-02
+ tran: time= 6.2924E-13 tot_iter=      42 conv_iter=      18 cpu clock= 2.60E-02
+ tran: time= 7.2924E-13 tot_iter=      46 conv_iter=      20 cpu clock= 2.60E-02
+ tran: time= 8.2924E-13 tot_iter=      50 conv_iter=      22 cpu clock= 2.60E-02
+ tran: time= 9.2924E-13 tot_iter=      54 conv_iter=      24 cpu clock= 2.60E-02
+ tran: time= 1.0000E-12 tot_iter=      58 conv_iter=      26 cpu clock= 2.60E-02
+ sweep: tran tran0    end,  cpu clock=  2.70E-02 memory=    177 kb
 >info:         ***** hspice job concluded
  Init: hspice initialization file: C:\synopsys\Hspice_A-2008.03\hspice.ini
  lic: Release hspice token(s)

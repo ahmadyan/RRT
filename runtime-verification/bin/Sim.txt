@@ -277,57 +277,57 @@
 
  xinv	vdd 	vss 	vsubp 	vsubn 	vin 	vout	inv_x1
  cl		vout 	vss		10f
- vsource		vdd		0		0.948845v
- vground		vss		0		0.117307v
- vsub1		vsubp   0 		1.01868v
- vsub2		vsubn 	0 		0.16599v
- vinput		vin 	0		1.95474v
+ vsource		vdd		0		1.13019v
+ vground		vss		0		0.114219v
+ vsub1		vsubp   0 		0.904874v
+ vsub2		vsubn 	0 		-0.0221625v
+ vinput		vin 	0		-0.00433973v
 
 
- .tran 1fs 1e-011 uic
- .save type=ic file=ic_999.ic level=all time=1e-011
- .load file=ic_0.ic0
+ .tran 1fs 1e-012 uic
+ .save type=ic file=ic_9999.ic level=all time=1e-012
+ .load file=ic_2533.ic0
  * "version" "a-2008.03 32-bit"
  * "format" "hsp"
- * "rundate" "02:03:22 02/09/2014 "
+ * "rundate" "04:57:34 02/09/2014 "
  * "netlist" "inverter_netlist.sp "
  * "runtitle" "cmos inverter"
- * time =    0.            
+ * time =    1.0000p       
  * temperature =   25.0000        
  *** begin: saved operating point ***                     
  .option 
  + gmindc=   1.0000p       
  .ic
- + vdd =   1.0000        
- + vin =   1.0000        
- + vout =  38.3752u       
- + vss =   0.            
- + vsubn =   0.            
- + vsubp =   1.0000        
- + xinv.n_a_m0_g = 999.9999m       
- + xinv.n_a_m1_g = 999.9998m       
- + xinv.n_vdd_m0_s = 999.9999m       
- + xinv.n_vss_m1_s = 106.3415n       
- + xinv.n_zn_m0_d =  38.5160u       
- + xinv.n_zn_m1_d =  38.3057u       
- + xinv.x_pm_inv_x1%vss_8 =   0.            
- + xinv.x_pm_inv_x1%vss_29 =  10.0384n       
- + xinv.x_pm_inv_x1%vdd_31 =   1.0000        
- + xinv.x_pm_inv_x1%vdd_19 =   1.0000        
- + xinv.x_pm_inv_x1%vdd_18 =   1.0000        
- + xinv.x_pm_inv_x1%vdd_12 =   1.0000        
- + xinv.x_pm_inv_x1%vdd_11 =   1.0000        
- + xinv.x_pm_inv_x1%vdd_8 =   1.0000        
- + xinv.x_pm_inv_x1%vdd_28 =   1.0000        
- + xinv.x_pm_inv_x1%vss_18 =   7.0639n       
- + xinv.x_pm_inv_x1%vss_17 =   0.            
- + xinv.x_pm_inv_x1%vss_10 =   0.            
- + xinv.x_pm_inv_x1%vss_9 =   0.            
- + xinv.x_pm_inv_x1%a_1 = 999.9999m       
- + xinv.x_pm_inv_x1%a_11 = 999.9999m       
- + xinv.x_pm_inv_x1%a_18 = 999.9999m       
- + xinv.x_pm_inv_x1%a_5 = 999.9999m       
- + xinv.x_pm_inv_x1%a_9 =   1.0000        
+ + vdd =   1.1834        
+ + vin =  94.6623m       
+ + vout = 668.2249m       
+ + vss = 169.3720m       
+ + vsubn =  76.3512m       
+ + vsubp = 879.8000m       
+ + xinv.n_a_m0_g =  95.9973m       
+ + xinv.n_a_m1_g =  95.4382m       
+ + xinv.n_vdd_m0_s =   1.1829        
+ + xinv.n_vss_m1_s = 169.3720m       
+ + xinv.n_zn_m0_d = 669.3290m       
+ + xinv.n_zn_m1_d = 668.1995m       
+ + xinv.x_pm_inv_x1%vss_8 = 169.3720m       
+ + xinv.x_pm_inv_x1%vss_29 = 169.3720m       
+ + xinv.x_pm_inv_x1%vdd_31 =   1.1834        
+ + xinv.x_pm_inv_x1%vdd_19 =   1.1834        
+ + xinv.x_pm_inv_x1%vdd_18 =   1.1833        
+ + xinv.x_pm_inv_x1%vdd_12 =   1.1834        
+ + xinv.x_pm_inv_x1%vdd_11 =   1.1834        
+ + xinv.x_pm_inv_x1%vdd_8 =   1.1834        
+ + xinv.x_pm_inv_x1%vdd_28 =   1.1833        
+ + xinv.x_pm_inv_x1%vss_18 = 169.3720m       
+ + xinv.x_pm_inv_x1%vss_17 = 169.3720m       
+ + xinv.x_pm_inv_x1%vss_10 = 169.3720m       
+ + xinv.x_pm_inv_x1%vss_9 = 169.3720m       
+ + xinv.x_pm_inv_x1%a_1 =  95.2195m       
+ + xinv.x_pm_inv_x1%a_11 =  95.1355m       
+ + xinv.x_pm_inv_x1%a_18 =  95.2089m       
+ + xinv.x_pm_inv_x1%a_5 =  95.2350m       
+ + xinv.x_pm_inv_x1%a_9 =  94.6649m       
  ***   end: saved operating point ***                     
 
  .option post 
@@ -928,19 +928,19 @@ Model Name: nmos_vtl
  cmos inverter                                                                  
   ******  operating point information      tnom=  25.000 temp=  25.000          
  ******  
- ***** operating point status is voltage   simulation time is    10.0000p
+ ***** operating point status is voltage   simulation time is     1.0000p
     node    =voltage      node    =voltage      node    =voltage
 
- +0:vdd     = 948.8450m 0:vin     =   1.9547  0:vout    = 111.2717m
- +0:vss     = 117.3070m 0:vsubn   = 165.9900m 0:vsubp   =   1.0187 
- +1:n_a_m0_g=   1.9548  1:n_a_m1_g=   1.9547  1:n_vdd_m0= 948.8448m
- +1:n_vss_m1= 117.2895m 1:n_zn_m0_= 111.3078m 1:n_zn_m1_= 111.2821m
- +1:x_pm_inv= 117.3070m 1:x_pm_inv= 117.3053m 1:x_pm_inv= 948.8450m
- +1:x_pm_inv= 948.8450m 1:x_pm_inv= 948.8450m 1:x_pm_inv= 948.8450m
- +1:x_pm_inv= 948.8450m 1:x_pm_inv= 948.8450m 1:x_pm_inv= 948.8450m
- +1:x_pm_inv= 117.3058m 1:x_pm_inv= 117.3070m 1:x_pm_inv= 117.3071m
- +1:x_pm_inv= 117.3070m 1:x_pm_inv=   1.9547  1:x_pm_inv=   1.9547 
- +1:x_pm_inv=   1.9547  1:x_pm_inv=   1.9547  1:x_pm_inv=   1.9547 
+ +0:vdd     =   1.1302  0:vin     =  -4.3397m 0:vout    = 710.3425m
+ +0:vss     = 114.2190m 0:vsubn   = -22.1625m 0:vsubp   = 904.8740m
+ +1:n_a_m0_g=  -3.0430m 1:n_a_m1_g=  -3.5956m 1:n_vdd_m0=   1.1297 
+ +1:n_vss_m1= 114.2291m 1:n_zn_m0_= 711.3925m 1:n_zn_m1_= 710.3170m
+ +1:x_pm_inv= 114.2202m 1:x_pm_inv= 114.2200m 1:x_pm_inv=   1.1302 
+ +1:x_pm_inv=   1.1302  1:x_pm_inv=   1.1301  1:x_pm_inv=   1.1302 
+ +1:x_pm_inv=   1.1302  1:x_pm_inv=   1.1302  1:x_pm_inv=   1.1301 
+ +1:x_pm_inv= 114.2197m 1:x_pm_inv= 114.2190m 1:x_pm_inv= 114.2190m
+ +1:x_pm_inv= 114.2190m 1:x_pm_inv=  -3.7931m 1:x_pm_inv=  -3.8748m
+ +1:x_pm_inv=  -3.8027m 1:x_pm_inv=  -3.7775m 1:x_pm_inv=  -4.3371m
 
 
           ***** job concluded
@@ -959,15 +959,15 @@ Model Name: nmos_vtl
     analysis           time    # points   tot. iter  conv.iter
 
     op point           0.00           1           0
-    transient          0.00       10001          68          29 rev=         1
+    transient          0.00        1001          60          27 rev=         1
     readin             0.01
     errchk             0.01
     setup              0.00
     output             0.00
            total cpu time          0.01 seconds
            total elapsed time         1 seconds
-               job started at  03:03:35 02/09/2014
-               job ended   at  03:03:35 02/09/2014
+               job started at  05:18:07 02/09/2014
+               job ended   at  05:18:07 02/09/2014
 
 
 >info:         ***** hspice job concluded

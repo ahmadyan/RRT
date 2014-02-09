@@ -271,7 +271,7 @@ drawTree2D( data52 , inv_vin, inv_vout, 'vin', 'vout', -0.2, 1.2, -0.2, 1.2)
 
 %Case 3: RRT, with variation on input and supply
 %data53=rrt2mat('inv_rrt_10000_fp.rrt');
-data53=rrt2mat('inverter5.rrt');
+data53=rrt2mat('inverter7.rrt');
 Fig_5_3_1 = figure(531);
 drawTrace(data53, inv_vout, inv_time, 'v_out', -1, -0.2, 1.2);
 
