@@ -5,12 +5,13 @@
 #include "node.h"
 #include "System.h"
 #include "Monitor.h"
-
+#include "config.h"
 using namespace std;
 class Monitor;
 
 class RRT{
 protected:
+	Configuration* config;
     int k ; // total number of nodes 
     int d ; // tree dimension, each node has a d dimension. (d-1 state + 1 time)
     vector<node*> nodes; //keeps a copy of each node for direct access, pair<parent_id, child>
@@ -54,4 +55,5 @@ public:
 	node* getRoot();
 	node* getNode(int);
 	void addMonitor(Monitor*);
+	void setConfig(Configuration*); 
 };

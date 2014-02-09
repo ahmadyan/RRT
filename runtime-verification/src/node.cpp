@@ -59,6 +59,19 @@ double node::unifRand(double a, double b){
 	return (b-a)*unifRand() + a;
 }
 
+#include <random>
+double node::normalRand(double min, double max){
+	std::mt19937 generator;
+	double mean = (min+max)/2;
+	double std = 1.0;
+	std::normal_distribution<double> normal(mean, std);
+
+	double d=normal(generator);
+	if (d < min) d = min;
+	if (d>max) d = max;
+	return d;
+}
+
 void node::set(double* _x){
 	//todo: check for size x
 	data=_x;
@@ -106,7 +119,7 @@ double node::getTime(){
 //random number is between (min[i], max[i]) range.
 void node::randomize(double* min, double* max){
 	for(int i=0;i<n;i++){
-		data[i] = unifRand(min[i], max[i]) ;// (max[i]-min[i])*( rand()/double(RAND_MAX) ) + min[i] ;
+		data[i] = normalRand(min[i], max[i]);//unifRand(min[i], max[i]) ;// (max[i]-min[i])*( rand()/double(RAND_MAX) ) + min[i] ;
 	}
 }
 

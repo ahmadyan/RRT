@@ -51,11 +51,11 @@ void TimedRRT::build(double* initialState){
 
 		vector<double> param;	//variation or input to the system 
 		for (int j = 0; j < var; j++){
-			if (j < 2){
+			if (j < 4){
 				param.push_back(unifRand(variationMin[j], variationMax[j]));
 			}
 			else{
-				double tnow = i*dt;
+				double tnow = q_near->getTime()+dt;
 				double tperiod = 100e-12;	//100ps -> 10GHz
 				double freq = 1 / tperiod;
 				int cycles = ceilf(tnow / tperiod) - 1;

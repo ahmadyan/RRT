@@ -37,6 +37,7 @@ public:
 
 	double unifRand();
 	double unifRand(double a, double b);
+	double normalRand(double, double);
 	void dump();
 	string toString();
 	node& operator=(const node &rhs);

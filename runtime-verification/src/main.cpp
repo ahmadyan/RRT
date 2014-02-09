@@ -201,10 +201,20 @@ void kernel_RRT(Configuration* config){
 	
 	double* initialState = new double[dim + 1]; // counting the time-augmentation as another dimension
 	initialState[dim] = 0;	//time always begins at 0
-	for (int i = 0; i < dim; i++){
-		double ic; config->getParameter("edu.uiuc.csl.system.var.ic", i, &ic);
-		initialState[i] = ic;
+	if (config->checkParameter("edu.uiuc.csl.system.ic", "file")){
+		double* tmp = circuit->parseICFile(config->get("edu.uiuc.csl.system.ic.file"));
+		for (int i = 0; i < dim; i++){
+			initialState[i] = tmp[i];
+		}
+		delete tmp;
 	}
+	else{
+		for (int i = 0; i < dim; i++){
+			double ic; config->getParameter("edu.uiuc.csl.system.var.ic", i, &ic);
+			initialState[i] = ic;
+		}
+	}
+	
 
 	int iter = 0;
 	if (config->checkParameter("edu.uiuc.crhc.core.mode", "mc")){
@@ -239,6 +249,8 @@ void kernel_RRT(Configuration* config){
 		double max; config->getParameter("edu.uiuc.csl.system.param.max", i, &max);
 		rrt.setVariationBound(i, min, max);
 	}
+
+	rrt.setConfig(config);
 	rrt.setdt(dt);
 	rrt.setSystem(circuit);
 	

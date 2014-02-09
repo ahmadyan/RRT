@@ -9,7 +9,7 @@ line = fgets(fid); %number of variations
 var = sscanf(line,'%d');
 
 line = fgets(fid); %number of samples
-samples = sscanf(line,'%d');
+samples = sscanf(line,'%d')-1;
 
 min = zeros(1, dim);
 max = zeros(1, dim);

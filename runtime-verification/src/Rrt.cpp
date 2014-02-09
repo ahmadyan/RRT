@@ -266,7 +266,39 @@ vector<node*> RRT::getNearestNode(node* q_sample, double errorTolerance, bool ti
 	//old method, O(n), used recursive tree search
 	//return root->getNearestNode(q_sample, min, max, true).first ;
 
+	//The inverter case study:
 	vector<node*> results;
+
+	double p = unifRand(0, 1);
+	double progressFactor; config->getParameter("edu.uiuc.csl.core.sampling.progressFactor", &progressFactor);
+
+	if (p < progressFactor){
+		//waste this sample on forward progress in time. 
+		//we choose the sample with highest time stamp, regardless of how close that sample is to the q_sample
+		//Can be efficiently implemented using priority queue
+		double lastTime = -1;
+		node* lastNode;
+		int last;
+		for (int i = 0; i < nodes.size(); i++){
+			if (nodes[i]->getTime() > lastTime){
+				last = i;
+				lastTime = nodes[i]->getTime();
+				lastNode = nodes[i];
+			}
+		}
+		results.push_back(lastNode);
+	}
+	else{
+
+	}
+
+	return results;
+
+
+
+
+	
+
 	if(errorTolerance <= 0){ 
 		//Searching for the nearest node, 
 		//Usually used for searching for closest node in the RRT from q_sample during the RRT loop
@@ -294,6 +326,9 @@ vector<node*> RRT::getNearestNode(node* q_sample, double errorTolerance, bool ti
 			}
 		}
 	}
+	//normally search for nearest neighbor
+	
+
 	return results;
 }
 
@@ -301,4 +336,8 @@ vector<node*> RRT::getNearestNode(node* q_sample, double errorTolerance, bool ti
 void RRT::addMonitor(Monitor* m){
 	cout << "Adding a new monitor to the RRT , total monitors=" << monitors.size() << endl ;
 	monitors.push_back(m);
+}
+
+void RRT::setConfig(Configuration* c){
+	config = c;
 }
