@@ -64,7 +64,7 @@ double node::normalRand(double min, double max){
 	std::random_device rd;
 	std::mt19937 generator(rd());
 	double mean = (min+max)/2;
-	double std = 0.3;
+	double std = 0.4;
 	std::normal_distribution<double> normal(mean, std);
 
 	double d=normal(generator);
