@@ -6,9 +6,10 @@
     C:\synopsys\Hspice_A-2008.03\license.warn
   Use of this program is your acceptance to be bound by this 
   license agreement. HSPICE is the trademark of Synopsys, Inc.
-  Input File: inverter_netlist.sp                                               
+  Input File: ring-netlist.sp                                                   
  Init: read install configuration file: C:\synopsys\Hspice_A-2008.03\meta.cfg
  Init: hspice initialization file: C:\synopsys\Hspice_A-2008.03\hspice.ini
+
 
 
 
@@ -275,65 +276,296 @@
  *
  ********************************************************************************
 
- xinv	vdd 	vss 	vsubp 	vsubn 	vin 	vout	inv_x1
- cl		vout 	vss		10f
- vsource		vdd		0		1.13019v
- vground		vss		0		0.114219v
- vsub1		vsubp   0 		0.904874v
- vsub2		vsubn 	0 		-0.0221625v
- vinput		vin 	0		-0.00433973v
+
+ x1 vdd1 gnd1 vsubp1 vsubn1 1 8   inv_x1
+ x2 vdd2 gnd2 vsubp2 vsubn2 2 9   inv_x1
+ x3 vdd3 gnd3 vsubp3 vsubn3 3 10  inv_x1
+ x4 vdd4 gnd4 vsubp4 vsubn4 4 11  inv_x1
+ x5 vdd5 gnd5 vsubp5 vsubn5 5 12  inv_x1
+ x6 vdd6 gnd6 vsubp6 vsubn6 6 13  inv_x1
+ x7 vdd7 gnd7 vsubp7 vsubn7 7 14  inv_x1
+
+ c1 1 0 1ff
+ c2 2 0 1ff
+ c3 3 0 1ff
+ c4 4 0 1ff
+ c5 5 0 1ff
+ c6 6 0 1ff
+ c7 7 0 1ff
+
+ vsrc1		vdd1	0       0.921444v
+ vsrc2		vdd2	0       0.936279v
+ vsrc3		vdd3	0       0.934146v
+ vsrc4		vdd4	0       0.864173v
+ vsrc5		vdd5	0       0.901012v
+ vsrc6		vdd6	0       0.866309v
+ vsrc7		vdd7	0       0.923208v
+
+ vgnd1        gnd1    0       0.00347453v
+ vgnd2        gnd2    0       0.0318201v
+ vgnd3        gnd3    0       0.0232627v
+ vgnd4        gnd4    0       0.0176992v
+ vgnd5        gnd5    0       -0.0164876v
+ vgnd6        gnd6    0       0.0224448v
+ vgnd7        gnd7    0       -0.00467696v
+
+ v1noise  	8 	2  		-0.00386868v
+ v2noise 	9 	3  		-0.000153966v
+ v3noise 	10 	4  		-0.00353847v
+ v4noise 	11 	5  		0.00344996v
+ v5noise 	12 	6  		-0.00335505v
+ v6noise 	13 	7  		-0.00440886v
+ v7noise 	14 	1  		-0.00487487v
+
+ vsub1		vsubp1   0 		0.865015v
+ vsub2		vsubp2   0 		0.901473v
+ vsub3		vsubp3   0 		0.877549v
+ vsub4		vsubp4   0 		0.886863v
+ vsub5		vsubp5   0 		0.914599v
+ vsub6		vsubp6   0 		0.90945v
+ vsub7		vsubp7   0 		0.905531v
+ vsub8		vsubn1 	0 		0.05v
+ vsub9		vsubn2	0 		0.05v
+ vsub10		vsubn3 	0 		0.05v
+ vsub11		vsubn4 	0 		0.05v
+ vsub12		vsubn5 	0 		0.05v
+ vsub13		vsubn6 	0 		0.05v
+ vsub14		vsubn7 	0 		0.05v
+
+
+ .options post
+ .options snaccuracy=50
+
+ **warning**  unknown option snaccu  
 
 
  .tran 1fs 1e-012 uic
- .save type=ic file=ic_9999.ic level=all time=1e-012
- .load file=ic_2533.ic0
+ .save type=ic file=ic_509.ic level=all time=1e-012
+ .load file=ic_508.ic0
  * "version" "a-2008.03 32-bit"
  * "format" "hsp"
- * "rundate" "04:57:34 02/09/2014 "
- * "netlist" "inverter_netlist.sp "
- * "runtitle" "cmos inverter"
+ * "rundate" "17:04:58 02/12/2014 "
+ * "netlist" "ring-netlist.sp "
+ * "runtitle" ".title ringosc"
  * time =    1.0000p       
  * temperature =   25.0000        
  *** begin: saved operating point ***                     
  .option 
  + gmindc=   1.0000p       
  .ic
- + vdd =   1.1834        
- + vin =  94.6623m       
- + vout = 668.2249m       
- + vss = 169.3720m       
- + vsubn =  76.3512m       
- + vsubp = 879.8000m       
- + xinv.n_a_m0_g =  95.9973m       
- + xinv.n_a_m1_g =  95.4382m       
- + xinv.n_vdd_m0_s =   1.1829        
- + xinv.n_vss_m1_s = 169.3720m       
- + xinv.n_zn_m0_d = 669.3290m       
- + xinv.n_zn_m1_d = 668.1995m       
- + xinv.x_pm_inv_x1%vss_8 = 169.3720m       
- + xinv.x_pm_inv_x1%vss_29 = 169.3720m       
- + xinv.x_pm_inv_x1%vdd_31 =   1.1834        
- + xinv.x_pm_inv_x1%vdd_19 =   1.1834        
- + xinv.x_pm_inv_x1%vdd_18 =   1.1833        
- + xinv.x_pm_inv_x1%vdd_12 =   1.1834        
- + xinv.x_pm_inv_x1%vdd_11 =   1.1834        
- + xinv.x_pm_inv_x1%vdd_8 =   1.1834        
- + xinv.x_pm_inv_x1%vdd_28 =   1.1833        
- + xinv.x_pm_inv_x1%vss_18 = 169.3720m       
- + xinv.x_pm_inv_x1%vss_17 = 169.3720m       
- + xinv.x_pm_inv_x1%vss_10 = 169.3720m       
- + xinv.x_pm_inv_x1%vss_9 = 169.3720m       
- + xinv.x_pm_inv_x1%a_1 =  95.2195m       
- + xinv.x_pm_inv_x1%a_11 =  95.1355m       
- + xinv.x_pm_inv_x1%a_18 =  95.2089m       
- + xinv.x_pm_inv_x1%a_5 =  95.2350m       
- + xinv.x_pm_inv_x1%a_9 =  94.6649m       
+ + 1 =  25.2119m       
+ + 2 = 898.8916m       
+ + 3 = 164.5071m       
+ + 4 = 157.8420m       
+ + 5 = 930.3076m       
+ + 6 =   6.6895m       
+ + 7 = 912.3071m       
+ + 8 = 900.4463m       
+ + 9 = 163.0366m       
+ + 10 = 155.6751m       
+ + 11 = 925.5364m       
+ + 12 =  10.8365m       
+ + 13 = 910.3047m       
+ + 14 =  23.0828m       
+ + gnd1 =  10.8386m       
+ + gnd2 =  -9.9170m       
+ + gnd3 =  -3.1785m       
+ + gnd4 =  33.7642m       
+ + gnd5 =  29.7235m       
+ + gnd6 =  36.6878m       
+ + gnd7 =  35.7143m       
+ + vdd1 = 929.7910m       
+ + vdd2 = 948.3670m       
+ + vdd3 = 894.8840m       
+ + vdd4 = 915.9230m       
+ + vdd5 = 919.0150m       
+ + vdd6 = 917.1320m       
+ + vdd7 = 932.5860m       
+ + vsubn1 =  50.0000m       
+ + vsubn2 =  50.0000m       
+ + vsubn3 =  50.0000m       
+ + vsubn4 =  50.0000m       
+ + vsubn5 =  50.0000m       
+ + vsubn6 =  50.0000m       
+ + vsubn7 =  50.0000m       
+ + vsubp1 = 892.6370m       
+ + vsubp2 = 911.8120m       
+ + vsubp3 = 947.3450m       
+ + vsubp4 = 883.7960m       
+ + vsubp5 = 928.6370m       
+ + vsubp6 = 931.4840m       
+ + vsubp7 = 861.0020m       
+ + x1.n_a_m0_g =  24.6880m       
+ + x1.n_a_m1_g =  24.9041m       
+ + x1.n_vdd_m0_s = 929.7471m       
+ + x1.n_vss_m1_s =  10.8409m       
+ + x1.n_zn_m0_d = 900.5410m       
+ + x1.n_zn_m1_d = 900.4430m       
+ + x1.x_pm_inv_x1%vss_8 =  10.8386m       
+ + x1.x_pm_inv_x1%vss_29 =  10.8388m       
+ + x1.x_pm_inv_x1%vdd_31 = 929.7892m       
+ + x1.x_pm_inv_x1%vdd_19 = 929.7910m       
+ + x1.x_pm_inv_x1%vdd_18 = 929.7799m       
+ + x1.x_pm_inv_x1%vdd_12 = 929.7910m       
+ + x1.x_pm_inv_x1%vdd_11 = 929.7910m       
+ + x1.x_pm_inv_x1%vdd_8 = 929.7910m       
+ + x1.x_pm_inv_x1%vdd_28 = 929.7789m       
+ + x1.x_pm_inv_x1%vss_18 =  10.8388m       
+ + x1.x_pm_inv_x1%vss_17 =  10.8386m       
+ + x1.x_pm_inv_x1%vss_10 =  10.8386m       
+ + x1.x_pm_inv_x1%vss_9 =  10.8386m       
+ + x1.x_pm_inv_x1%a_1 =  24.9911m       
+ + x1.x_pm_inv_x1%a_11 =  25.0244m       
+ + x1.x_pm_inv_x1%a_18 =  24.9953m       
+ + x1.x_pm_inv_x1%a_5 =  24.9851m       
+ + x1.x_pm_inv_x1%a_9 =  25.2108m       
+ + x2.n_a_m0_g = 897.1249m       
+ + x2.n_a_m1_g = 897.2544m       
+ + x2.n_vdd_m0_s = 948.3692m       
+ + x2.n_vss_m1_s =  -9.5312m       
+ + x2.n_zn_m0_d = 163.0929m       
+ + x2.n_zn_m1_d = 162.8234m       
+ + x2.x_pm_inv_x1%vss_8 =  -9.9170m       
+ + x2.x_pm_inv_x1%vss_29 =  -9.8806m       
+ + x2.x_pm_inv_x1%vdd_31 = 948.3671m       
+ + x2.x_pm_inv_x1%vdd_19 = 948.3670m       
+ + x2.x_pm_inv_x1%vdd_18 = 948.3676m       
+ + x2.x_pm_inv_x1%vdd_12 = 948.3670m       
+ + x2.x_pm_inv_x1%vdd_11 = 948.3670m       
+ + x2.x_pm_inv_x1%vdd_8 = 948.3670m       
+ + x2.x_pm_inv_x1%vdd_28 = 948.3676m       
+ + x2.x_pm_inv_x1%vss_18 =  -9.8914m       
+ + x2.x_pm_inv_x1%vss_17 =  -9.9170m       
+ + x2.x_pm_inv_x1%vss_10 =  -9.9170m       
+ + x2.x_pm_inv_x1%vss_9 =  -9.9170m       
+ + x2.x_pm_inv_x1%a_1 = 897.9408m       
+ + x2.x_pm_inv_x1%a_11 = 898.0974m       
+ + x2.x_pm_inv_x1%a_18 = 897.9742m       
+ + x2.x_pm_inv_x1%a_5 = 897.9461m       
+ + x2.x_pm_inv_x1%a_9 = 898.8872m       
+ + x3.n_a_m0_g = 172.0344m       
+ + x3.n_a_m1_g = 169.3802m       
+ + x3.n_vdd_m0_s = 894.5839m       
+ + x3.n_vss_m1_s =  -3.1950m       
+ + x3.n_zn_m0_d = 156.1641m       
+ + x3.n_zn_m1_d = 155.6209m       
+ + x3.x_pm_inv_x1%vss_8 =  -3.1785m       
+ + x3.x_pm_inv_x1%vss_29 =  -3.1801m       
+ + x3.x_pm_inv_x1%vdd_31 = 894.8715m       
+ + x3.x_pm_inv_x1%vdd_19 = 894.8840m       
+ + x3.x_pm_inv_x1%vdd_18 = 894.8078m       
+ + x3.x_pm_inv_x1%vdd_12 = 894.8840m       
+ + x3.x_pm_inv_x1%vdd_11 = 894.8840m       
+ + x3.x_pm_inv_x1%vdd_8 = 894.8840m       
+ + x3.x_pm_inv_x1%vdd_28 = 894.8010m       
+ + x3.x_pm_inv_x1%vss_18 =  -3.1796m       
+ + x3.x_pm_inv_x1%vss_17 =  -3.1785m       
+ + x3.x_pm_inv_x1%vss_10 =  -3.1785m       
+ + x3.x_pm_inv_x1%vss_9 =  -3.1785m       
+ + x3.x_pm_inv_x1%a_1 = 167.8300m       
+ + x3.x_pm_inv_x1%a_11 = 167.3186m       
+ + x3.x_pm_inv_x1%a_18 = 167.7547m       
+ + x3.x_pm_inv_x1%a_5 = 167.8965m       
+ + x3.x_pm_inv_x1%a_9 = 164.5226m       
+ + x4.n_a_m0_g = 150.8456m       
+ + x4.n_a_m1_g = 153.8296m       
+ + x4.n_vdd_m0_s = 915.9729m       
+ + x4.n_vss_m1_s =  33.7863m       
+ + x4.n_zn_m0_d = 925.5677m       
+ + x4.n_zn_m1_d = 925.5391m       
+ + x4.x_pm_inv_x1%vss_8 =  33.7642m       
+ + x4.x_pm_inv_x1%vss_29 =  33.7663m       
+ + x4.x_pm_inv_x1%vdd_31 = 915.9251m       
+ + x4.x_pm_inv_x1%vdd_19 = 915.9230m       
+ + x4.x_pm_inv_x1%vdd_18 = 915.9357m       
+ + x4.x_pm_inv_x1%vdd_12 = 915.9230m       
+ + x4.x_pm_inv_x1%vdd_11 = 915.9230m       
+ + x4.x_pm_inv_x1%vdd_8 = 915.9230m       
+ + x4.x_pm_inv_x1%vdd_28 = 915.9368m       
+ + x4.x_pm_inv_x1%vss_18 =  33.7657m       
+ + x4.x_pm_inv_x1%vss_17 =  33.7642m       
+ + x4.x_pm_inv_x1%vss_10 =  33.7642m       
+ + x4.x_pm_inv_x1%vss_9 =  33.7642m       
+ + x4.x_pm_inv_x1%a_1 = 154.9309m       
+ + x4.x_pm_inv_x1%a_11 = 155.3681m       
+ + x4.x_pm_inv_x1%a_18 = 154.9844m       
+ + x4.x_pm_inv_x1%a_5 = 154.8473m       
+ + x4.x_pm_inv_x1%a_9 = 157.8282m       
+ + x5.n_a_m0_g = 929.8880m       
+ + x5.n_a_m1_g = 929.9847m       
+ + x5.n_vdd_m0_s = 919.0175m       
+ + x5.n_vss_m1_s =  29.6805m       
+ + x5.n_zn_m0_d =  10.8301m       
+ + x5.n_zn_m1_d =  10.8658m       
+ + x5.x_pm_inv_x1%vss_8 =  29.7235m       
+ + x5.x_pm_inv_x1%vss_29 =  29.7194m       
+ + x5.x_pm_inv_x1%vdd_31 = 919.0151m       
+ + x5.x_pm_inv_x1%vdd_19 = 919.0150m       
+ + x5.x_pm_inv_x1%vdd_18 = 919.0156m       
+ + x5.x_pm_inv_x1%vdd_12 = 919.0150m       
+ + x5.x_pm_inv_x1%vdd_11 = 919.0150m       
+ + x5.x_pm_inv_x1%vdd_8 = 919.0150m       
+ + x5.x_pm_inv_x1%vdd_28 = 919.0157m       
+ + x5.x_pm_inv_x1%vss_18 =  29.7206m       
+ + x5.x_pm_inv_x1%vss_17 =  29.7235m       
+ + x5.x_pm_inv_x1%vss_10 =  29.7235m       
+ + x5.x_pm_inv_x1%vss_9 =  29.7235m       
+ + x5.x_pm_inv_x1%a_1 = 930.1037m       
+ + x5.x_pm_inv_x1%a_11 = 930.1361m       
+ + x5.x_pm_inv_x1%a_18 = 930.1095m       
+ + x5.x_pm_inv_x1%a_5 = 930.1021m       
+ + x5.x_pm_inv_x1%a_9 = 930.3066m       
+ + x6.n_a_m0_g =   5.7449m       
+ + x6.n_a_m1_g =   6.1577m       
+ + x6.n_vdd_m0_s = 917.1254m       
+ + x6.n_vss_m1_s =  36.6907m       
+ + x6.n_zn_m0_d = 910.3290m       
+ + x6.n_zn_m1_d = 910.3030m       
+ + x6.x_pm_inv_x1%vss_8 =  36.6878m       
+ + x6.x_pm_inv_x1%vss_29 =  36.6881m       
+ + x6.x_pm_inv_x1%vdd_31 = 917.1317m       
+ + x6.x_pm_inv_x1%vdd_19 = 917.1320m       
+ + x6.x_pm_inv_x1%vdd_18 = 917.1303m       
+ + x6.x_pm_inv_x1%vdd_12 = 917.1320m       
+ + x6.x_pm_inv_x1%vdd_11 = 917.1320m       
+ + x6.x_pm_inv_x1%vdd_8 = 917.1320m       
+ + x6.x_pm_inv_x1%vdd_28 = 917.1302m       
+ + x6.x_pm_inv_x1%vss_18 =  36.6880m       
+ + x6.x_pm_inv_x1%vss_17 =  36.6878m       
+ + x6.x_pm_inv_x1%vss_10 =  36.6878m       
+ + x6.x_pm_inv_x1%vss_9 =  36.6878m       
+ + x6.x_pm_inv_x1%a_1 =   6.2998m       
+ + x6.x_pm_inv_x1%a_11 =   6.3581m       
+ + x6.x_pm_inv_x1%a_18 =   6.3067m       
+ + x6.x_pm_inv_x1%a_5 =   6.2881m       
+ + x6.x_pm_inv_x1%a_9 =   6.6876m       
+ + x7.n_a_m0_g = 912.0736m       
+ + x7.n_a_m1_g = 912.1416m       
+ + x7.n_vdd_m0_s = 932.5874m       
+ + x7.n_vss_m1_s =  35.6856m       
+ + x7.n_zn_m0_d =  23.0780m       
+ + x7.n_zn_m1_d =  23.1017m       
+ + x7.x_pm_inv_x1%vss_8 =  35.7143m       
+ + x7.x_pm_inv_x1%vss_29 =  35.7116m       
+ + x7.x_pm_inv_x1%vdd_31 = 932.5861m       
+ + x7.x_pm_inv_x1%vdd_19 = 932.5860m       
+ + x7.x_pm_inv_x1%vdd_18 = 932.5864m       
+ + x7.x_pm_inv_x1%vdd_12 = 932.5860m       
+ + x7.x_pm_inv_x1%vdd_11 = 932.5860m       
+ + x7.x_pm_inv_x1%vdd_8 = 932.5860m       
+ + x7.x_pm_inv_x1%vdd_28 = 932.5864m       
+ + x7.x_pm_inv_x1%vss_18 =  35.7124m       
+ + x7.x_pm_inv_x1%vss_17 =  35.7143m       
+ + x7.x_pm_inv_x1%vss_10 =  35.7143m       
+ + x7.x_pm_inv_x1%vss_9 =  35.7143m       
+ + x7.x_pm_inv_x1%a_1 = 912.1986m       
+ + x7.x_pm_inv_x1%a_11 = 912.2155m       
+ + x7.x_pm_inv_x1%a_18 = 912.2013m       
+ + x7.x_pm_inv_x1%a_5 = 912.1971m       
+ + x7.x_pm_inv_x1%a_9 = 912.3066m       
  ***   end: saved operating point ***                     
 
- .option post 
- .print vout
- **warning** unrecognized output type vout     on above line,ignored.
-
+ .end
 
  ***********************************************************************
  ** runlvl is invoked, you can disable it by:
@@ -360,16 +592,22 @@
 
 1****** HSPICE -- A-2008.03 32-BIT (Feb 26 2008) winnt ******                   
  ******  
- cmos inverter                                                                  
+ .title ringosc                                                                 
   ******  circuit name directory                                                
  ******  
  circuit number to circuit name directory
    number circuitname                     definition         multiplier
         0 main circuit
-        1 xinv.                           inv_x1             1.00 
+        1 x1.                             inv_x1             1.00 
+        2 x2.                             inv_x1             1.00 
+        3 x3.                             inv_x1             1.00 
+        4 x4.                             inv_x1             1.00 
+        5 x5.                             inv_x1             1.00 
+        6 x6.                             inv_x1             1.00 
+        7 x7.                             inv_x1             1.00 
 1****** HSPICE -- A-2008.03 32-BIT (Feb 26 2008) winnt ******                   
  ******  
- cmos inverter                                                                  
+ .title ringosc                                                                 
   ******  mos   model parameters           tnom=  25.000 temp=  25.000          
  ******  
  
@@ -916,58 +1154,142 @@ Model Name: nmos_vtl
 
  Warning:  Acde = 1 may be too small in BSIM4 model pmos_vtl with w=6.3e-007 l=5e-008.
 
+ Warning:  Acde = 1 may be too small in BSIM4 model pmos_vtl with w=6.3e-007 l=5e-008.
+
+ Warning:  Acde = 1 may be too small in BSIM4 model pmos_vtl with w=6.3e-007 l=5e-008.
+
+ Warning:  Acde = 1 may be too small in BSIM4 model pmos_vtl with w=6.3e-007 l=5e-008.
+
+ Warning:  Acde = 1 may be too small in BSIM4 model pmos_vtl with w=6.3e-007 l=5e-008.
+
+ Warning:  Acde = 1 may be too small in BSIM4 model pmos_vtl with w=6.3e-007 l=5e-008.
+
+ Warning:  Acde = 1 may be too small in BSIM4 model pmos_vtl with w=6.3e-007 l=5e-008.
+
+ Warning:  Acde = 1 may be too small in BSIM4 model nmos_vtl with w=4.15e-007 l=5e-008.
+
+ Warning:  Acde = 1 may be too small in BSIM4 model nmos_vtl with w=4.15e-007 l=5e-008.
+
+ Warning:  Acde = 1 may be too small in BSIM4 model nmos_vtl with w=4.15e-007 l=5e-008.
+
+ Warning:  Acde = 1 may be too small in BSIM4 model nmos_vtl with w=4.15e-007 l=5e-008.
+
+ Warning:  Acde = 1 may be too small in BSIM4 model nmos_vtl with w=4.15e-007 l=5e-008.
+
+ Warning:  Acde = 1 may be too small in BSIM4 model nmos_vtl with w=4.15e-007 l=5e-008.
+
  Warning:  Acde = 1 may be too small in BSIM4 model nmos_vtl with w=4.15e-007 l=5e-008.
 
  
       
   Opening plot unit= 79
- file=inverter_netlist.pa0                                                     
+ file=ring-netlist.pa0                                                         
 
 1****** HSPICE -- A-2008.03 32-BIT (Feb 26 2008) winnt ******                   
  ******  
- cmos inverter                                                                  
+ .title ringosc                                                                 
   ******  operating point information      tnom=  25.000 temp=  25.000          
  ******  
  ***** operating point status is voltage   simulation time is     1.0000p
     node    =voltage      node    =voltage      node    =voltage
 
- +0:vdd     =   1.1302  0:vin     =  -4.3397m 0:vout    = 710.3425m
- +0:vss     = 114.2190m 0:vsubn   = -22.1625m 0:vsubp   = 904.8740m
- +1:n_a_m0_g=  -3.0430m 1:n_a_m1_g=  -3.5956m 1:n_vdd_m0=   1.1297 
- +1:n_vss_m1= 114.2291m 1:n_zn_m0_= 711.3925m 1:n_zn_m1_= 710.3170m
- +1:x_pm_inv= 114.2202m 1:x_pm_inv= 114.2200m 1:x_pm_inv=   1.1302 
- +1:x_pm_inv=   1.1302  1:x_pm_inv=   1.1301  1:x_pm_inv=   1.1302 
- +1:x_pm_inv=   1.1302  1:x_pm_inv=   1.1302  1:x_pm_inv=   1.1301 
- +1:x_pm_inv= 114.2197m 1:x_pm_inv= 114.2190m 1:x_pm_inv= 114.2190m
- +1:x_pm_inv= 114.2190m 1:x_pm_inv=  -3.7931m 1:x_pm_inv=  -3.8748m
- +1:x_pm_inv=  -3.8027m 1:x_pm_inv=  -3.7775m 1:x_pm_inv=  -4.3371m
+ +0:1       =  14.2353m 0:2       = 907.9280m 0:3       = 136.4452m
+ +0:4       = 235.3661m 0:5       = 912.6667m 0:6       =  -7.9072m
+ +0:7       = 892.9823m 0:8       = 904.0594m 0:9       = 136.2912m
+ +0:10      = 231.8277m 0:11      = 916.1167m 0:12      = -11.2623m
+ +0:13      = 888.5734m 0:14      =   9.3605m 0:gnd1    =   3.4745m
+ +0:gnd2    =  31.8201m 0:gnd3    =  23.2627m 0:gnd4    =  17.6992m
+ +0:gnd5    = -16.4876m 0:gnd6    =  22.4448m 0:gnd7    =  -4.6770m
+ +0:vdd1    = 921.4440m 0:vdd2    = 936.2790m 0:vdd3    = 934.1460m
+ +0:vdd4    = 864.1730m 0:vdd5    = 901.0120m 0:vdd6    = 866.3090m
+ +0:vdd7    = 923.2080m 0:vsubn1  =  50.0000m 0:vsubn2  =  50.0000m
+ +0:vsubn3  =  50.0000m 0:vsubn4  =  50.0000m 0:vsubn5  =  50.0000m
+ +0:vsubn6  =  50.0000m 0:vsubn7  =  50.0000m 0:vsubp1  = 865.0150m
+ +0:vsubp2  = 901.4730m 0:vsubp3  = 877.5490m 0:vsubp4  = 886.8630m
+ +0:vsubp5  = 914.5990m 0:vsubp6  = 909.4500m 0:vsubp7  = 905.5310m
+ +1:n_a_m0_g=  15.1500m 1:n_a_m1_g=  14.7306m 1:n_vdd_m0= 921.4117m
+ +1:n_vss_m1=   3.4727m 1:n_zn_m0_= 904.1070m 1:n_zn_m1_= 904.0569m
+ +1:x_pm_inv=   3.4745m 1:x_pm_inv=   3.4744m 1:x_pm_inv= 921.4426m
+ +1:x_pm_inv= 921.4440m 1:x_pm_inv= 921.4358m 1:x_pm_inv= 921.4440m
+ +1:x_pm_inv= 921.4440m 1:x_pm_inv= 921.4440m 1:x_pm_inv= 921.4351m
+ +1:x_pm_inv=   3.4744m 1:x_pm_inv=   3.4745m 1:x_pm_inv=   3.4745m
+ +1:x_pm_inv=   3.4745m 1:x_pm_inv=  14.6055m 1:x_pm_inv=  14.5505m
+ +1:x_pm_inv=  14.5994m 1:x_pm_inv=  14.6176m 1:x_pm_inv=  14.2371m
+ +2:n_a_m0_g= 907.0471m 2:n_a_m1_g= 907.0715m 2:n_vdd_m0= 936.2800m
+ +2:n_vss_m1=  32.0657m 2:n_zn_m0_= 136.3208m 2:n_zn_m1_= 136.1539m
+ +2:x_pm_inv=  31.8201m 2:x_pm_inv=  31.8433m 2:x_pm_inv= 936.2790m
+ +2:x_pm_inv= 936.2790m 2:x_pm_inv= 936.2792m 2:x_pm_inv= 936.2790m
+ +2:x_pm_inv= 936.2790m 2:x_pm_inv= 936.2790m 2:x_pm_inv= 936.2793m
+ +2:x_pm_inv=  31.8364m 2:x_pm_inv=  31.8201m 2:x_pm_inv=  31.8201m
+ +2:x_pm_inv=  31.8201m 2:x_pm_inv= 907.4401m 2:x_pm_inv= 907.5212m
+ +2:x_pm_inv= 907.4580m 2:x_pm_inv= 907.4444m 2:x_pm_inv= 907.9258m
+ +3:n_a_m0_g= 141.9612m 3:n_a_m1_g= 139.9373m 3:n_vdd_m0= 933.7979m
+ +3:n_vss_m1=  23.2537m 3:n_zn_m0_= 232.4436m 3:n_zn_m1_= 231.7710m
+ +3:x_pm_inv=  23.2627m 3:x_pm_inv=  23.2618m 3:x_pm_inv= 934.1315m
+ +3:x_pm_inv= 934.1460m 3:x_pm_inv= 934.0577m 3:x_pm_inv= 934.1460m
+ +3:x_pm_inv= 934.1460m 3:x_pm_inv= 934.1460m 3:x_pm_inv= 934.0498m
+ +3:x_pm_inv=  23.2621m 3:x_pm_inv=  23.2627m 3:x_pm_inv=  23.2627m
+ +3:x_pm_inv=  23.2627m 3:x_pm_inv= 138.8514m 3:x_pm_inv= 138.4826m
+ +3:x_pm_inv= 138.7987m 3:x_pm_inv= 138.9034m 3:x_pm_inv= 136.4564m
+ +4:n_a_m0_g= 225.7160m 4:n_a_m1_g= 229.8331m 4:n_vdd_m0= 864.2765m
+ +4:n_vss_m1=  17.7380m 4:n_zn_m0_= 916.0798m 4:n_zn_m1_= 916.1235m
+ +4:x_pm_inv=  17.6992m 4:x_pm_inv=  17.7029m 4:x_pm_inv= 864.1773m
+ +4:x_pm_inv= 864.1730m 4:x_pm_inv= 864.1993m 4:x_pm_inv= 864.1730m
+ +4:x_pm_inv= 864.1730m 4:x_pm_inv= 864.1730m 4:x_pm_inv= 864.2016m
+ +4:x_pm_inv=  17.7018m 4:x_pm_inv=  17.6992m 4:x_pm_inv=  17.6992m
+ +4:x_pm_inv=  17.6992m 4:x_pm_inv= 231.3525m 4:x_pm_inv= 231.9553m
+ +4:x_pm_inv= 231.4262m 4:x_pm_inv= 231.2371m 4:x_pm_inv= 235.3472m
+ +5:n_a_m0_g= 912.9470m 5:n_a_m1_g= 912.9092m 5:n_vdd_m0= 901.0105m
+ +5:n_vss_m1= -16.4753m 5:n_zn_m0_= -11.2593m 5:n_zn_m1_= -11.2689m
+ +5:x_pm_inv= -16.4876m 5:x_pm_inv= -16.4864m 5:x_pm_inv= 901.0119m
+ +5:x_pm_inv= 901.0120m 5:x_pm_inv= 901.0116m 5:x_pm_inv= 901.0120m
+ +5:x_pm_inv= 901.0120m 5:x_pm_inv= 901.0120m 5:x_pm_inv= 901.0116m
+ +5:x_pm_inv= -16.4868m 5:x_pm_inv= -16.4876m 5:x_pm_inv= -16.4876m
+ +5:x_pm_inv= -16.4876m 5:x_pm_inv= 912.8121m 5:x_pm_inv= 912.7885m
+ +5:x_pm_inv= 912.8074m 5:x_pm_inv= 912.8120m 5:x_pm_inv= 912.6674m
+ +6:n_a_m0_g=  -7.9895m 6:n_a_m1_g=  -7.8895m 6:n_vdd_m0= 866.3398m
+ +6:n_vss_m1=  22.4433m 6:n_zn_m0_= 888.5076m 6:n_zn_m1_= 888.5790m
+ +6:x_pm_inv=  22.4448m 6:x_pm_inv=  22.4447m 6:x_pm_inv= 866.3103m
+ +6:x_pm_inv= 866.3090m 6:x_pm_inv= 866.3168m 6:x_pm_inv= 866.3090m
+ +6:x_pm_inv= 866.3090m 6:x_pm_inv= 866.3090m 6:x_pm_inv= 866.3175m
+ +6:x_pm_inv=  22.4447m 6:x_pm_inv=  22.4448m 6:x_pm_inv=  22.4448m
+ +6:x_pm_inv=  22.4448m 6:x_pm_inv=  -7.9181m 6:x_pm_inv=  -7.9179m
+ +6:x_pm_inv=  -7.9195m 6:x_pm_inv=  -7.9219m 6:x_pm_inv=  -7.9072m
+ +7:n_a_m0_g= 893.6971m 7:n_a_m1_g= 893.6207m 7:n_vdd_m0= 923.2047m
+ +7:n_vss_m1=  -4.6447m 7:n_zn_m0_=   9.3629m 7:n_zn_m1_=   9.3379m
+ +7:x_pm_inv=  -4.6770m 7:x_pm_inv=  -4.6739m 7:x_pm_inv= 923.2079m
+ +7:x_pm_inv= 923.2080m 7:x_pm_inv= 923.2072m 7:x_pm_inv= 923.2080m
+ +7:x_pm_inv= 923.2080m 7:x_pm_inv= 923.2080m 7:x_pm_inv= 923.2071m
+ +7:x_pm_inv=  -4.6748m 7:x_pm_inv=  -4.6770m 7:x_pm_inv=  -4.6770m
+ +7:x_pm_inv=  -4.6770m 7:x_pm_inv= 893.3597m 7:x_pm_inv= 893.2981m
+ +7:x_pm_inv= 893.3471m 7:x_pm_inv= 893.3586m 7:x_pm_inv= 892.9841m
 
 
           ***** job concluded
 1****** HSPICE -- A-2008.03 32-BIT (Feb 26 2008) winnt ******                   
  ******  
- cmos inverter                                                                  
+ .title ringosc                                                                 
   ******  job statistics summary           tnom=  25.000 temp=  25.000          
  ******  
 
-           total memory used        177 kbytes
+           total memory used        464 kbytes
 
-  # nodes =      39 # elements=      56
-  # diodes=       0 # bjts    =       0 # jfets   =       0 # mosfets =       2
+  # nodes =     267 # elements=     392
+  # diodes=       0 # bjts    =       0 # jfets   =       0 # mosfets =      14
   # va device =       0
 
     analysis           time    # points   tot. iter  conv.iter
 
     op point           0.00           1           0
-    transient          0.00        1001          60          27 rev=         1
+    transient          0.01        1001          62          27 rev=         1
     readin             0.01
     errchk             0.01
     setup              0.00
     output             0.00
-           total cpu time          0.01 seconds
+           total cpu time          0.02 seconds
            total elapsed time         1 seconds
-               job started at  05:18:07 02/09/2014
-               job ended   at  05:18:07 02/09/2014
+               job started at  17:04:59 02/12/2014
+               job ended   at  17:04:59 02/12/2014
 
 
 >info:         ***** hspice job concluded

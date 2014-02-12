@@ -15,13 +15,14 @@
 //#include <gsl/gsl_odeiv2.h>
 
 using namespace std;
-enum simulatorType {SPICE, GSL};
+enum simulatorType { HSPICE, GSL , MATLAB, INTERNAL};
 class System{
 	
 public:
 	~System();
 	System();
-
+	System(Configuration*);
+	Configuration* config;
 	simulatorType simulator;
 	int d;	//dimension, currently not in use since the ode integration id depreted
 	int(*function)(double t, const double y[], double f[], void *params);
@@ -48,4 +49,6 @@ public:
 	//double runSPICE(double* initialState, double* param, double);
 
 	double* parseICFile(string fileName);
+
+
 };

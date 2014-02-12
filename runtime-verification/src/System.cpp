@@ -3,6 +3,9 @@
 
 System::System(){}
 System::~System(){}
+System::System(Configuration* c){
+	config = c;
+}
 
 void System::setSystem(int _d,int (*f)(double t, const double y[], double f[], void *params), 
                     int (*j) (double t, const double y[], double *dfdy, double dfdt[], void *params) ){

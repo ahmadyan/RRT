@@ -6,7 +6,7 @@
 Inverter::Inverter(Configuration* config){
 	cout << "Selected system is Inverter" << endl;
 	config->getParameter("edu.uiuc.csl.system.dimension", &d);
-	System::simulator = SPICE;
+	System::simulator = HSPICE;
 }
 
 vector<double>  Inverter::simulate(double* ic, vector<double> param, vector<string> setting, double t0, double dt){

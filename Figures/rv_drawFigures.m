@@ -295,3 +295,30 @@ for i=3:size(data51, 1),
     disp(sprintf('edu.uiuc.csl.system.var.name[%d]=v%d', i-3, i-3));
 
 end
+
+
+
+
+
+%%-------------------------------------------------------------------------
+% Experiment 6: Ring oscillator
+%%-------------------------------------------------------------------------
+%Case 1: MC
+ringv1= 3;
+ringv2= 4;
+ringv3= 5;
+ringv4= 6;
+ringv5=7;
+ringv6=8;
+ringv7=9;
+
+
+ring_vdd=5;
+ring_gnd=6;
+ring_time=213; 
+
+data61=rrt2mat('ring.rrt');
+Fig_6_1_1 = figure(611);
+drawEye(data61, ringv1, ring_time, 100e-12, 'Voltage(v)', -0.2, 1.2)
+drawTrace(data61, ringv1, ring_time, 'v_{out}', -1, -0.2, 1.2);
+

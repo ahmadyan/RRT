@@ -51,6 +51,7 @@ void TimedRRT::build(double* initialState){
 
 		vector<double> param;	//variation or input to the system 
 		for (int j = 0; j < var; j++){
+			/*
 			if (j < 4){
 				param.push_back(unifRand(variationMin[j], variationMax[j]));
 			}
@@ -83,7 +84,7 @@ void TimedRRT::build(double* initialState){
 				}
 				param.push_back(vin);
 			}
-
+			*/
 		}
 
 		vector<string> settings;
@@ -154,7 +155,10 @@ void TimedRRT::simulate(double* initialState){
 
 		vector<double> param;	//variation or input to the system 
 		for (int j = 0; j < var; j++){
-			if (j < 2){
+			param.push_back(unifRand(variationMin[j], variationMax[j]));
+
+		/*
+		if (j < 2){
 				param.push_back(unifRand(variationMin[j], variationMax[j]));
 			}
 			else{
@@ -185,7 +189,7 @@ void TimedRRT::simulate(double* initialState){
 				}
 				param.push_back(vin);
 			}
-			
+			*/
 		}
 
 		

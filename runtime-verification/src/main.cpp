@@ -20,6 +20,7 @@
 #include "kdtree.h"
 
 #include "System.h"
+#include "spice.h"
 #include "vanderpol.h"
 #include "pll.h"
 #include "tdo.h"
@@ -180,8 +181,13 @@ System* systemSelector(Configuration* config){
 	}else if (config->checkParameter("edu.uiuc.csl.system.name", "Josephson")){
 		circuit = new Josephson(config);
 	}else{
-		string name; config->getParameter("edu.uiuc.csl.system.name", &name);
-		cout << "System " << name << " is not supported. " << endl;
+		if (config->checkParameter("edu.uiuc.csl.system.simulator", "hspice")){
+			circuit = new SPICE(config);
+		}else{
+			string name; config->getParameter("edu.uiuc.csl.system.name", &name);
+			cout << "System " << name << " is not supported. " << endl;
+		}
+		
 	}
 	return circuit;
 }
@@ -215,7 +221,6 @@ void kernel_RRT(Configuration* config){
 		}
 	}
 	
-
 	int iter = 0;
 	if (config->checkParameter("edu.uiuc.crhc.core.mode", "mc")){
 		iter = simulationTime / dt;
@@ -278,7 +283,6 @@ void kernel_RRT(Configuration* config){
 		else{
 			cout << "Uknown plot command: [edu.uiuc.crhc.core.options.plot.type] " << config->get("edu.uiuc.crhc.core.options.plot.type") << endl;
 		}
-		
 	}
 }
 
@@ -286,16 +290,24 @@ void rrt_experiments(Configuration* config){
 	if (config->checkParameter("edu.uiuc.crhc.core.mode", "rrt")){
 		kernel_RRT(config);
 	}
-	else{
-		vector<Monitor*> monitors;	//for this experiment, the monitors are empty. 
-		Plotter* plotter = new Plotter("C:\\opt\\gnuplot\\bin\\gnuplot.exe -persist");
-		int mode = SIM_PLL;
-		bool generatePlot = true;
-		string inputFileName = "test2.rrt";
-		string outputFileName = "pll_sim_ok_10000.rrt";
-		//the new kernel has the monitors argument
-		//kernel_RRT(monitors, mode, generatePlot, inputFileName, outputFileName, plotter);
+	else if (config->checkParameter("edu.uiuc.crhc.core.mode", "mc")){
+		kernel_RRT(config);
+	}else{
+		cout << "Uknown operation mode:" << config->get("edu.uiuc.crhc.core.mode") << endl;
+		
 	}
+
+	/*
+	pll:
+	vector<Monitor*> monitors;	//for this experiment, the monitors are empty.
+	Plotter* plotter = new Plotter("C:\\opt\\gnuplot\\bin\\gnuplot.exe -persist");
+	int mode = SIM_PLL;
+	bool generatePlot = true;
+	string inputFileName = "test2.rrt";
+	string outputFileName = "pll_sim_ok_10000.rrt";
+	//the new kernel has the monitors argument
+	//kernel_RRT(monitors, mode, generatePlot, inputFileName, outputFileName, plotter);
+	*/
 }
 
 //	Computing the joint time-frequency space instead of only time-augmented RRT
@@ -417,7 +429,7 @@ int main (int argc, const char * argv[]){
 	char full[_MAX_PATH];
 	_fullpath(full, ".\\", _MAX_PATH);
 	cout << "Current working directory is:" << full << endl;
-	string configFile = string(full) + "config\\inverter.conf";
+	string configFile = string(full) + "config\\ring.conf";
 	Configuration* config = new Configuration(configFile);
 
 	//fft_experiments();
