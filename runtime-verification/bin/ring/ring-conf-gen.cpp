@@ -7,7 +7,7 @@ int main(){
     string prefix="edu.uiuc.csl.";
     //generating random vdd
     double vdd=0.9;
-    double dvdd=0.05;
+    double dvdd=0.1;
     for(int i=0;i<k;i++){
         cout << "#auto-generated parameter: vdd#" << i << endl;
         cout << prefix << "system.param.min["<< i<<"]=" << vdd-dvdd << endl ;
@@ -17,7 +17,7 @@ int main(){
 
     //generating random vgnd
     double gnd=0;
-    double dgnd=0.05;
+    double dgnd=0.1;
     
     for(int i=1*k; i<2*k;i++){
         cout << "#auto-generated parameter: vgnd#" << i << endl;
@@ -28,7 +28,7 @@ int main(){
 
     //generating random vnoise
     double vnoise=0;
-    double dvnoise=0.005;
+    double dvnoise=0.05;
     for(int i=2*k; i<3*k;i++){
         cout << "#auto-generated parameter: vnoise#" << i << endl;
         cout << prefix << "system.param.min["<< i<<"]=" << vnoise-dvnoise<< endl ;
@@ -39,7 +39,7 @@ int main(){
 
     //generating random vsubp
     double vsubp=0.9;
-    double dvsubp=0.05;
+    double dvsubp=0.1;
     for(int i=3*k; i<4*k;i++){
         cout << "#auto-generated parameter: vsubp#" << i << endl;
         cout << prefix << "system.param.min["<< i<<"]="<<vsubp-dvsubp << endl ;
@@ -49,7 +49,7 @@ int main(){
 
     //generating random vsubn
     double vsubn=0;
-    double dvsubn=0.05;
+    double dvsubn=0.1;
     for(int i=4*k; i<5*k;i++){
         cout << "#auto-generated parameter: vsubn#" << i << endl;
         cout << prefix << "system.param.min["<< i<<"]=" << vsubn-dvsubn<< endl ;

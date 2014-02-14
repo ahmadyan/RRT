@@ -291,16 +291,26 @@ vector<node*> RRT::getNearestNode(node* q_sample, double errorTolerance, bool ti
 	else{
 		double closestDistance = 99999;
 		int closestNodeIndex = -1;
-		for (int i = 0; i<nodes.size(); i++){
+		for (int i = 0; i < nodes.size(); i++){
 			//Compute distance from an abstraction, not an entire model, 
 			//I don't really care about every variable in the circuits, some are more important than the others (weighted distance model???).
-			double iv = 2;
-			//cout << iv << " " << nodes[i]->get(iv) << " ----> " << q_sample->get(iv) << endl;
-			double d = abs(nodes[i]->get(iv) - q_sample->get(iv));
-			if (d<closestDistance){
-				closestDistance = d;
+
+			double distance = 0;
+			for (int j = 0; j < 7; j++){
+				distance += (nodes[i]->get(j) - q_sample->get(j))*(nodes[i]->get(j) - q_sample->get(j));
+			}
+			distance = sqrt(distance);
+			if (distance<closestDistance){
+				closestDistance = distance;
 				closestNodeIndex = i;
 			}
+			//double iv = 2;
+			//cout << iv << " " << nodes[i]->get(iv) << " ----> " << q_sample->get(iv) << endl;
+			//double d = abs(nodes[i]->get(iv) - q_sample->get(iv));
+			//if (d<closestDistance){
+			//	closestDistance = d;
+			//	closestNodeIndex = i;
+			//}
 		}
 		results.push_back(nodes[closestNodeIndex]);
 		

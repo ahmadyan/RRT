@@ -1,4 +1,4 @@
-function drawEye(data, index, t, period, yname, yaxismin, yaxismax)   
+function drawEye(data, index, t, offset, period, yname, yaxismin, yaxismax)   
     max=-999;
     min=999;
     for i=1:size(data, 2),
@@ -11,9 +11,24 @@ function drawEye(data, index, t, period, yname, yaxismin, yaxismax)
         end
     end
     
-    
+    if(offset==-1),
+        d0 = data(index, 1);
+        i=2;
+        if(d0>0.6),
+            while data(index, i)>0.5
+                i = i+1;
+            end
+            offset=data(t, i);
+        else
+            while data(index, i)<0.5
+                i = i+1;
+            end
+            offset=data(t, i);
+        end
+    end
+    offset
     hold on
-    axis([0 period yaxismin yaxismax])
+    axis([0 period/2 yaxismin yaxismax])
     
     set(gca,'FontSize',16,'fontWeight','demi')
     set(findall(gcf,'type','text'),'FontSize',16,'fontWeight','bold')
@@ -32,7 +47,8 @@ function drawEye(data, index, t, period, yname, yaxismin, yaxismax)
         cx=data(index,i);
         ct=data(t,i);
        
-        
+        pt=pt-offset;
+        ct=ct-offset;
         clk=ceil(pt/period)-1;
         t0=pt-clk*period;
         t1=ct-clk*period;

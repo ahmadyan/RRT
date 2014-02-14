@@ -322,3 +322,41 @@ Fig_6_1_1 = figure(611);
 drawEye(data61, ringv1, ring_time, 100e-12, 'Voltage(v)', -0.2, 1.2)
 drawTrace(data61, ringv1, ring_time, 'v_{out}', -1, -0.2, 1.2);
 
+
+data62=rrt2mat('ring-rrt10k.rrt');
+Fig_6_2_1 = figure(621);
+drawEye(data62, ringv1, ring_time, 100e-12, 'Voltage(v)', -0.2, 1.2)
+
+Fig_6_2_2 = figure(622);
+drawTrace(data62, ringv1, ring_time, 'v_{out}', -1, -0.2, 1.2);
+
+Fig_6_2_3 = figure(623);
+hold on
+drawEye(data62, ringv1, ring_time, -1, 100e-12, 'Voltage(v)', -0.2, 1.2)
+drawEye(data62, ringv2, ring_time, -1, 100e-12, 'Voltage(v)', -0.2, 1.2)
+drawEye(data62, ringv3, ring_time, -1, 100e-12, 'Voltage(v)', -0.2, 1.2)
+drawEye(data62, ringv4, ring_time, -1, 100e-12, 'Voltage(v)', -0.2, 1.2)
+drawEye(data62, ringv5, ring_time, -1, 100e-12, 'Voltage(v)', -0.2, 1.2)
+drawEye(data62, ringv6, ring_time, -1, 100e-12, 'Voltage(v)', -0.2, 1.2)
+drawEye(data62, ringv7, ring_time, -1, 100e-12, 'Voltage(v)', -0.2, 1.2)
+hold off
+
+
+
+data63=rrt2mat('ring-rrt-25k.rrt');
+Fig_6_3_1 = figure(631);
+drawEye(data63, ringv1, ring_time, -1, 100e-12, 'Voltage(v)', -0.2, 1.2)
+
+Fig_6_3_2 = figure(632);
+drawTrace(data63, ringv1, ring_time, 'v_{out}', -1, -0.2, 1.2);
+
+Fig_6_3_3 = figure(633);
+hold on
+drawEye(data63, ringv1, ring_time, -1, 100e-12, 'Voltage(v)', -0.2, 1.2)
+drawEye(data63, ringv2, ring_time, -1, 100e-12, 'Voltage(v)', -0.2, 1.2)
+drawEye(data63, ringv3, ring_time, -1, 100e-12, 'Voltage(v)', -0.2, 1.2)
+drawEye(data63, ringv4, ring_time, -1, 100e-12, 'Voltage(v)', -0.2, 1.2)
+drawEye(data63, ringv5, ring_time, -1, 100e-12, 'Voltage(v)', -0.2, 1.2)
+drawEye(data63, ringv6, ring_time, -1, 100e-12, 'Voltage(v)', -0.2, 1.2)
+drawEye(data63, ringv7, ring_time, -1, 100e-12, 'Voltage(v)', -0.2, 1.2)
+hold off

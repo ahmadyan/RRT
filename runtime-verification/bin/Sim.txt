@@ -293,44 +293,44 @@
  c6 6 0 1ff
  c7 7 0 1ff
 
- vsrc1		vdd1	0       0.921444v
- vsrc2		vdd2	0       0.936279v
- vsrc3		vdd3	0       0.934146v
- vsrc4		vdd4	0       0.864173v
- vsrc5		vdd5	0       0.901012v
- vsrc6		vdd6	0       0.866309v
- vsrc7		vdd7	0       0.923208v
+ vsrc1		vdd1	0       0.965484v
+ vsrc2		vdd2	0       0.97047v
+ vsrc3		vdd3	0       0.868526v
+ vsrc4		vdd4	0       0.972698v
+ vsrc5		vdd5	0       0.952947v
+ vsrc6		vdd6	0       0.970519v
+ vsrc7		vdd7	0       0.832991v
 
- vgnd1        gnd1    0       0.00347453v
- vgnd2        gnd2    0       0.0318201v
- vgnd3        gnd3    0       0.0232627v
- vgnd4        gnd4    0       0.0176992v
- vgnd5        gnd5    0       -0.0164876v
- vgnd6        gnd6    0       0.0224448v
- vgnd7        gnd7    0       -0.00467696v
+ vgnd1        gnd1    0       -0.0704031v
+ vgnd2        gnd2    0       0.0989074v
+ vgnd3        gnd3    0       0.0799188v
+ vgnd4        gnd4    0       0.0711966v
+ vgnd5        gnd5    0       -0.0088168v
+ vgnd6        gnd6    0       -0.0405744v
+ vgnd7        gnd7    0       -0.058916v
 
- v1noise  	8 	2  		-0.00386868v
- v2noise 	9 	3  		-0.000153966v
- v3noise 	10 	4  		-0.00353847v
- v4noise 	11 	5  		0.00344996v
- v5noise 	12 	6  		-0.00335505v
- v6noise 	13 	7  		-0.00440886v
- v7noise 	14 	1  		-0.00487487v
+ v1noise  	8 	2  		0.0119739v
+ v2noise 	9 	3  		-0.0346034v
+ v3noise 	10 	4  		-0.0364803v
+ v4noise 	11 	5  		-0.0306787v
+ v5noise 	12 	6  		-0.0246208v
+ v6noise 	13 	7  		-0.035107v
+ v7noise 	14 	1  		-0.0109424v
 
- vsub1		vsubp1   0 		0.865015v
- vsub2		vsubp2   0 		0.901473v
- vsub3		vsubp3   0 		0.877549v
- vsub4		vsubp4   0 		0.886863v
- vsub5		vsubp5   0 		0.914599v
- vsub6		vsubp6   0 		0.90945v
- vsub7		vsubp7   0 		0.905531v
- vsub8		vsubn1 	0 		0.05v
- vsub9		vsubn2	0 		0.05v
- vsub10		vsubn3 	0 		0.05v
- vsub11		vsubn4 	0 		0.05v
- vsub12		vsubn5 	0 		0.05v
- vsub13		vsubn6 	0 		0.05v
- vsub14		vsubn7 	0 		0.05v
+ vsub1		vsubp1   0 		0.982269v
+ vsub2		vsubp2   0 		0.806305v
+ vsub3		vsubp3   0 		0.973034v
+ vsub4		vsubp4   0 		0.911258v
+ vsub5		vsubp5   0 		0.816449v
+ vsub6		vsubp6   0 		0.9361v
+ vsub7		vsubp7   0 		0.987036v
+ vsub8		vsubn1 	0 		0.0579943v
+ vsub9		vsubn2	0 		0.0135289v
+ vsub10		vsubn3 	0 		-0.0775567v
+ vsub11		vsubn4 	0 		0.0268715v
+ vsub12		vsubn5 	0 		0.0469405v
+ vsub13		vsubn6 	0 		0.00610675v
+ vsub14		vsubn7 	0 		-0.0878353v
 
 
  .options post
@@ -340,11 +340,11 @@
 
 
  .tran 1fs 1e-012 uic
- .save type=ic file=ic_509.ic level=all time=1e-012
- .load file=ic_508.ic0
+ .save type=ic file=ic_24999.ic level=all time=1e-012
+ .load file=ic_2058.ic0
  * "version" "a-2008.03 32-bit"
  * "format" "hsp"
- * "rundate" "17:04:58 02/12/2014 "
+ * "rundate" "13:57:37 02/13/2014 "
  * "netlist" "ring-netlist.sp "
  * "runtitle" ".title ringosc"
  * time =    1.0000p       
@@ -353,216 +353,216 @@
  .option 
  + gmindc=   1.0000p       
  .ic
- + 1 =  25.2119m       
- + 2 = 898.8916m       
- + 3 = 164.5071m       
- + 4 = 157.8420m       
- + 5 = 930.3076m       
- + 6 =   6.6895m       
- + 7 = 912.3071m       
- + 8 = 900.4463m       
- + 9 = 163.0366m       
- + 10 = 155.6751m       
- + 11 = 925.5364m       
- + 12 =  10.8365m       
- + 13 = 910.3047m       
- + 14 =  23.0828m       
- + gnd1 =  10.8386m       
- + gnd2 =  -9.9170m       
- + gnd3 =  -3.1785m       
- + gnd4 =  33.7642m       
- + gnd5 =  29.7235m       
- + gnd6 =  36.6878m       
- + gnd7 =  35.7143m       
- + vdd1 = 929.7910m       
- + vdd2 = 948.3670m       
- + vdd3 = 894.8840m       
- + vdd4 = 915.9230m       
- + vdd5 = 919.0150m       
- + vdd6 = 917.1320m       
- + vdd7 = 932.5860m       
- + vsubn1 =  50.0000m       
- + vsubn2 =  50.0000m       
- + vsubn3 =  50.0000m       
- + vsubn4 =  50.0000m       
- + vsubn5 =  50.0000m       
- + vsubn6 =  50.0000m       
- + vsubn7 =  50.0000m       
- + vsubp1 = 892.6370m       
- + vsubp2 = 911.8120m       
- + vsubp3 = 947.3450m       
- + vsubp4 = 883.7960m       
- + vsubp5 = 928.6370m       
- + vsubp6 = 931.4840m       
- + vsubp7 = 861.0020m       
- + x1.n_a_m0_g =  24.6880m       
- + x1.n_a_m1_g =  24.9041m       
- + x1.n_vdd_m0_s = 929.7471m       
- + x1.n_vss_m1_s =  10.8409m       
- + x1.n_zn_m0_d = 900.5410m       
- + x1.n_zn_m1_d = 900.4430m       
- + x1.x_pm_inv_x1%vss_8 =  10.8386m       
- + x1.x_pm_inv_x1%vss_29 =  10.8388m       
- + x1.x_pm_inv_x1%vdd_31 = 929.7892m       
- + x1.x_pm_inv_x1%vdd_19 = 929.7910m       
- + x1.x_pm_inv_x1%vdd_18 = 929.7799m       
- + x1.x_pm_inv_x1%vdd_12 = 929.7910m       
- + x1.x_pm_inv_x1%vdd_11 = 929.7910m       
- + x1.x_pm_inv_x1%vdd_8 = 929.7910m       
- + x1.x_pm_inv_x1%vdd_28 = 929.7789m       
- + x1.x_pm_inv_x1%vss_18 =  10.8388m       
- + x1.x_pm_inv_x1%vss_17 =  10.8386m       
- + x1.x_pm_inv_x1%vss_10 =  10.8386m       
- + x1.x_pm_inv_x1%vss_9 =  10.8386m       
- + x1.x_pm_inv_x1%a_1 =  24.9911m       
- + x1.x_pm_inv_x1%a_11 =  25.0244m       
- + x1.x_pm_inv_x1%a_18 =  24.9953m       
- + x1.x_pm_inv_x1%a_5 =  24.9851m       
- + x1.x_pm_inv_x1%a_9 =  25.2108m       
- + x2.n_a_m0_g = 897.1249m       
- + x2.n_a_m1_g = 897.2544m       
- + x2.n_vdd_m0_s = 948.3692m       
- + x2.n_vss_m1_s =  -9.5312m       
- + x2.n_zn_m0_d = 163.0929m       
- + x2.n_zn_m1_d = 162.8234m       
- + x2.x_pm_inv_x1%vss_8 =  -9.9170m       
- + x2.x_pm_inv_x1%vss_29 =  -9.8806m       
- + x2.x_pm_inv_x1%vdd_31 = 948.3671m       
- + x2.x_pm_inv_x1%vdd_19 = 948.3670m       
- + x2.x_pm_inv_x1%vdd_18 = 948.3676m       
- + x2.x_pm_inv_x1%vdd_12 = 948.3670m       
- + x2.x_pm_inv_x1%vdd_11 = 948.3670m       
- + x2.x_pm_inv_x1%vdd_8 = 948.3670m       
- + x2.x_pm_inv_x1%vdd_28 = 948.3676m       
- + x2.x_pm_inv_x1%vss_18 =  -9.8914m       
- + x2.x_pm_inv_x1%vss_17 =  -9.9170m       
- + x2.x_pm_inv_x1%vss_10 =  -9.9170m       
- + x2.x_pm_inv_x1%vss_9 =  -9.9170m       
- + x2.x_pm_inv_x1%a_1 = 897.9408m       
- + x2.x_pm_inv_x1%a_11 = 898.0974m       
- + x2.x_pm_inv_x1%a_18 = 897.9742m       
- + x2.x_pm_inv_x1%a_5 = 897.9461m       
- + x2.x_pm_inv_x1%a_9 = 898.8872m       
- + x3.n_a_m0_g = 172.0344m       
- + x3.n_a_m1_g = 169.3802m       
- + x3.n_vdd_m0_s = 894.5839m       
- + x3.n_vss_m1_s =  -3.1950m       
- + x3.n_zn_m0_d = 156.1641m       
- + x3.n_zn_m1_d = 155.6209m       
- + x3.x_pm_inv_x1%vss_8 =  -3.1785m       
- + x3.x_pm_inv_x1%vss_29 =  -3.1801m       
- + x3.x_pm_inv_x1%vdd_31 = 894.8715m       
- + x3.x_pm_inv_x1%vdd_19 = 894.8840m       
- + x3.x_pm_inv_x1%vdd_18 = 894.8078m       
- + x3.x_pm_inv_x1%vdd_12 = 894.8840m       
- + x3.x_pm_inv_x1%vdd_11 = 894.8840m       
- + x3.x_pm_inv_x1%vdd_8 = 894.8840m       
- + x3.x_pm_inv_x1%vdd_28 = 894.8010m       
- + x3.x_pm_inv_x1%vss_18 =  -3.1796m       
- + x3.x_pm_inv_x1%vss_17 =  -3.1785m       
- + x3.x_pm_inv_x1%vss_10 =  -3.1785m       
- + x3.x_pm_inv_x1%vss_9 =  -3.1785m       
- + x3.x_pm_inv_x1%a_1 = 167.8300m       
- + x3.x_pm_inv_x1%a_11 = 167.3186m       
- + x3.x_pm_inv_x1%a_18 = 167.7547m       
- + x3.x_pm_inv_x1%a_5 = 167.8965m       
- + x3.x_pm_inv_x1%a_9 = 164.5226m       
- + x4.n_a_m0_g = 150.8456m       
- + x4.n_a_m1_g = 153.8296m       
- + x4.n_vdd_m0_s = 915.9729m       
- + x4.n_vss_m1_s =  33.7863m       
- + x4.n_zn_m0_d = 925.5677m       
- + x4.n_zn_m1_d = 925.5391m       
- + x4.x_pm_inv_x1%vss_8 =  33.7642m       
- + x4.x_pm_inv_x1%vss_29 =  33.7663m       
- + x4.x_pm_inv_x1%vdd_31 = 915.9251m       
- + x4.x_pm_inv_x1%vdd_19 = 915.9230m       
- + x4.x_pm_inv_x1%vdd_18 = 915.9357m       
- + x4.x_pm_inv_x1%vdd_12 = 915.9230m       
- + x4.x_pm_inv_x1%vdd_11 = 915.9230m       
- + x4.x_pm_inv_x1%vdd_8 = 915.9230m       
- + x4.x_pm_inv_x1%vdd_28 = 915.9368m       
- + x4.x_pm_inv_x1%vss_18 =  33.7657m       
- + x4.x_pm_inv_x1%vss_17 =  33.7642m       
- + x4.x_pm_inv_x1%vss_10 =  33.7642m       
- + x4.x_pm_inv_x1%vss_9 =  33.7642m       
- + x4.x_pm_inv_x1%a_1 = 154.9309m       
- + x4.x_pm_inv_x1%a_11 = 155.3681m       
- + x4.x_pm_inv_x1%a_18 = 154.9844m       
- + x4.x_pm_inv_x1%a_5 = 154.8473m       
- + x4.x_pm_inv_x1%a_9 = 157.8282m       
- + x5.n_a_m0_g = 929.8880m       
- + x5.n_a_m1_g = 929.9847m       
- + x5.n_vdd_m0_s = 919.0175m       
- + x5.n_vss_m1_s =  29.6805m       
- + x5.n_zn_m0_d =  10.8301m       
- + x5.n_zn_m1_d =  10.8658m       
- + x5.x_pm_inv_x1%vss_8 =  29.7235m       
- + x5.x_pm_inv_x1%vss_29 =  29.7194m       
- + x5.x_pm_inv_x1%vdd_31 = 919.0151m       
- + x5.x_pm_inv_x1%vdd_19 = 919.0150m       
- + x5.x_pm_inv_x1%vdd_18 = 919.0156m       
- + x5.x_pm_inv_x1%vdd_12 = 919.0150m       
- + x5.x_pm_inv_x1%vdd_11 = 919.0150m       
- + x5.x_pm_inv_x1%vdd_8 = 919.0150m       
- + x5.x_pm_inv_x1%vdd_28 = 919.0157m       
- + x5.x_pm_inv_x1%vss_18 =  29.7206m       
- + x5.x_pm_inv_x1%vss_17 =  29.7235m       
- + x5.x_pm_inv_x1%vss_10 =  29.7235m       
- + x5.x_pm_inv_x1%vss_9 =  29.7235m       
- + x5.x_pm_inv_x1%a_1 = 930.1037m       
- + x5.x_pm_inv_x1%a_11 = 930.1361m       
- + x5.x_pm_inv_x1%a_18 = 930.1095m       
- + x5.x_pm_inv_x1%a_5 = 930.1021m       
- + x5.x_pm_inv_x1%a_9 = 930.3066m       
- + x6.n_a_m0_g =   5.7449m       
- + x6.n_a_m1_g =   6.1577m       
- + x6.n_vdd_m0_s = 917.1254m       
- + x6.n_vss_m1_s =  36.6907m       
- + x6.n_zn_m0_d = 910.3290m       
- + x6.n_zn_m1_d = 910.3030m       
- + x6.x_pm_inv_x1%vss_8 =  36.6878m       
- + x6.x_pm_inv_x1%vss_29 =  36.6881m       
- + x6.x_pm_inv_x1%vdd_31 = 917.1317m       
- + x6.x_pm_inv_x1%vdd_19 = 917.1320m       
- + x6.x_pm_inv_x1%vdd_18 = 917.1303m       
- + x6.x_pm_inv_x1%vdd_12 = 917.1320m       
- + x6.x_pm_inv_x1%vdd_11 = 917.1320m       
- + x6.x_pm_inv_x1%vdd_8 = 917.1320m       
- + x6.x_pm_inv_x1%vdd_28 = 917.1302m       
- + x6.x_pm_inv_x1%vss_18 =  36.6880m       
- + x6.x_pm_inv_x1%vss_17 =  36.6878m       
- + x6.x_pm_inv_x1%vss_10 =  36.6878m       
- + x6.x_pm_inv_x1%vss_9 =  36.6878m       
- + x6.x_pm_inv_x1%a_1 =   6.2998m       
- + x6.x_pm_inv_x1%a_11 =   6.3581m       
- + x6.x_pm_inv_x1%a_18 =   6.3067m       
- + x6.x_pm_inv_x1%a_5 =   6.2881m       
- + x6.x_pm_inv_x1%a_9 =   6.6876m       
- + x7.n_a_m0_g = 912.0736m       
- + x7.n_a_m1_g = 912.1416m       
- + x7.n_vdd_m0_s = 932.5874m       
- + x7.n_vss_m1_s =  35.6856m       
- + x7.n_zn_m0_d =  23.0780m       
- + x7.n_zn_m1_d =  23.1017m       
- + x7.x_pm_inv_x1%vss_8 =  35.7143m       
- + x7.x_pm_inv_x1%vss_29 =  35.7116m       
- + x7.x_pm_inv_x1%vdd_31 = 932.5861m       
- + x7.x_pm_inv_x1%vdd_19 = 932.5860m       
- + x7.x_pm_inv_x1%vdd_18 = 932.5864m       
- + x7.x_pm_inv_x1%vdd_12 = 932.5860m       
- + x7.x_pm_inv_x1%vdd_11 = 932.5860m       
- + x7.x_pm_inv_x1%vdd_8 = 932.5860m       
- + x7.x_pm_inv_x1%vdd_28 = 932.5864m       
- + x7.x_pm_inv_x1%vss_18 =  35.7124m       
- + x7.x_pm_inv_x1%vss_17 =  35.7143m       
- + x7.x_pm_inv_x1%vss_10 =  35.7143m       
- + x7.x_pm_inv_x1%vss_9 =  35.7143m       
- + x7.x_pm_inv_x1%a_1 = 912.1986m       
- + x7.x_pm_inv_x1%a_11 = 912.2155m       
- + x7.x_pm_inv_x1%a_18 = 912.2013m       
- + x7.x_pm_inv_x1%a_5 = 912.1971m       
- + x7.x_pm_inv_x1%a_9 = 912.3066m       
+ + 1 =  57.2319m       
+ + 2 = 907.9899m       
+ + 3 = 109.1288m       
+ + 4 = 808.5446m       
+ + 5 =   1.5583m       
+ + 6 = 890.5072m       
+ + 7 = 223.9196m       
+ + 8 = 872.1780m       
+ + 9 =  61.5764m       
+ + 10 = 835.8663m       
+ + 11 =  36.4272m       
+ + 12 = 902.8779m       
+ + 13 = 263.4670m       
+ + 14 = 105.8830m       
+ + gnd1 = -98.7365m       
+ + gnd2 =  79.2535m       
+ + gnd3 =  29.0078m       
+ + gnd4 =  24.9794m       
+ + gnd5 = -87.8292m       
+ + gnd6 =  92.7671m       
+ + gnd7 = -77.9595m       
+ + vdd1 = 926.2670m       
+ + vdd2 = 929.0990m       
+ + vdd3 = 803.6740m       
+ + vdd4 = 932.1630m       
+ + vdd5 = 985.6260m       
+ + vdd6 = 921.6960m       
+ + vdd7 = 884.5790m       
+ + vsubn1 =  15.2379m       
+ + vsubn2 =  53.9109m       
+ + vsubn3 = -69.7806m       
+ + vsubn4 =  21.0852m       
+ + vsubn5 =  -1.2421m       
+ + vsubn6 = -14.0782m       
+ + vsubn7 = -49.0890m       
+ + vsubp1 = 880.8130m       
+ + vsubp2 = 870.0520m       
+ + vsubp3 = 920.4140m       
+ + vsubp4 = 802.9050m       
+ + vsubp5 = 891.2810m       
+ + vsubp6 = 808.7280m       
+ + vsubp7 = 838.2640m       
+ + x1.n_a_m0_g =  51.6266m       
+ + x1.n_a_m1_g =  53.9617m       
+ + x1.n_vdd_m0_s = 926.2132m       
+ + x1.n_vss_m1_s = -98.7117m       
+ + x1.n_zn_m0_d = 872.3603m       
+ + x1.n_zn_m1_d = 872.1657m       
+ + x1.x_pm_inv_x1%vss_8 = -98.7365m       
+ + x1.x_pm_inv_x1%vss_29 = -98.7342m       
+ + x1.x_pm_inv_x1%vdd_31 = 926.2648m       
+ + x1.x_pm_inv_x1%vdd_19 = 926.2670m       
+ + x1.x_pm_inv_x1%vdd_18 = 926.2533m       
+ + x1.x_pm_inv_x1%vdd_12 = 926.2670m       
+ + x1.x_pm_inv_x1%vdd_11 = 926.2670m       
+ + x1.x_pm_inv_x1%vdd_8 = 926.2670m       
+ + x1.x_pm_inv_x1%vdd_28 = 926.2521m       
+ + x1.x_pm_inv_x1%vss_18 = -98.7349m       
+ + x1.x_pm_inv_x1%vss_17 = -98.7365m       
+ + x1.x_pm_inv_x1%vss_10 = -98.7365m       
+ + x1.x_pm_inv_x1%vss_9 = -98.7365m       
+ + x1.x_pm_inv_x1%a_1 =  54.8793m       
+ + x1.x_pm_inv_x1%a_11 =  55.2338m       
+ + x1.x_pm_inv_x1%a_18 =  54.9238m       
+ + x1.x_pm_inv_x1%a_5 =  54.8147m       
+ + x1.x_pm_inv_x1%a_9 =  57.2207m       
+ + x2.n_a_m0_g = 905.8425m       
+ + x2.n_a_m1_g = 906.0613m       
+ + x2.n_vdd_m0_s = 929.1075m       
+ + x2.n_vss_m1_s =  79.2276m       
+ + x2.n_zn_m0_d =  61.5792m       
+ + x2.n_zn_m1_d =  61.6108m       
+ + x2.x_pm_inv_x1%vss_8 =  79.2535m       
+ + x2.x_pm_inv_x1%vss_29 =  79.2511m       
+ + x2.x_pm_inv_x1%vdd_31 = 929.0994m       
+ + x2.x_pm_inv_x1%vdd_19 = 929.0990m       
+ + x2.x_pm_inv_x1%vdd_18 = 929.1012m       
+ + x2.x_pm_inv_x1%vdd_12 = 929.0990m       
+ + x2.x_pm_inv_x1%vdd_11 = 929.0990m       
+ + x2.x_pm_inv_x1%vdd_8 = 929.0990m       
+ + x2.x_pm_inv_x1%vdd_28 = 929.1013m       
+ + x2.x_pm_inv_x1%vss_18 =  79.2518m       
+ + x2.x_pm_inv_x1%vss_17 =  79.2535m       
+ + x2.x_pm_inv_x1%vss_10 =  79.2535m       
+ + x2.x_pm_inv_x1%vss_9 =  79.2535m       
+ + x2.x_pm_inv_x1%a_1 = 906.8527m       
+ + x2.x_pm_inv_x1%a_11 = 907.0387m       
+ + x2.x_pm_inv_x1%a_18 = 906.8911m       
+ + x2.x_pm_inv_x1%a_5 = 906.8564m       
+ + x2.x_pm_inv_x1%a_9 = 907.9846m       
+ + x3.n_a_m0_g = 107.4613m       
+ + x3.n_a_m1_g = 108.2575m       
+ + x3.n_vdd_m0_s = 803.7189m       
+ + x3.n_vss_m1_s =  29.0109m       
+ + x3.n_zn_m0_d = 835.8031m       
+ + x3.n_zn_m1_d = 835.8724m       
+ + x3.x_pm_inv_x1%vss_8 =  29.0078m       
+ + x3.x_pm_inv_x1%vss_29 =  29.0081m       
+ + x3.x_pm_inv_x1%vdd_31 = 803.6759m       
+ + x3.x_pm_inv_x1%vdd_19 = 803.6740m       
+ + x3.x_pm_inv_x1%vdd_18 = 803.6854m       
+ + x3.x_pm_inv_x1%vdd_12 = 803.6740m       
+ + x3.x_pm_inv_x1%vdd_11 = 803.6740m       
+ + x3.x_pm_inv_x1%vdd_8 = 803.6740m       
+ + x3.x_pm_inv_x1%vdd_28 = 803.6864m       
+ + x3.x_pm_inv_x1%vss_18 =  29.0080m       
+ + x3.x_pm_inv_x1%vss_17 =  29.0078m       
+ + x3.x_pm_inv_x1%vss_10 =  29.0078m       
+ + x3.x_pm_inv_x1%vss_9 =  29.0078m       
+ + x3.x_pm_inv_x1%a_1 = 108.4654m       
+ + x3.x_pm_inv_x1%a_11 = 108.5632m       
+ + x3.x_pm_inv_x1%a_18 = 108.4755m       
+ + x3.x_pm_inv_x1%a_5 = 108.4419m       
+ + x3.x_pm_inv_x1%a_9 = 109.1257m       
+ + x4.n_a_m0_g = 809.2645m       
+ + x4.n_a_m1_g = 809.1957m       
+ + x4.n_vdd_m0_s = 932.1584m       
+ + x4.n_vss_m1_s =  25.0027m       
+ + x4.n_zn_m0_d =  36.4287m       
+ + x4.n_zn_m1_d =  36.4060m       
+ + x4.x_pm_inv_x1%vss_8 =  24.9794m       
+ + x4.x_pm_inv_x1%vss_29 =  24.9816m       
+ + x4.x_pm_inv_x1%vdd_31 = 932.1628m       
+ + x4.x_pm_inv_x1%vdd_19 = 932.1630m       
+ + x4.x_pm_inv_x1%vdd_18 = 932.1618m       
+ + x4.x_pm_inv_x1%vdd_12 = 932.1630m       
+ + x4.x_pm_inv_x1%vdd_11 = 932.1630m       
+ + x4.x_pm_inv_x1%vdd_8 = 932.1630m       
+ + x4.x_pm_inv_x1%vdd_28 = 932.1617m       
+ + x4.x_pm_inv_x1%vss_18 =  24.9809m       
+ + x4.x_pm_inv_x1%vss_17 =  24.9794m       
+ + x4.x_pm_inv_x1%vss_10 =  24.9794m       
+ + x4.x_pm_inv_x1%vss_9 =  24.9794m       
+ + x4.x_pm_inv_x1%a_1 = 808.9273m       
+ + x4.x_pm_inv_x1%a_11 = 808.8646m       
+ + x4.x_pm_inv_x1%a_18 = 808.9142m       
+ + x4.x_pm_inv_x1%a_5 = 808.9258m       
+ + x4.x_pm_inv_x1%a_9 = 808.5463m       
+ + x5.n_a_m0_g =   2.8687m       
+ + x5.n_a_m1_g =   2.2263m       
+ + x5.n_vdd_m0_s = 985.4920m       
+ + x5.n_vss_m1_s = -87.8281m       
+ + x5.n_zn_m0_d = 903.1041m       
+ + x5.n_zn_m1_d = 902.8614m       
+ + x5.x_pm_inv_x1%vss_8 = -87.8292m       
+ + x5.x_pm_inv_x1%vss_29 = -87.8291m       
+ + x5.x_pm_inv_x1%vdd_31 = 985.6204m       
+ + x5.x_pm_inv_x1%vdd_19 = 985.6260m       
+ + x5.x_pm_inv_x1%vdd_18 = 985.5920m       
+ + x5.x_pm_inv_x1%vdd_12 = 985.6260m       
+ + x5.x_pm_inv_x1%vdd_11 = 985.6260m       
+ + x5.x_pm_inv_x1%vdd_8 = 985.6260m       
+ + x5.x_pm_inv_x1%vdd_28 = 985.5889m       
+ + x5.x_pm_inv_x1%vss_18 = -87.8291m       
+ + x5.x_pm_inv_x1%vss_17 = -87.8292m       
+ + x5.x_pm_inv_x1%vss_10 = -87.8292m       
+ + x5.x_pm_inv_x1%vss_9 = -87.8292m       
+ + x5.x_pm_inv_x1%a_1 =   2.0730m       
+ + x5.x_pm_inv_x1%a_11 =   1.9974m       
+ + x5.x_pm_inv_x1%a_18 =   2.0656m       
+ + x5.x_pm_inv_x1%a_5 =   2.0921m       
+ + x5.x_pm_inv_x1%a_9 =   1.5607m       
+ + x6.n_a_m0_g = 887.3444m       
+ + x6.n_a_m1_g = 887.6298m       
+ + x6.n_vdd_m0_s = 921.7036m       
+ + x6.n_vss_m1_s =  93.1028m       
+ + x6.n_zn_m0_d = 263.5226m       
+ + x6.n_zn_m1_d = 263.2908m       
+ + x6.x_pm_inv_x1%vss_8 =  92.7671m       
+ + x6.x_pm_inv_x1%vss_29 =  92.7988m       
+ + x6.x_pm_inv_x1%vdd_31 = 921.6963m       
+ + x6.x_pm_inv_x1%vdd_19 = 921.6960m       
+ + x6.x_pm_inv_x1%vdd_18 = 921.6979m       
+ + x6.x_pm_inv_x1%vdd_12 = 921.6960m       
+ + x6.x_pm_inv_x1%vdd_11 = 921.6960m       
+ + x6.x_pm_inv_x1%vdd_8 = 921.6960m       
+ + x6.x_pm_inv_x1%vdd_28 = 921.6981m       
+ + x6.x_pm_inv_x1%vss_18 =  92.7894m       
+ + x6.x_pm_inv_x1%vss_17 =  92.7671m       
+ + x6.x_pm_inv_x1%vss_10 =  92.7671m       
+ + x6.x_pm_inv_x1%vss_9 =  92.7671m       
+ + x6.x_pm_inv_x1%a_1 = 888.8217m       
+ + x6.x_pm_inv_x1%a_11 = 889.0982m       
+ + x6.x_pm_inv_x1%a_18 = 888.8796m       
+ + x6.x_pm_inv_x1%a_5 = 888.8288m       
+ + x6.x_pm_inv_x1%a_9 = 890.4994m       
+ + x7.n_a_m0_g = 229.8224m       
+ + x7.n_a_m1_g = 228.0209m       
+ + x7.n_vdd_m0_s = 884.3128m       
+ + x7.n_vss_m1_s = -77.9558m       
+ + x7.n_zn_m0_d = 106.3328m       
+ + x7.n_zn_m1_d = 105.8205m       
+ + x7.x_pm_inv_x1%vss_8 = -77.9595m       
+ + x7.x_pm_inv_x1%vss_29 = -77.9592m       
+ + x7.x_pm_inv_x1%vdd_31 = 884.5679m       
+ + x7.x_pm_inv_x1%vdd_19 = 884.5790m       
+ + x7.x_pm_inv_x1%vdd_18 = 884.5114m       
+ + x7.x_pm_inv_x1%vdd_12 = 884.5790m       
+ + x7.x_pm_inv_x1%vdd_11 = 884.5790m       
+ + x7.x_pm_inv_x1%vdd_8 = 884.5790m       
+ + x7.x_pm_inv_x1%vdd_28 = 884.5054m       
+ + x7.x_pm_inv_x1%vss_18 = -77.9593m       
+ + x7.x_pm_inv_x1%vss_17 = -77.9595m       
+ + x7.x_pm_inv_x1%vss_10 = -77.9595m       
+ + x7.x_pm_inv_x1%vss_9 = -77.9595m       
+ + x7.x_pm_inv_x1%a_1 = 226.6226m       
+ + x7.x_pm_inv_x1%a_11 = 226.2008m       
+ + x7.x_pm_inv_x1%a_18 = 226.5547m       
+ + x7.x_pm_inv_x1%a_5 = 226.6629m       
+ + x7.x_pm_inv_x1%a_9 = 223.9321m       
  ***   end: saved operating point ***                     
 
  .end
@@ -1193,76 +1193,76 @@ Model Name: nmos_vtl
  ***** operating point status is voltage   simulation time is     1.0000p
     node    =voltage      node    =voltage      node    =voltage
 
- +0:1       =  14.2353m 0:2       = 907.9280m 0:3       = 136.4452m
- +0:4       = 235.3661m 0:5       = 912.6667m 0:6       =  -7.9072m
- +0:7       = 892.9823m 0:8       = 904.0594m 0:9       = 136.2912m
- +0:10      = 231.8277m 0:11      = 916.1167m 0:12      = -11.2623m
- +0:13      = 888.5734m 0:14      =   9.3605m 0:gnd1    =   3.4745m
- +0:gnd2    =  31.8201m 0:gnd3    =  23.2627m 0:gnd4    =  17.6992m
- +0:gnd5    = -16.4876m 0:gnd6    =  22.4448m 0:gnd7    =  -4.6770m
- +0:vdd1    = 921.4440m 0:vdd2    = 936.2790m 0:vdd3    = 934.1460m
- +0:vdd4    = 864.1730m 0:vdd5    = 901.0120m 0:vdd6    = 866.3090m
- +0:vdd7    = 923.2080m 0:vsubn1  =  50.0000m 0:vsubn2  =  50.0000m
- +0:vsubn3  =  50.0000m 0:vsubn4  =  50.0000m 0:vsubn5  =  50.0000m
- +0:vsubn6  =  50.0000m 0:vsubn7  =  50.0000m 0:vsubp1  = 865.0150m
- +0:vsubp2  = 901.4730m 0:vsubp3  = 877.5490m 0:vsubp4  = 886.8630m
- +0:vsubp5  = 914.5990m 0:vsubp6  = 909.4500m 0:vsubp7  = 905.5310m
- +1:n_a_m0_g=  15.1500m 1:n_a_m1_g=  14.7306m 1:n_vdd_m0= 921.4117m
- +1:n_vss_m1=   3.4727m 1:n_zn_m0_= 904.1070m 1:n_zn_m1_= 904.0569m
- +1:x_pm_inv=   3.4745m 1:x_pm_inv=   3.4744m 1:x_pm_inv= 921.4426m
- +1:x_pm_inv= 921.4440m 1:x_pm_inv= 921.4358m 1:x_pm_inv= 921.4440m
- +1:x_pm_inv= 921.4440m 1:x_pm_inv= 921.4440m 1:x_pm_inv= 921.4351m
- +1:x_pm_inv=   3.4744m 1:x_pm_inv=   3.4745m 1:x_pm_inv=   3.4745m
- +1:x_pm_inv=   3.4745m 1:x_pm_inv=  14.6055m 1:x_pm_inv=  14.5505m
- +1:x_pm_inv=  14.5994m 1:x_pm_inv=  14.6176m 1:x_pm_inv=  14.2371m
- +2:n_a_m0_g= 907.0471m 2:n_a_m1_g= 907.0715m 2:n_vdd_m0= 936.2800m
- +2:n_vss_m1=  32.0657m 2:n_zn_m0_= 136.3208m 2:n_zn_m1_= 136.1539m
- +2:x_pm_inv=  31.8201m 2:x_pm_inv=  31.8433m 2:x_pm_inv= 936.2790m
- +2:x_pm_inv= 936.2790m 2:x_pm_inv= 936.2792m 2:x_pm_inv= 936.2790m
- +2:x_pm_inv= 936.2790m 2:x_pm_inv= 936.2790m 2:x_pm_inv= 936.2793m
- +2:x_pm_inv=  31.8364m 2:x_pm_inv=  31.8201m 2:x_pm_inv=  31.8201m
- +2:x_pm_inv=  31.8201m 2:x_pm_inv= 907.4401m 2:x_pm_inv= 907.5212m
- +2:x_pm_inv= 907.4580m 2:x_pm_inv= 907.4444m 2:x_pm_inv= 907.9258m
- +3:n_a_m0_g= 141.9612m 3:n_a_m1_g= 139.9373m 3:n_vdd_m0= 933.7979m
- +3:n_vss_m1=  23.2537m 3:n_zn_m0_= 232.4436m 3:n_zn_m1_= 231.7710m
- +3:x_pm_inv=  23.2627m 3:x_pm_inv=  23.2618m 3:x_pm_inv= 934.1315m
- +3:x_pm_inv= 934.1460m 3:x_pm_inv= 934.0577m 3:x_pm_inv= 934.1460m
- +3:x_pm_inv= 934.1460m 3:x_pm_inv= 934.1460m 3:x_pm_inv= 934.0498m
- +3:x_pm_inv=  23.2621m 3:x_pm_inv=  23.2627m 3:x_pm_inv=  23.2627m
- +3:x_pm_inv=  23.2627m 3:x_pm_inv= 138.8514m 3:x_pm_inv= 138.4826m
- +3:x_pm_inv= 138.7987m 3:x_pm_inv= 138.9034m 3:x_pm_inv= 136.4564m
- +4:n_a_m0_g= 225.7160m 4:n_a_m1_g= 229.8331m 4:n_vdd_m0= 864.2765m
- +4:n_vss_m1=  17.7380m 4:n_zn_m0_= 916.0798m 4:n_zn_m1_= 916.1235m
- +4:x_pm_inv=  17.6992m 4:x_pm_inv=  17.7029m 4:x_pm_inv= 864.1773m
- +4:x_pm_inv= 864.1730m 4:x_pm_inv= 864.1993m 4:x_pm_inv= 864.1730m
- +4:x_pm_inv= 864.1730m 4:x_pm_inv= 864.1730m 4:x_pm_inv= 864.2016m
- +4:x_pm_inv=  17.7018m 4:x_pm_inv=  17.6992m 4:x_pm_inv=  17.6992m
- +4:x_pm_inv=  17.6992m 4:x_pm_inv= 231.3525m 4:x_pm_inv= 231.9553m
- +4:x_pm_inv= 231.4262m 4:x_pm_inv= 231.2371m 4:x_pm_inv= 235.3472m
- +5:n_a_m0_g= 912.9470m 5:n_a_m1_g= 912.9092m 5:n_vdd_m0= 901.0105m
- +5:n_vss_m1= -16.4753m 5:n_zn_m0_= -11.2593m 5:n_zn_m1_= -11.2689m
- +5:x_pm_inv= -16.4876m 5:x_pm_inv= -16.4864m 5:x_pm_inv= 901.0119m
- +5:x_pm_inv= 901.0120m 5:x_pm_inv= 901.0116m 5:x_pm_inv= 901.0120m
- +5:x_pm_inv= 901.0120m 5:x_pm_inv= 901.0120m 5:x_pm_inv= 901.0116m
- +5:x_pm_inv= -16.4868m 5:x_pm_inv= -16.4876m 5:x_pm_inv= -16.4876m
- +5:x_pm_inv= -16.4876m 5:x_pm_inv= 912.8121m 5:x_pm_inv= 912.7885m
- +5:x_pm_inv= 912.8074m 5:x_pm_inv= 912.8120m 5:x_pm_inv= 912.6674m
- +6:n_a_m0_g=  -7.9895m 6:n_a_m1_g=  -7.8895m 6:n_vdd_m0= 866.3398m
- +6:n_vss_m1=  22.4433m 6:n_zn_m0_= 888.5076m 6:n_zn_m1_= 888.5790m
- +6:x_pm_inv=  22.4448m 6:x_pm_inv=  22.4447m 6:x_pm_inv= 866.3103m
- +6:x_pm_inv= 866.3090m 6:x_pm_inv= 866.3168m 6:x_pm_inv= 866.3090m
- +6:x_pm_inv= 866.3090m 6:x_pm_inv= 866.3090m 6:x_pm_inv= 866.3175m
- +6:x_pm_inv=  22.4447m 6:x_pm_inv=  22.4448m 6:x_pm_inv=  22.4448m
- +6:x_pm_inv=  22.4448m 6:x_pm_inv=  -7.9181m 6:x_pm_inv=  -7.9179m
- +6:x_pm_inv=  -7.9195m 6:x_pm_inv=  -7.9219m 6:x_pm_inv=  -7.9072m
- +7:n_a_m0_g= 893.6971m 7:n_a_m1_g= 893.6207m 7:n_vdd_m0= 923.2047m
- +7:n_vss_m1=  -4.6447m 7:n_zn_m0_=   9.3629m 7:n_zn_m1_=   9.3379m
- +7:x_pm_inv=  -4.6770m 7:x_pm_inv=  -4.6739m 7:x_pm_inv= 923.2079m
- +7:x_pm_inv= 923.2080m 7:x_pm_inv= 923.2072m 7:x_pm_inv= 923.2080m
- +7:x_pm_inv= 923.2080m 7:x_pm_inv= 923.2080m 7:x_pm_inv= 923.2071m
- +7:x_pm_inv=  -4.6748m 7:x_pm_inv=  -4.6770m 7:x_pm_inv=  -4.6770m
- +7:x_pm_inv=  -4.6770m 7:x_pm_inv= 893.3597m 7:x_pm_inv= 893.2981m
- +7:x_pm_inv= 893.3471m 7:x_pm_inv= 893.3586m 7:x_pm_inv= 892.9841m
+ +0:1       = 138.8026m 0:2       = 925.7745m 0:3       = 123.1843m
+ +0:4       = 858.2001m 0:5       =  51.2831m 0:6       = 916.9180m
+ +0:7       = 169.1228m 0:8       = 937.7484m 0:9       =  88.5809m
+ +0:10      = 821.7198m 0:11      =  20.6044m 0:12      = 892.2972m
+ +0:13      = 134.0158m 0:14      = 127.8602m 0:gnd1    = -70.4031m
+ +0:gnd2    =  98.9074m 0:gnd3    =  79.9188m 0:gnd4    =  71.1966m
+ +0:gnd5    =  -8.8168m 0:gnd6    = -40.5744m 0:gnd7    = -58.9160m
+ +0:vdd1    = 965.4840m 0:vdd2    = 970.4700m 0:vdd3    = 868.5260m
+ +0:vdd4    = 972.6980m 0:vdd5    = 952.9470m 0:vdd6    = 970.5190m
+ +0:vdd7    = 832.9910m 0:vsubn1  =  57.9943m 0:vsubn2  =  13.5289m
+ +0:vsubn3  = -77.5567m 0:vsubn4  =  26.8715m 0:vsubn5  =  46.9405m
+ +0:vsubn6  =   6.1067m 0:vsubn7  = -87.8353m 0:vsubp1  = 982.2690m
+ +0:vsubp2  = 806.3050m 0:vsubp3  = 973.0340m 0:vsubp4  = 911.2580m
+ +0:vsubp5  = 816.4490m 0:vsubp6  = 936.1000m 0:vsubp7  = 987.0360m
+ +1:n_a_m0_g= 133.8833m 1:n_a_m1_g= 135.8850m 1:n_vdd_m0= 965.4668m
+ +1:n_vss_m1= -70.3686m 1:n_zn_m0_= 937.8571m 1:n_zn_m1_= 937.7347m
+ +1:x_pm_inv= -70.4031m 1:x_pm_inv= -70.3998m 1:x_pm_inv= 965.4833m
+ +1:x_pm_inv= 965.4840m 1:x_pm_inv= 965.4796m 1:x_pm_inv= 965.4840m
+ +1:x_pm_inv= 965.4840m 1:x_pm_inv= 965.4840m 1:x_pm_inv= 965.4792m
+ +1:x_pm_inv= -70.4008m 1:x_pm_inv= -70.4031m 1:x_pm_inv= -70.4031m
+ +1:x_pm_inv= -70.4031m 1:x_pm_inv= 136.7218m 1:x_pm_inv= 137.0364m
+ +1:x_pm_inv= 136.7624m 1:x_pm_inv= 136.6671m 1:x_pm_inv= 138.7928m
+ +2:n_a_m0_g= 924.6908m 2:n_a_m1_g= 924.8421m 2:n_vdd_m0= 970.4749m
+ +2:n_vss_m1=  98.8931m 2:n_zn_m0_=  88.5781m 2:n_zn_m1_=  88.5975m
+ +2:x_pm_inv=  98.9074m 2:x_pm_inv=  98.9060m 2:x_pm_inv= 970.4702m
+ +2:x_pm_inv= 970.4700m 2:x_pm_inv= 970.4712m 2:x_pm_inv= 970.4700m
+ +2:x_pm_inv= 970.4700m 2:x_pm_inv= 970.4700m 2:x_pm_inv= 970.4714m
+ +2:x_pm_inv=  98.9064m 2:x_pm_inv=  98.9074m 2:x_pm_inv=  98.9074m
+ +2:x_pm_inv=  98.9074m 2:x_pm_inv= 925.2146m 2:x_pm_inv= 925.3055m
+ +2:x_pm_inv= 925.2327m 2:x_pm_inv= 925.2148m 2:x_pm_inv= 925.7718m
+ +3:n_a_m0_g= 122.9041m 3:n_a_m1_g= 122.9957m 3:n_vdd_m0= 868.4710m
+ +3:n_vss_m1=  79.9223m 3:n_zn_m0_= 821.8190m 3:n_zn_m1_= 821.7098m
+ +3:x_pm_inv=  79.9188m 3:x_pm_inv=  79.9191m 3:x_pm_inv= 868.5237m
+ +3:x_pm_inv= 868.5260m 3:x_pm_inv= 868.5120m 3:x_pm_inv= 868.5260m
+ +3:x_pm_inv= 868.5260m 3:x_pm_inv= 868.5260m 3:x_pm_inv= 868.5108m
+ +3:x_pm_inv=  79.9190m 3:x_pm_inv=  79.9188m 3:x_pm_inv=  79.9188m
+ +3:x_pm_inv=  79.9188m 3:x_pm_inv= 123.0571m 3:x_pm_inv= 123.0768m
+ +3:x_pm_inv= 123.0601m 3:x_pm_inv= 123.0549m 3:x_pm_inv= 123.1837m
+ +4:n_a_m0_g= 857.2760m 4:n_a_m1_g= 857.5781m 4:n_vdd_m0= 972.7035m
+ +4:n_vss_m1=  71.0878m 4:n_zn_m0_=  20.5890m 4:n_zn_m1_=  20.6740m
+ +4:x_pm_inv=  71.1966m 4:x_pm_inv=  71.1863m 4:x_pm_inv= 972.6982m
+ +4:x_pm_inv= 972.6980m 4:x_pm_inv= 972.6994m 4:x_pm_inv= 972.6980m
+ +4:x_pm_inv= 972.6980m 4:x_pm_inv= 972.6980m 4:x_pm_inv= 972.6995m
+ +4:x_pm_inv=  71.1894m 4:x_pm_inv=  71.1966m 4:x_pm_inv=  71.1966m
+ +4:x_pm_inv=  71.1966m 4:x_pm_inv= 857.7821m 4:x_pm_inv= 857.8468m
+ +4:x_pm_inv= 857.7920m 4:x_pm_inv= 857.7749m 4:x_pm_inv= 858.1981m
+ +5:n_a_m0_g=  49.1719m 5:n_a_m1_g=  50.0642m 5:n_vdd_m0= 952.8643m
+ +5:n_vss_m1=  -8.8079m 5:n_zn_m0_= 892.4872m 5:n_zn_m1_= 892.2877m
+ +5:x_pm_inv=  -8.8168m 5:x_pm_inv=  -8.8160m 5:x_pm_inv= 952.9435m
+ +5:x_pm_inv= 952.9470m 5:x_pm_inv= 952.9260m 5:x_pm_inv= 952.9470m
+ +5:x_pm_inv= 952.9470m 5:x_pm_inv= 952.9470m 5:x_pm_inv= 952.9241m
+ +5:x_pm_inv=  -8.8162m 5:x_pm_inv=  -8.8168m 5:x_pm_inv=  -8.8168m
+ +5:x_pm_inv=  -8.8168m 5:x_pm_inv=  50.4011m 5:x_pm_inv=  50.5337m
+ +5:x_pm_inv=  50.4175m 5:x_pm_inv=  50.3762m 5:x_pm_inv=  51.2789m
+ +6:n_a_m0_g= 913.9406m 6:n_a_m1_g= 914.1586m 6:n_vdd_m0= 970.5236m
+ +6:n_vss_m1= -40.1687m 6:n_zn_m0_= 134.0829m 6:n_zn_m1_= 133.8010m
+ +6:x_pm_inv= -40.5744m 6:x_pm_inv= -40.5361m 6:x_pm_inv= 970.5192m
+ +6:x_pm_inv= 970.5190m 6:x_pm_inv= 970.5202m 6:x_pm_inv= 970.5190m
+ +6:x_pm_inv= 970.5190m 6:x_pm_inv= 970.5190m 6:x_pm_inv= 970.5203m
+ +6:x_pm_inv= -40.5475m 6:x_pm_inv= -40.5744m 6:x_pm_inv= -40.5744m
+ +6:x_pm_inv= -40.5744m 6:x_pm_inv= 915.3143m 6:x_pm_inv= 915.5783m
+ +6:x_pm_inv= 915.3704m 6:x_pm_inv= 915.3231m 6:x_pm_inv= 916.9106m
+ +7:n_a_m0_g= 176.3332m 7:n_a_m1_g= 173.8148m 7:n_vdd_m0= 832.7523m
+ +7:n_vss_m1= -58.9321m 7:n_zn_m0_= 128.2305m 7:n_zn_m1_= 127.8148m
+ +7:x_pm_inv= -58.9160m 7:x_pm_inv= -58.9175m 7:x_pm_inv= 832.9810m
+ +7:x_pm_inv= 832.9910m 7:x_pm_inv= 832.9304m 7:x_pm_inv= 832.9910m
+ +7:x_pm_inv= 832.9910m 7:x_pm_inv= 832.9910m 7:x_pm_inv= 832.9250m
+ +7:x_pm_inv= -58.9171m 7:x_pm_inv= -58.9160m 7:x_pm_inv= -58.9160m
+ +7:x_pm_inv= -58.9160m 7:x_pm_inv= 172.3147m 7:x_pm_inv= 171.8230m
+ +7:x_pm_inv= 172.2419m 7:x_pm_inv= 172.3773m 7:x_pm_inv= 169.1378m
 
 
           ***** job concluded
@@ -1281,15 +1281,15 @@ Model Name: nmos_vtl
     analysis           time    # points   tot. iter  conv.iter
 
     op point           0.00           1           0
-    transient          0.01        1001          62          27 rev=         1
+    transient          0.01        1001          63          28 rev=         1
     readin             0.01
     errchk             0.01
     setup              0.00
     output             0.00
            total cpu time          0.02 seconds
            total elapsed time         1 seconds
-               job started at  17:04:59 02/12/2014
-               job ended   at  17:04:59 02/12/2014
+               job started at  16:10:14 02/13/2014
+               job ended   at  16:10:14 02/13/2014
 
 
 >info:         ***** hspice job concluded

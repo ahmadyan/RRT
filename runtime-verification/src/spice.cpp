@@ -35,12 +35,12 @@ vector<double>  SPICE::simulate(double* ic, vector<double> param, vector<string>
 	}
 	sed << " > " << netlistFile << endl;
 
-	cout << sed.str() << endl;
+	//cout << sed.str() << endl;
 	system(sed.str().c_str());
 
 	string hspiceCommand = "hspice " + netlistFile + " > Sim.txt";
 
-	cout << hspiceCommand << endl;
+	//cout << hspiceCommand << endl;
 	system(hspiceCommand.c_str());
 
 
