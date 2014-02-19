@@ -34,8 +34,12 @@ public:
     void load(string fileName);
     void save(string fileName);
     string getName();
-    double unifRand();
-	double unifRand(double a, double b);
+    
+	double generateNormalSample(double mean, double std);
+	double generateTruncatedNormalSample(double mean, double std, double min, double max);
+	double generateUniformSample();
+	double generateUniformSample(double a, double b);
+
     void build(double*);
     void buildUniform(double* initialState);
     void setBound(int d, double _min, double _max);
@@ -50,8 +54,14 @@ public:
     void setSystem(System*);
 	void setdt(double);
 	double RRT::getdt();
-	node* getNearestNode(node* q_sample);
-	vector<node*> getNearestNode(node* q_sample, double errorTolerance, bool timed);
+
+
+	vector<node*> getLatestNode();
+	vector<node*> NearestNodeInProjectiveSpace(node* q_sample);
+	vector<node*> NearestNodeUsingTimeDistance(node* q_sample);
+	vector<node*> NearestNodeUsingEuclideanDistance(node* q_sample);
+	vector<node*> recursiveNearestNodeSearch(node* q_sample);
+	vector<node*> getNearestNode(node* q_sample);
 	node* getRoot();
 	node* getNode(int);
 	void addMonitor(Monitor*);

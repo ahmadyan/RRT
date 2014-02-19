@@ -25,4 +25,5 @@ public:
     void getParameter(string parameter, int* result);
     void setParameter(string, string);
 	bool checkParameter(string key, string value);
+	bool checkParameter(string parameter, int i, string value);
 };

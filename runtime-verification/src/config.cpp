@@ -8,7 +8,6 @@
 #include <vector>
 
 
-+
 #include <boost/algorithm/string.hpp>
 //#include <boost/graph/graph_traits.hpp>
 //#include <boost/graph/adjacency_list.hpp>
@@ -89,6 +88,18 @@ void Configuration::getParameter(string parameter, int i, double* result){
 
 void Configuration::setParameter(string key, string value){
     db[key] = value ;
+}
+
+bool Configuration::checkParameter(string parameter, int i, string value){
+	try{
+		stringstream ss;
+		ss << parameter << "[" << i << "]";
+		return checkParameter(ss.str(), value);
+	}
+	catch (const std::exception&){
+		cout << "Variable " << parameter << "@" << i << " not found" << endl;
+		return false;
+	}
 }
 
 bool Configuration::checkParameter(string key, string value){

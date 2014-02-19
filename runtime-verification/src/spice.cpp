@@ -26,10 +26,10 @@ vector<double>  SPICE::simulate(double* ic, vector<double> param, vector<string>
 		sed << "-e s/$PARAM_" << i << "/" << param[i] << "/ ";
 	}
 	if (dcSimulation){		
-		sed << "-e s/$tran/" << "\".tran 1fs " << dt << "\"/ ";
+		sed << "-e s/$tran/" << "\".tran " << dt/10 << " " << dt << "\"/ ";
 		sed << "-e s/$save/" << "\".save type=ic file=" << setting[0] << " level=all time=" << dt << "\"/ ";
 	}else{
-		sed << "-e s/$tran/" << "\".tran 1fs " << dt << " uic" << "\"/ ";
+		sed << "-e s/$tran/" << "\".tran " << dt/10 << " " << dt << " uic" << "\"/ ";
 		sed << "-e s/$save/" << "\".save type=ic file=" << setting[0] << " level=all time=" << dt << "\"/ ";
 		sed << "-e s/$load/" << "\".load file=" << setting[1] << "\"/";
 	}

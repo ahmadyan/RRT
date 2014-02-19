@@ -6,7 +6,7 @@
 #include <conio.h>
 #include <stdlib.h>
 #include <direct.h>
-
+#include <random>
 #include "config.h"
 #include "Monitor.h"
 #include "RRT.h"
@@ -429,7 +429,7 @@ int main (int argc, const char * argv[]){
 	char full[_MAX_PATH];
 	_fullpath(full, ".\\", _MAX_PATH);
 	cout << "Current working directory is:" << full << endl;
-	string configFile = string(full) + "config\\ring.conf";
+	string configFile = string(full) + "config\\half-wave-limiter.conf";
 	Configuration* config = new Configuration(configFile);
 
 	//fft_experiments();

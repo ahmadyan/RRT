@@ -360,3 +360,46 @@ drawEye(data63, ringv5, ring_time, -1, 100e-12, 'Voltage(v)', -0.2, 1.2)
 drawEye(data63, ringv6, ring_time, -1, 100e-12, 'Voltage(v)', -0.2, 1.2)
 drawEye(data63, ringv7, ring_time, -1, 100e-12, 'Voltage(v)', -0.2, 1.2)
 hold off
+
+
+
+
+%%-------------------------------------------------------------------------
+% Experiment 6: Halfwave-limiter with low pass filter
+%%-------------------------------------------------------------------------
+vin=3;
+vfilter=4;
+vlim=5;
+vout=6;
+t=7;
+
+
+%Case I: Monte Carlo Golden
+data71=rrt2mat('limiter71.rrt');
+Fig_711 = figure(711);
+drawTrace(data71, vin, t, 'v_{in}', -1, -3.2, 3.2);
+
+Fig_712 = figure(712);
+drawTrace(data71, vfilter, t, 'v_{filter}', -1, -3, 3);
+
+Fig_713 = figure(713);
+drawTrace(data71, vlim, t, 'v_{limited}', -1, -1, 3);
+
+Fig_714 = figure(714);
+drawTrace(data71, vout, t, 'v_{out}', -1, -1, 2);
+
+
+
+%Case II: MC with variation
+data72=rrt2mat('limiter72.rrt');
+Fig_721 = figure(721);
+drawTrace(data72, vin, t, 'v_{in}', -1, -3.2, 3.2);
+
+Fig_722 = figure(722);
+drawTrace(data72, vfilter, t, 'v_{filter}', -1, -3, 3);
+
+Fig_723 = figure(723);
+drawTrace(data72, vlim, t, 'v_{limited}', -1, -1, 3);
+
+Fig_724 = figure(724);
+drawTrace(data72, vout, t, 'v_{out}', -1, -1, 2);

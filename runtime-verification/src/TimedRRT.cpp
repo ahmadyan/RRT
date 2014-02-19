@@ -13,6 +13,79 @@ TimedRRT::TimedRRT(int _d, int _k, int _var, string nam): RRT(_d+1, _k, _var, na
     setBound(_d, 0, sim_time); //maximum time for sim, minimum is 0 and it is assigned in RRT constructor
 }
 
+vector<double> TimedRRT::generateSimulationParameters(node* q_near){
+	vector<double> param;	//variation or input to the system 
+	for (int j = 0; j < var; j++){
+		if (config->checkParameter("edu.uiuc.csl.system.param.type", j, "sin")){
+			double tnow = q_near->getTime() + dt;
+			double Fc = 60;	config->getParameter("edu.uiuc.csl.system.param.freq", j, &Fc);	//Freq in Hertz
+			double max = 0; config->getParameter("edu.uiuc.csl.system.param.max", j, &max);
+			double min = 0; config->getParameter("edu.uiuc.csl.system.param.min", j, &min);
+			double scale = max - min;
+			double v = scale*sin(2 * 3.14159265358979323846 *tnow*Fc);	//Base signal
+
+			double noise = 0;
+			double dv = 0; config->getParameter("edu.uiuc.csl.system.param.dv", j, &dv);	//noise
+			if (config->checkParameter("edu.uiuc.csl.system.param.dist.type", j, "normal")){
+				double mean = 0;  config->getParameter("edu.uiuc.csl.system.param.dist.mean", j, &mean);
+				double var = 0;  config->getParameter("edu.uiuc.csl.system.param.dist.var", j, &var);
+				noise = 0;
+			}else{//uniform
+				noise = generateUniformSample(-dv, +dv);
+			}
+
+			cout << "------------" << endl;
+			cout << "TNow=" << tnow << endl;
+			cout << "TNow=" << Fc << endl;
+			cout << "Scale=" << scale << endl;
+			cout << "V=" << v << endl;
+			cout << "DV=" << dv << endl;
+			cout << "noise=" << noise << endl;
+			cout << "------------" << endl;
+			cout << endl << endl;
+			v += noise;
+			param.push_back(v);
+		}
+		else if (config->checkParameter("edu.uiuc.csl.system.param.type", j, "pulse")){
+			double tnow = q_near->getTime() + dt;
+			double tperiod = 100e-12;	//100ps -> 10GHz
+			double freq = 1 / tperiod;
+			int cycles = ceilf(tnow / tperiod) - 1;
+			double tp = tnow - cycles * tperiod;
+
+			double vin = 0; int vinIndex = 2;
+			double vdd = 1;
+			double gnd = 0;
+			if (tp < 0.1*tperiod){
+				//pulse rising
+				vin = gnd + vdd* ((tp / tperiod) / 0.1) + generateUniformSample(variationMin[vinIndex], variationMax[vinIndex]);
+			}
+			else if (tp<0.5*tperiod){
+				//pulse is 1
+				vin = vdd - generateUniformSample(variationMin[vinIndex], variationMax[vinIndex]);
+			}
+			else if (tp < 0.6*tperiod){
+				//pulse falling
+				double x = vdd* (((tp / tperiod) - 0.5) / 0.1);
+				vin = vdd - x - generateUniformSample(variationMin[vinIndex], variationMax[vinIndex]);
+			}
+			else{
+				//pulse is 0
+				vin = gnd + generateUniformSample(variationMin[vinIndex], variationMax[vinIndex]);
+			}
+			param.push_back(vin);
+		}
+		else if (config->checkParameter("edu.uiuc.csl.system.param.type", j, "dc")){
+			param.push_back(generateUniformSample(variationMin[j], variationMax[j]));
+		}
+		else{
+			param.push_back(generateUniformSample(variationMin[j], variationMax[j]));
+		}
+	}
+
+	return param;
+}
+
 void TimedRRT::build(double* initialState){
 	double timeEnvlope=dt;		//time_envlope is the latest sampled discovered so far
 
@@ -41,7 +114,7 @@ void TimedRRT::build(double* initialState){
 		}
 
 		//find nearest node in the tree
-		vector<node*> q_near_vec = getNearestNode(q_sample, -1, true);
+		vector<node*> q_near_vec = getNearestNode(q_sample);
 		node* q_near = q_near_vec[0];
 		double* state_near = q_near->get();
 		double* ic = new double[d];
@@ -49,45 +122,7 @@ void TimedRRT::build(double* initialState){
 			ic[j] = state_near[j];
 		}
 
-		vector<double> param;	//variation or input to the system 
-		for (int j = 0; j < var; j++){
-			param.push_back(unifRand(variationMin[j], variationMax[j]));
-			/*
-			if (j < 4){
-				param.push_back(unifRand(variationMin[j], variationMax[j]));
-			}
-			else{
-				double tnow = q_near->getTime()+dt;
-				double tperiod = 100e-12;	//100ps -> 10GHz
-				double freq = 1 / tperiod;
-				int cycles = ceilf(tnow / tperiod) - 1;
-				double tp = tnow - cycles * tperiod;
-
-				double vin = 0; int vinIndex = 2;
-				double vdd = 1;
-				double gnd = 0;
-				if (tp < 0.1*tperiod){
-					//pulse rising
-					vin = gnd + vdd* ((tp / tperiod) / 0.1) + unifRand(variationMin[vinIndex], variationMax[vinIndex]);
-				}
-				else if (tp<0.5*tperiod){
-					//pulse is 1
-					vin = vdd - unifRand(variationMin[vinIndex], variationMax[vinIndex]);
-				}
-				else if (tp < 0.6*tperiod){
-					//pulse falling
-					double x = vdd* (((tp / tperiod) - 0.5) / 0.1);
-					vin = vdd - x - unifRand(variationMin[vinIndex], variationMax[vinIndex]);
-				}
-				else{
-					//pulse is 0
-					vin = gnd + unifRand(variationMin[vinIndex], variationMax[vinIndex]);
-				}
-				param.push_back(vin);
-			}
-			*/
-		}
-
+		
 		vector<string> settings;
 		stringstream icInputFileName; icInputFileName << "ic_" << q_near->getIndex() << ".ic0";
 		stringstream icOutputFileName; icOutputFileName << "ic_" << i << ".ic";
@@ -95,7 +130,7 @@ void TimedRRT::build(double* initialState){
 		settings.push_back(icInputFileName.str());
 		settings.push_back("transient"); // or settings.push_back("dc");
 
-
+		vector<double> param = generateSimulationParameters(q_near);
 		double t_init = ic[d - 1];
 		vector<double> result = system->simulate(ic, param, settings, 0, dt);
 
@@ -153,46 +188,7 @@ void TimedRRT::simulate(double* initialState){
         for(int j=0;j<d;j++){
 			state[j]=state_near[j];
 		}
-
-		vector<double> param;	//variation or input to the system 
-		for (int j = 0; j < var; j++){
-			param.push_back(unifRand(variationMin[j], variationMax[j]));
-
-		/*
-		if (j < 2){
-				param.push_back(unifRand(variationMin[j], variationMax[j]));
-			}
-			else{
-				double tnow = i*dt;
-				double tperiod = 100e-12;	//100ps -> 10GHz
-				double freq = 1 / tperiod;
-				int cycles = ceilf(tnow / tperiod) - 1;
-				double tp = tnow - cycles * tperiod;
-				
-				double vin = 0; int vinIndex = 2;
-				double vdd = 1;
-				double gnd = 0;
-				if (tp < 0.1*tperiod){
-					//pulse rising
-					vin = gnd+ vdd* ((tp/tperiod)/0.1) + unifRand(variationMin[vinIndex], variationMax[vinIndex]);
-				}
-				else if (tp<0.5*tperiod){
-					//pulse is 1
-					vin = vdd - unifRand(variationMin[vinIndex], variationMax[vinIndex]);
-				}
-				else if (tp < 0.6*tperiod){
-					//pulse falling
-					double x=vdd* ( ((tp / tperiod) - 0.5)/0.1); 
-					vin = vdd -x- unifRand(variationMin[vinIndex], variationMax[vinIndex]);
-				}else{
-					//pulse is 0
-					vin = gnd+ unifRand(variationMin[vinIndex], variationMax[vinIndex]);
-				}
-				param.push_back(vin);
-			}
-			*/
-		}
-
+		vector<double> param = generateSimulationParameters(q_near);
 		
 		vector<string> settings;
 		stringstream icInputFileName; icInputFileName << "ic_" << q_near->getIndex() << ".ic0";
