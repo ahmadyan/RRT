@@ -259,8 +259,8 @@ inv_time=31;
 %Case 1: MC
 data51=rrt2mat('inverter_mc_1000.rrt');
 Fig_5_1_1 = figure(511);
-drawEye(data51, inv_vout, inv_time, 100e-12, 'Voltage(v)', -0.2, 1.2)
-
+drawEye(data51, inv_vout, inv_time, 0, 100e-12, 150e-12, 'Voltage(v)', -0.2, 1.2)
+ 
 %Case 2: RRT, with variation on input and supply
 data52=rrt2mat('inv_rrt_2000.rrt');
 Fig_5_2_1 = figure(531);
@@ -268,6 +268,10 @@ drawTrace(data52, inv_vout, inv_time, 'v_out', -1, -0.2, 1.2);
 
 Fig_5_2_2 = figure(532);
 drawTree2D( data52 , inv_vin, inv_vout, 'vin', 'vout', -0.2, 1.2, -0.2, 1.2)
+
+drawTest(data52, inv_vout, inv_time, 1000, 'vin', -1, -0.2, 1.2)   
+drawTest(data52, inv_vin, inv_time, 1000, 'vin', -1, -0.2, 1.2)   
+
 
 %Case 3: RRT, with variation on input and supply
 %data53=rrt2mat('inv_rrt_10000_fp.rrt');
@@ -279,9 +283,19 @@ Fig_5_3_2 = figure(532);
 drawTree2D( data53 , inv_vin, inv_vout, 'vin', 'vout', -0.2, 1.2, -0.2, 1.2)
 
 Fig_5_3_3 = figure(533);
-drawEye(data53, inv_vout, inv_time, 100e-12, 'Voltage(v)', -0.2, 1.2);
+drawEye(data53, inv_vout, inv_time,0, 100e-12, 'Voltage(v)', -0.2, 1.2);
 
 
+
+
+
+%Case 4: MC Base (ideal signal)
+data54=rrt2mat('inverter.base.rrt');
+fig_541=figure(541);
+drawTrace(data54, inv_vout, inv_time, 'v_{out}', -1, -0.2, 1.2);
+
+fig_542=figure(542);
+drawEye(data54, inv_vout, inv_time, 0, 100e-12, 150e-12, 'Voltage(v)', -0.2, 1.2);
 
 for i=3:size(data51, 1),
     x=min(data51(i, :));
@@ -403,3 +417,26 @@ drawTrace(data72, vlim, t, 'v_{limited}', -1, -1, 3);
 
 Fig_724 = figure(724);
 drawTrace(data72, vout, t, 'v_{out}', -1, -1, 2);
+
+
+
+%Case II: MC with variation
+data73=rrt2mat('limiter73.rrt');
+Fig_731 = figure(731);
+drawTrace(data73, vin, t, 'v_{in}', -1, -3.2, 3.2);
+drawTest(data73, vlim, t, 1600, 'v_{in}', -1, -5, 5, 4e-4)
+
+Fig_732 = figure(732);
+drawTrace(data73, vfilter, t, 'v_{filter}', -1, -3, 3);
+
+Fig_733 = figure(733);
+drawTrace(data73, vlim, t, 'v_{limited}', -1, -1, 3);
+
+Fig_734 = figure(734);
+drawTrace(data72, vout, t, 'v_{out}', -1, -1, 2);
+
+
+for i=1:31,
+    figure(i),
+    drawTest(data53, i, inv_time, 1600, 'v_{in}', -1, -5, 5, 2.5e-10)
+end

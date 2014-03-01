@@ -1,19 +1,22 @@
 %   Draw a test sequence from sample leaf to the root of the tree
 %
 %
-function drawTest(data, index, t, leaf, yname, tmax, yaxismin, yaxismax)   
+function drawTest(data, index, t, leaf, yname, tmax, yaxismin, yaxismax, t0)   
     timeEnvlope=0;
     max=-999;
     min=999;
     
+    if(t0>0),
     tt=0;
     i=1;
-    while(tt<5e-10),
+    while(tt<t0),
         if( data( t, i) > tt),
             leaf=i;
             tt=data(t,i);
         end
         i=i+1;
+    end
+    
     end
     
     for i=1:size(data, 2),
