@@ -41,6 +41,7 @@ RRT::~RRT(){
 
 
 double RRT::generateNormalSample(double mean, double std){
+	//A Mersenne Twister pseudo-random generator of 32-bit numbers with a state size of 19937 bits.
 	std::mt19937 generator((unsigned int)time(0));
 	std::normal_distribution<double> normal(mean, std);
 	return normal(generator);
@@ -200,8 +201,10 @@ void RRT::save(string fileName){
 		}
 		else{
 			for (int j = 0; j < nodes.size(); j++){
-				if (nodes[i]->getParent()->getID() == nodes[j]->getID())
+				if (nodes[i]->getParent()->getID() == nodes[j]->getID()){
 					file << j << " ";
+					break;
+				}
 			}
 		}
 
@@ -257,13 +260,14 @@ void RRT::load(string fileName){
 				double x;
 				file >> x;
 				param.push_back(x);
-
 			}
 			node* newNode = new node(d, id, data);
 			newNode->setInputVector(param);
 			//If this node is a root node (i.e. the parent_id is -1), sets this as root, otherwise
 			//this node has a parent. Find the parent and add this as children. 
 			//I'm reading/writing nodes in a monotonic manner, so I can directly access nodes via nodes[id]
+
+			cout << i << " " <<  id << " " << parent_id << endl;
 			if (parent_id == -1){
 				newNode->setRoot();
 				root = newNode;

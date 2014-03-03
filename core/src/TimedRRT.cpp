@@ -124,26 +124,39 @@ vector<double> TimedRRT::generateSimulationParameters(node* q_near){
 			param.push_back(vin);
 		}
 		else if (config->checkParameter("edu.uiuc.csl.system.param.type", j, "dc")){
-			param.push_back(generateUniformSample(variationMin[j], variationMax[j]));
+			if (config->checkParameter("edu.uiuc.csl.system.param.dist.type", j, "gaussian") || config->checkParameter("edu.uiuc.csl.system.param.dist.type", j, "normal")){
+				double mean = 0; config->getParameter("edu.uiuc.csl.system.param.dist.mean", j, &mean);
+				double var = 1; config->getParameter("edu.uiuc.csl.system.param.dist.variance", j, &var);
+				double std = sqrt(var);
+				double v = generateTruncatedNormalSample(mean, std, variationMin[j], variationMax[j]);
+				param.push_back(v); 
+			}
+			else{
+				param.push_back(generateUniformSample(variationMin[j], variationMax[j]));
+			}
 		}else if (config->checkParameter("edu.uiuc.csl.system.param.type", j, "boot")){
 			//We are going to generate the 00110 signal
 			int boot[5] = { 0, 0, 1, 1, 0 };
 			double tnow = q_near->getTime() + dt;
 			double freq; config->getParameter("edu.uiuc.csl.system.param.freq", j, &freq);
 			double period = 1 / freq;
-			int cycles = ceilf(tnow / period) - 1;
+			int cycles = ceilf(tnow / period) - 1 ;
+			cycles = cycles % 5;
 			double vin = boot[cycles] * 0.9;
+
 			double dv; config->getParameter("edu.uiuc.csl.system.param.dv", j, &dv);
-			double noise = generateUniformSample(-dv, dv);
+			double noise=0;
+			if (config->checkParameter("edu.uiuc.csl.system.param.dist.type", j, "gaussian") || config->checkParameter("edu.uiuc.csl.system.param.dist.type", j, "normal")){
+				double mean = 0; config->getParameter("edu.uiuc.csl.system.param.dist.mean", j, &mean);
+				double var = 1; config->getParameter("edu.uiuc.csl.system.param.dist.variance", j, &var);
+				double std = sqrt(var);
+				noise=generateTruncatedNormalSample(mean, std, variationMin[j], variationMax[j]);
+			}else{
+				noise = generateUniformSample(-dv, dv);
+
+			}
 			vin += noise;
 			param.push_back(vin);
-
-			cout << "Tnow=" << tnow << endl;
-			cout << "freq=" << freq << endl;
-			cout << "period=" << period << endl;
-			cout << "cycles=" << cycles << endl;
-			cout << "vin=" << vin << endl;
-
 		}else{
 			param.push_back(generateUniformSample(variationMin[j], variationMax[j]));
 		}
@@ -342,6 +355,9 @@ void TimedRRT::simulate(double* initialState){
 		q_new->setIndex(i);
 		q_new->setInputVector(param);
 		nodes.push_back(q_new);
+		Transition transition = tboot;
+		nodes.push_back(q_new);
+		eye->push(q_new, transition);
 
 		for(int i=0;i<monitors.size();i++){
 			monitors[i]->check(q_new);

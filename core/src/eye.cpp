@@ -86,21 +86,56 @@ void EyeDiagram::push(node* v, Transition tran){
 	Transition transition = tnull;
 	
 	if (tran == tboot){
+	//for MC result only
+		double t = v->getTime();
+
+		if (t <= 2e-10){
+			Transition boot[5] = { t01, t11};
+			int cycles = floor(t / period);
+			transition = boot[cycles];
+		}
+		else{
+			Transition boot[10] = { t10, t00, t01, t11, t11, t01, t00, t10, t11, t11 };
+			t = t - 2e-10;
+			int cycles = floor(t / period);
+			cycles = cycles % 10;
+			transition = boot[cycles];
+		}
+
+		/*
+		Transition boot[5] = { t11, t11, t10, t00, t01 };
+		//Transition boot[5] = { t01, t11, t10, t00, t01 };
+		double t = v->getTime();
+		int cycles = ceilf(t / period) - 1;
+		cycles = cycles % 5;
+		transition = boot[cycles];
+		
 		if (t < 1e-10){
 			transition = t01;
 		}
-		else if (t < 2e-10){
-			transition = t11;
+		else{
+			transition = boot[cycles];
 		}
-		else if (t < 3e-10){
+		
+		if (t<=8e-10 && t > 7e-10){
+			transition = t01;
+			cout << "Transition = " << transition << endl;
+		}
+		else if (t <= 9e-10 &&t > 8e-10){
+			transition = t00;
+			cout << "Transition = " << transition << endl;
+		}
+		else if (t <= 10e-10 &&t > 9e-10){
 			transition = t10;
 		}
-		else if (t < 4e-10){
-			transition = t00;
+		else if (t <= 11e-10 &&t > 10e-10){
+			transition = t11;
 		}
-		else{
-			transition = t01;
-		}
+
+
+		*/
+
+		cout << t << " " << transition << endl;
 	}
 	else{
 		transition = tran;
@@ -228,7 +263,6 @@ void EyeDiagram::test(){
 		cout << "Max @" << i << " = " << max << " @" << index << "     == " << maxSuperior[i] << " @" << maxSuperiorIndex[i] << endl;
 	}
 
-	cout << "done" << endl;
 
 	for (int i = 0; i < size; i++){
 		if (palpebraSuperior[i].size() == 0){
@@ -296,56 +330,36 @@ string EyeDiagram::toString(){
 			}
 		}
 	}
-
-
+	
 	for (int i = 1; i < size; i++){
 		double iToX = i*sampleRate;
 		double iToY = minInferior[i];
-		//double iFromX = palpebraSuperior[i][j]->getParent()->getTime();
 		double iFromX = (i - 1)*sampleRate;
 		double iFromY = minInferior[i-1];
-
-
-		if (iToY>5 || iFromY >5){
-			cout << iToX << endl;
-		}
-
 		str << " set arrow from " << iFromX << "," << iFromY << "   to     " << iToX << "," << iToY << "  nohead  lc rgb \"yellow\" lw 2 \n";
 	}
-
 
 	for (int i = 1; i < size; i++){
 		double iToX = i*sampleRate;
 		double iToY = maxInferior[i];
-		//double iFromX = palpebraSuperior[i][j]->getParent()->getTime();
 		double iFromX = (i - 1)*sampleRate;
 		double iFromY = maxInferior[i - 1];
 		str << " set arrow from " << iFromX << "," << iFromY << "   to     " << iToX << "," << iToY << "  nohead  lc rgb \"black\" lw 2 \n";
 	}
 
-
 	for (int i = 1; i < size; i++){
 		double iToX = i*sampleRate;
 		double iToY = minSuperior[i];
-		//double iFromX = palpebraSuperior[i][j]->getParent()->getTime();
 		double iFromX = (i - 1)*sampleRate;
 		double iFromY = minSuperior[i - 1];
 		str << " set arrow from " << iFromX << "," << iFromY << "   to     " << iToX << "," << iToY << "  nohead  lc rgb \"green\" lw 2 \n";
 	}
 
-
 	for (int i = 1; i < size; i++){
 		double iToX = i*sampleRate;
 		double iToY = maxSuperior[i];
-		//double iFromX = palpebraSuperior[i][j]->getParent()->getTime();
 		double iFromX = (i - 1)*sampleRate;
 		double iFromY = maxSuperior[i - 1];
-
-		if ((iToX > 1.2e-10) && (iToX < 1.3e-10)){
-			cout << iToX << endl;
-		}
-
-
 		str << " set arrow from " << iFromX << "," << iFromY << "   to     " << iToX << "," << iToY << "  nohead  lc rgb \"purple\" lw 2 \n";
 	}
 	return str.str();
