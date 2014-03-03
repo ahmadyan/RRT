@@ -6,6 +6,8 @@
 #include "System.h"
 #include "Monitor.h"
 #include "config.h"
+#include "eye.h"
+#include "config.h"
 using namespace std;
 class Monitor;
 
@@ -25,11 +27,12 @@ protected:
 	double dt ;
 
 	int var; //number of variation parameters
+	EyeDiagram* eye;
 
 	vector<Monitor*> monitors;
 public:
-    RRT(int, int, int, string);
-    RRT(string);
+    RRT(Configuration*, int, int, int, string);
+	RRT(Configuration* c, string);
     ~RRT();
     void load(string fileName);
     void save(string fileName);
@@ -68,4 +71,6 @@ public:
 	node* getNode(int);
 	void addMonitor(Monitor*);
 	void setConfig(Configuration*); 
+
+	EyeDiagram* getEyeDiagram();
 };

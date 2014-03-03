@@ -7,7 +7,7 @@
 #include <stack>
 using namespace std;
 
-RRT::RRT(int _d, int _k, int _var, string nam){
+RRT::RRT(Configuration* c, int _d, int _k, int _var, string nam){
 	d = _d;
 	k = _k;
 	var = _var;
@@ -25,9 +25,12 @@ RRT::RRT(int _d, int _k, int _var, string nam){
 		variationMin[i] = 0;
 		variationMax[i] = 0;
 	}
+
+	eye = new EyeDiagram(c);
 }
 
-RRT::RRT(string fileName){
+RRT::RRT(Configuration* c, string fileName){
+	eye = new EyeDiagram(c);
 	load(fileName);
 }
 
@@ -167,7 +170,7 @@ double RRT::getMax(int i){
 //Saving the RRT into a file
 //Stores each-node-id, parent-node-id, node-data, input
 void RRT::save(string fileName){
-	cout << "Saving the RRT" << endl;
+	//cout << "Saving the RRT" << endl;
 	ofstream file;
 	file.open(fileName.c_str());
 	file << "rrt" << endl;
@@ -187,9 +190,9 @@ void RRT::save(string fileName){
 	//linear printing of every nodes
 	//nodes are being printed in this format: id parentid data timestamp
 
-	cout << "Nodes.size=" << nodes.size() << endl;
+	//cout << "Nodes.size=" << nodes.size() << endl;
 	for (int i = 0; i < nodes.size(); i++){
-		cout << "Saving node " << i << endl;
+		//cout << "Saving node " << i << endl;
 		file << i << " ";
 
 		if (nodes[i]->isRoot()){
@@ -205,11 +208,18 @@ void RRT::save(string fileName){
 		for (int j = 0; j < nodes[i]->getDimension(); j++){
 			file << nodes[i]->get(j) << " ";
 		}
+
+		for (int j = 0; j < var; j++){
+			file << nodes[i]->getInput(j) << " ";
+		}
+
 		file << endl;
 	}
 
 	file.close();
 }
+
+
 
 //Loads the RRT from the text file (default extension is the *.rrt)
 void RRT::load(string fileName){
@@ -241,7 +251,16 @@ void RRT::load(string fileName){
 			for (int j = 0; j < d; j++){
 				file >> data[j];
 			}
+
+			vector<double> param;
+			for (int j = 0; j < var; j++){
+				double x;
+				file >> x;
+				param.push_back(x);
+
+			}
 			node* newNode = new node(d, id, data);
+			newNode->setInputVector(param);
 			//If this node is a root node (i.e. the parent_id is -1), sets this as root, otherwise
 			//this node has a parent. Find the parent and add this as children. 
 			//I'm reading/writing nodes in a monotonic manner, so I can directly access nodes via nodes[id]
@@ -254,10 +273,13 @@ void RRT::load(string fileName){
 			}
 			newNode->setIndex(id);	//This is unnecessary, because currently nodes are constructed with their id
 			nodes.push_back(newNode);
+			if (config->checkParameter("edu.uiuc.crhc.core.options.eyediagram", "1"))
+				eye->push(newNode);
 		}
 		file.close();
 	}
 }
+
 
 string RRT::getName(){
 	return name;
@@ -410,6 +432,20 @@ vector<node*> RRT::NearestNodeUsingEuclideanDistance(node* q_sample){
 
 vector<node*> RRT::getNearestNode(node* q_sample){
 	vector<node*> results;
+
+	if (config->checkParameter("edu.uiuc.csl.core.search.mode", "random")){
+		int n = generateUniformSample(0, nodes.size());
+		results.push_back(nodes[n]);
+		return results;
+	}
+
+	if (config->checkParameter("edu.uiuc.csl.core.search.mode", "optimize")){
+		int n = generateUniformSample(0, eye->getWindowSize());
+		node* v = eye->getNode(n);
+		results.push_back(v);
+		return results;
+	}
+
 	if (config->checkParameter("edu.uiuc.csl.core.search.time-progress", "1")){
 		if (q_sample->getTime() != -1){
 			//time-progress is enabled
@@ -460,4 +496,8 @@ void RRT::addMonitor(Monitor* m){
 
 void RRT::setConfig(Configuration* c){
 	config = c;
+}
+
+EyeDiagram* RRT::getEyeDiagram(){
+	return eye;
 }

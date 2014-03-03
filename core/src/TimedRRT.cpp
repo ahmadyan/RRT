@@ -1,15 +1,15 @@
 #include "TimedRRT.h"
 #include <stdio.h>
 
-TimedRRT::TimedRRT(string fileName): RRT(fileName){
+TimedRRT::TimedRRT(Configuration* c, string fileName): RRT(c, fileName){
 }
 
-TimedRRT::TimedRRT(int _d, int _k, int _var, double _simTime, string nam): RRT(_d+1, _k, _var, nam){ //Add time dimension to the RRT
+TimedRRT::TimedRRT(Configuration* c, int _d, int _k, int _var, double _simTime, string nam) : RRT(c, _d + 1, _k, _var, nam){ //Add time dimension to the RRT
     sim_time = _simTime;
     setBound(_d, 0, sim_time); //maximum time for sim, minimum is 0 and it is assigned in RRT constructor
 }
 
-TimedRRT::TimedRRT(int _d, int _k, int _var, string nam): RRT(_d+1, _k, _var, nam){ //Add time dimension to the RRT
+TimedRRT::TimedRRT(Configuration* c, int _d, int _k, int _var, string nam) : RRT(c, _d + 1, _k, _var, nam){ //Add time dimension to the RRT
     sim_time = 1 ; //default
     setBound(_d, 0, sim_time); //maximum time for sim, minimum is 0 and it is assigned in RRT constructor
 }
@@ -133,6 +133,9 @@ vector<double> TimedRRT::generateSimulationParameters(node* q_near){
 			double period = 1 / freq;
 			int cycles = ceilf(tnow / period) - 1;
 			double vin = boot[cycles] * 0.9;
+			double dv; config->getParameter("edu.uiuc.csl.system.param.dv", j, &dv);
+			double noise = generateUniformSample(-dv, dv);
+			vin += noise;
 			param.push_back(vin);
 
 			cout << "Tnow=" << tnow << endl;
@@ -149,26 +152,33 @@ vector<double> TimedRRT::generateSimulationParameters(node* q_near){
 	return param;
 }
 
-void TimedRRT::build(double* initialState){
-	vector<double> p;
-	for (int i = 0; i < var; i++)
-		p.push_back(0);
 
-	double timeEnvlope=dt;		//time_envlope is the latest sampled discovered so far
-	bool forceIteration = false;
-	if (config->checkParameter("edu.uiuc.csl.core.sampling.iteration.force", "1")){
-		forceIteration = true;
-	}
+void TimedRRT::build(double* initialState){
 	//first, we construct the root from the given initial state
 	root = new node(d);
-    root->set(initialState);
+	root->set(initialState);
 	root->setRoot();
 	nodes.push_back(root);
 	root->setIndex(0);
 	root->setCounter(0);
+	vector<double> p;
+	for (int i = 0; i < var; i++)
+		p.push_back(0);
 	root->setInputVector(p);
+	
+	build();
+}
 
-	int i = 1;
+
+void TimedRRT::build(){
+	double timeEnvlope = dt;		//time_envlope is the latest sampled discovered so far
+	timeEnvlope = 501e-12;
+	bool forceIteration = false;
+	if (config->checkParameter("edu.uiuc.csl.core.sampling.iteration.force", "1")){
+		forceIteration = true;
+	}
+	config->getParameter("edu.uiuc.csl.core.sampling.iteration", &k);
+	int i = nodes.size();
 	bool simulationFinished = false;
 	while (!simulationFinished){
 		cout << "#################################################  Iteration  " << i << endl;
@@ -188,13 +198,15 @@ void TimedRRT::build(double* initialState){
 		//find nearest node in the tree
 		vector<node*> q_near_vec = getNearestNode(q_sample);
 		node* q_near = q_near_vec[0];
+
+		
 		double* state_near = q_near->get();
 		double* ic = new double[d];
 		for (int j = 0; j<d; j++){
 			ic[j] = state_near[j];
 		}
 
-		
+
 		vector<string> settings;
 		stringstream icInputFileName; icInputFileName << "ic_" << q_near->getIndex() << ".ic0";
 		stringstream icOutputFileName; icOutputFileName << "ic_" << i << ".ic";
@@ -206,6 +218,14 @@ void TimedRRT::build(double* initialState){
 		double t_init = ic[d - 1];
 		vector<double> result = system->simulate(ic, param, settings, 0, dt);
 
+
+		cout << "********" << endl;
+		cout << "Tinit=" << t_init << endl;
+		for (int j = 0; j<var; j++){
+
+			cout << param[j] << endl;
+		}
+		cout << "********" << endl;
 
 		result[0] += t_init;		//result[0] contains the time-stamp, in the simulation it is stamped as dt, however we have to add the time of the parrent node as well.
 
@@ -226,7 +246,9 @@ void TimedRRT::build(double* initialState){
 		q_new->setInputVector(param);
 
 
+		
 
+		/*
 		int q_near_digit4;
 		int q_new_digit4;
 
@@ -247,11 +269,10 @@ void TimedRRT::build(double* initialState){
 		else{
 			q_new->setCounter(0);
 		}
-
-
-
-
+		*/
+		Transition transition = tboot;
 		nodes.push_back(q_new);
+		eye->push(q_new, transition);
 		//casting
 		//vector<node*> cast = getNearestNode(q_sample, 0.1, true);
 		//cout << endl << "CAST size=" << cast.size() << endl ;
@@ -261,10 +282,6 @@ void TimedRRT::build(double* initialState){
 		//	cast[j]->addCast(q_new);
 		//}
 
-
-
-
-		
 		for (int j = 0; j<monitors.size(); j++){
 			monitors[j]->check(q_new);
 		}
@@ -281,7 +298,7 @@ void TimedRRT::build(double* initialState){
 				simulationFinished = true;
 			}
 		}
-		
+
 
 	}
 }
@@ -292,6 +309,10 @@ void TimedRRT::simulate(double* initialState){
 	root->setRoot();
 	nodes.push_back(root);
 	root->setIndex(0);
+	vector<double> p;
+	for (int i = 0; i < var; i++)
+		p.push_back(0);
+	root->setInputVector(p);
 	for(int i=1;i<k; i++){
     	cout <<"[s] #### " << i << endl ;
 		node* q_near = nodes[ nodes.size()-1 ]; //last inserted node for the linear simulation
@@ -319,6 +340,7 @@ void TimedRRT::simulate(double* initialState){
         q_near->addChildren(q_new);		//add the new node to the tree
 		q_new->setParent(q_near);		//We only make the parent-child releation ship during the tree build
 		q_new->setIndex(i);
+		q_new->setInputVector(param);
 		nodes.push_back(q_new);
 
 		for(int i=0;i<monitors.size();i++){

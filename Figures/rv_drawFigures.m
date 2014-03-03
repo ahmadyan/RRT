@@ -286,6 +286,9 @@ Fig_5_3_3 = figure(533);
 drawEye(data53, inv_vout, inv_time,0, 100e-12, 'Voltage(v)', -0.2, 1.2);
 
 
+data54=rrt2mati('null');
+Fig_541 = figure(541);
+drawTrace(data54, inv_vout, inv_time, 'v_{out}', -1, -0.2, 1.2);
 
 
 

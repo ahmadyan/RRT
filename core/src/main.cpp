@@ -236,7 +236,7 @@ void kernel_RRT(Configuration* config){
 	cout << "dt=" << dt << endl;
 
 	cout << "----------------------------------------------" << endl;
-	TimedRRT rrt = TimedRRT( dim, iter, param, simulationTime, name);
+	TimedRRT rrt = TimedRRT(config, dim, iter, param, simulationTime, name);
 
 	//for (int i = 0; i<(int)(monitors.size()); i++){
 	//	rrt.addMonitor(monitors[i]);
@@ -258,7 +258,6 @@ void kernel_RRT(Configuration* config){
 	rrt.setConfig(config);
 	rrt.setdt(dt);
 	rrt.setSystem(circuit);
-	
 
 	cout << "config->get(\"edu.uiuc.crhc.core.mode\") = " << config->get("edu.uiuc.crhc.core.mode") << config->checkParameter("edu.uiuc.crhc.core.mode", "load") << endl;
 	if (config->checkParameter("edu.uiuc.crhc.core.mode", "mc")){
@@ -267,11 +266,20 @@ void kernel_RRT(Configuration* config){
 		rrt.build(initialState);
 	}else if (config->checkParameter("edu.uiuc.crhc.core.mode", "load")){
 		rrt.load(config->get("edu.uiuc.crhc.core.options.inputFileName"));
+	}else if (config->checkParameter("edu.uiuc.crhc.core.mode", "load+rrt")){
+		rrt.load(config->get("edu.uiuc.crhc.core.options.inputFileName"));
+		rrt.build();
+	}else if (config->checkParameter("edu.uiuc.crhc.core.mode", "mc+rrt")){
+		rrt.simulate(initialState);
+		rrt.build();
 	}else{
 		cout << "Uknown operation mode: " << config->get("edu.uiuc.crhc.core.mode") << endl;
 	}
 	rrt.save(outputFileName);
 
+	//unit testing for the eye-diagram, this line can be safely commented or removed
+	//rrt.getEyeDiagram()->test(); 
+	
 	if (config->checkParameter("edu.uiuc.crhc.core.options.plot", "1")){
 		string plotPath; config->getParameter("edu.uiuc.crhc.core.options.plot.path", &plotPath);
 		Plotter* plotter = new Plotter(plotPath);
@@ -283,15 +291,17 @@ void kernel_RRT(Configuration* config){
 		else if (config->checkParameter("edu.uiuc.crhc.core.options.plot.type", "rrt")){
 			plotter->plotRRT("lines", rrt.getName().c_str(), "test", rrt, "x_1", "x_2", "t");
 		}
+		else if (config->checkParameter("edu.uiuc.crhc.core.options.plot.type", "eye")){
+			plotter->execute(rrt.getEyeDiagram()->toString());
+		}
 		else{
 			cout << "Uknown plot command: [edu.uiuc.crhc.core.options.plot.type] " << config->get("edu.uiuc.crhc.core.options.plot.type") << endl;
 		}
 	}
-}
+	cout.flush();
+	rrt.getEyeDiagram()->sum();
 
-void rrt_experiments(Configuration* config){
-	kernel_RRT(config);
-	
+
 	/*
 	pll:
 	vector<Monitor*> monitors;	//for this experiment, the monitors are empty.
@@ -411,13 +421,6 @@ void MonitorExperiment(){
 }
 
 
-void optimization_experiment(){
-	int dim = 3;		//input state size
-	int varDim = 2;		//variational state size
-	
-}
-
-
 int main (int argc, const char * argv[]){
 	srand((unsigned int)time(0));
 	char full[_MAX_PATH];
@@ -430,7 +433,7 @@ int main (int argc, const char * argv[]){
 	//fft_experiments();
 	//kdtree_experiment();
 	//MonitorExperiment();
-	rrt_experiments(config);
+	kernel_RRT(config);
 	//optimization_experiment();
 	system("PAUSE");
 	return 0;
