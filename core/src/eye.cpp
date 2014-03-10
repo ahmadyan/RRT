@@ -295,14 +295,49 @@ string EyeDiagram::toString(){
 	stringstream str;
 
 	double vmin = -0.1, vmax = 1, tmin = 0, tmax = window;
+	
 	config->getParameter("edu.uiuc.csl.system.var.min", voltage, &vmin);
 	config->getParameter("edu.uiuc.csl.system.var.max", voltage, &vmax);
 
 	str << "plot [ " << tmin << ":" << tmax << "][" << vmin << ":" << vmax << "] 0 with linespoints lt \"white\" pt 0.01";
 	str << " title \"" << " " << "\"  \n";
-	
-	//draw palpebra Superior
+	/*
+	//draw palpebra inferior
 	for (int i = 0; i < size; i++){
+		for (int j = 0; j < palpebraInferior[i].size(); j++){
+			if (!palpebraInferior[i][j]->isRoot()){
+				//double iToX = palpebraSuperior[i][j]->getTime();
+				double iToX = i*sampleRate;
+				double iToY = palpebraInferior[i][j]->get(voltage);
+				//double iFromX = palpebraSuperior[i][j]->getParent()->getTime();
+				double iFromX = (i - 1)*sampleRate;
+				double iFromY = palpebraInferior[i][j]->getParent()->get(voltage);
+				str << " set arrow from " << iFromX << "," << iFromY << "   to     " << iToX << "," << iToY << "  nohead lc rgb \"grey\" lw 2 \n";
+			}
+		}
+	}*/
+
+	for (int i = 1; i < size; i++){
+		double iToX = i*sampleRate;
+		double iToY = minInferior[i];
+		double iFromX = (i - 1)*sampleRate;
+		double iFromY = minInferior[i - 1];
+		str << " set arrow from " << iFromX << "," << iFromY << "   to     " << iToX << "," << iToY << "  nohead  lc rgb \"blue\" lw 2 \n";
+	}
+
+	for (int i = 1; i < size; i++){
+		double iToX = i*sampleRate;
+		double iToY = maxInferior[i];
+		double iFromX = (i - 1)*sampleRate;
+		double iFromY = maxInferior[i - 1];
+		str << " set arrow from " << iFromX << "," << iFromY << "   to     " << iToX << "," << iToY << "  nohead  lc rgb \"blue\" lw 2 \n";
+	}
+
+
+
+
+	//draw palpebra Superior
+/*	for (int i = 0; i < size; i++){
 		for (int j = 0; j < palpebraSuperior[i].size(); j++){
 			if (!palpebraSuperior[i][j]->isRoot()){
 				//double iToX = palpebraSuperior[i][j]->getTime();
@@ -312,47 +347,17 @@ string EyeDiagram::toString(){
 				double iFromX = (i - 1)*sampleRate;
 				double iFromY = palpebraSuperior[i][j]->getParent()->get(voltage);
 				str << " set arrow from " << iFromX << "," << iFromY << "   to     " << iToX << "," << iToY << "  nohead  lc rgb \"blue\" lw 2 \n";
+				
 			}
 		}
-	}
-
-	//draw palpebra inferior
-	for (int i = 0; i < size; i++){	
-		for (int j = 0; j < palpebraInferior[i].size(); j++){
-			if (!palpebraInferior[i][j]->isRoot()){
-				//double iToX = palpebraSuperior[i][j]->getTime();
-				double iToX = i*sampleRate;
-				double iToY = palpebraInferior[i][j]->get(voltage);
-				//double iFromX = palpebraSuperior[i][j]->getParent()->getTime();
-				double iFromX = (i - 1)*sampleRate;
-				double iFromY = palpebraInferior[i][j]->getParent()->get(voltage);
-				str << " set arrow from " << iFromX << "," << iFromY << "   to     " << iToX << "," << iToY << "  nohead  lc rgb \"red\" lw 2 \n";
-			}
-		}
-	}
-	
-	for (int i = 1; i < size; i++){
-		double iToX = i*sampleRate;
-		double iToY = minInferior[i];
-		double iFromX = (i - 1)*sampleRate;
-		double iFromY = minInferior[i-1];
-		str << " set arrow from " << iFromX << "," << iFromY << "   to     " << iToX << "," << iToY << "  nohead  lc rgb \"yellow\" lw 2 \n";
-	}
-
-	for (int i = 1; i < size; i++){
-		double iToX = i*sampleRate;
-		double iToY = maxInferior[i];
-		double iFromX = (i - 1)*sampleRate;
-		double iFromY = maxInferior[i - 1];
-		str << " set arrow from " << iFromX << "," << iFromY << "   to     " << iToX << "," << iToY << "  nohead  lc rgb \"black\" lw 2 \n";
-	}
+	}*/
 
 	for (int i = 1; i < size; i++){
 		double iToX = i*sampleRate;
 		double iToY = minSuperior[i];
 		double iFromX = (i - 1)*sampleRate;
 		double iFromY = minSuperior[i - 1];
-		str << " set arrow from " << iFromX << "," << iFromY << "   to     " << iToX << "," << iToY << "  nohead  lc rgb \"green\" lw 2 \n";
+		str << " set arrow from " << iFromX << "," << iFromY << "   to     " << iToX << "," << iToY << "  nohead  lc rgb \"red\" lw 2 \n";	
 	}
 
 	for (int i = 1; i < size; i++){
@@ -360,8 +365,12 @@ string EyeDiagram::toString(){
 		double iToY = maxSuperior[i];
 		double iFromX = (i - 1)*sampleRate;
 		double iFromY = maxSuperior[i - 1];
-		str << " set arrow from " << iFromX << "," << iFromY << "   to     " << iToX << "," << iToY << "  nohead  lc rgb \"purple\" lw 2 \n";
+		str << " set arrow from " << iFromX << "," << iFromY << "   to     " << iToX << "," << iToY << "  nohead  lc rgb \"red\" lw 2 \n";
 	}
+
+
+	
+
 	return str.str();
 }
 
