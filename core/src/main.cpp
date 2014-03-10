@@ -427,7 +427,7 @@ int main (int argc, const char * argv[]){
 	_fullpath(full, ".\\", _MAX_PATH);
 	cout << "Current working directory is:" << full << endl;
 	//string configFile = string(full) + "config\\half-wave-limiter.conf";
-	string configFile = string(full) + "config\\inverter.conf";
+	string configFile = string(full) + "config\\half-wave-limiter-75.conf";
 	Configuration* config = new Configuration(configFile);
 
 	//fft_experiments();
