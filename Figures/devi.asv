@@ -1,0 +1,24 @@
+
+function Deviation=getDev(theoticalVal, experimentalVal)
+    
+
+tV=rrt2mat(theoticalVal);
+eV=rrt2mat(experimentalVal);
+time_interval=2e-7
+for i=1:size(eV)
+    t=eV(end,i);
+    index=floor(t/time_interval)+1;
+    newTimeDev=eV(3:6,i)-tV(3:6,index);
+    if (i==1)
+          Dev=newTimeDev;
+    else 
+          Dev=[Dev,newTimeDev];
+    end
+end
+
+nodecopy=eV(1:2,:);
+timecopy=eV(end,:);
+Deviation=[nodecopy;dev;timecopy];
+
+
+end

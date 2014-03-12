@@ -1,0 +1,34 @@
+function [upper,lower,sorted]=getEnv(data)
+
+c=(sortrows(data',7))'; %%sort data w.r.t. time
+k=2;
+[x,y]=size(data)
+maxarray=c(3:7,1);
+minarray=c(3:7,1);
+sorted=c;
+while (k<20001)
+    maxarray=c(3:7,k);
+    minarray=c(3:7,k);
+    
+    if(upper(end,end)~=maxarray(end,1))               
+        upper=[upper,maxarray];
+    else
+        upper(3,end)=max(upper(3,end),maxarray(3,1);
+        upper(4,end)=max(upper(4,end),maxarray(3,1);
+        upper(5,end)=max(upper(5,end),maxarray(3,1);
+        upper(6,end)=max(upper(6,end),maxarray(3,1);
+    end;
+        
+     if(upper(end,end)~=maxarray(end,1))               
+        upper=[upper,maxarray];
+    else
+        lower(3,end)=min(upper(3,end),maxarray(3,1);
+        lower(4,end)=min(upper(4,end),maxarray(3,1);
+        lower(5,end)=min(upper(5,end),maxarray(3,1);
+        lower(6,end)=min(upper(6,end),maxarray(3,1);
+    k=k+1
+    
+end
+end
+    
+    
