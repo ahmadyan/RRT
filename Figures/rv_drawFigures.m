@@ -423,7 +423,7 @@ drawTrace(data72, vout, t, 'v_{out}', -1, -1, 2);
 
 
 
-%Case II: MC with variation
+%Case II: rrt with variation
 data73=rrt2mat('limiter73.rrt');
 Fig_731 = figure(731);
 drawTrace(data73, vin, t, 'v_{in}', -1, -3.2, 3.2);
@@ -436,10 +436,18 @@ Fig_733 = figure(733);
 drawTrace(data73, vlim, t, 'v_{limited}', -1, -1, 3);
 
 Fig_734 = figure(734);
-drawTrace(data72, vout, t, 'v_{out}', -1, -1, 2);
+drawTrace(data73, vout, t, 'v_{out}', -1, -1, 2);
 
 
 for i=1:31,
     figure(i),
     drawTest(data53, i, inv_time, 1600, 'v_{in}', -1, -5, 5, 2.5e-10)
+end
+
+
+j=0;
+for i=1:size(data73, 2),
+    if(data73(t, i)==9e-6),
+        j=j+1;
+    end
 end
