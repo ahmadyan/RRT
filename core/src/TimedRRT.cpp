@@ -354,7 +354,7 @@ void TimedRRT::simulate(double* initialState){
 		q_new->setParent(q_near);		//We only make the parent-child releation ship during the tree build
 		q_new->setIndex(i);
 		q_new->setInputVector(param);
-		nodes.push_back(q_new);
+		
 		Transition transition = tboot;
 		nodes.push_back(q_new);
 		eye->push(q_new, transition);
