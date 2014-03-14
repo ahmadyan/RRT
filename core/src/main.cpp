@@ -413,7 +413,7 @@ void MonitorExperiment(){
 	string inputFileName = "test2.rrt";
 	string outputFileName = "test.rrt" ;
 	//kernel_RRT(monitors, mode, generatePlot, inputFileName, outputFileName, plotter);
-
+	 
 
 	//pt->parseFormula("");
 	//pt->printParseTree(pt->getRoot());
@@ -428,7 +428,9 @@ int main (int argc, const char * argv[]){
 	cout << "Current working directory is:" << full << endl;
 	//string configFile = string(full) + "config\\half-wave-limiter.conf";
 	//string configFile = string(full) + "config\\half-wave-limiter-75.conf";
-	string configFile = string(full) + "config\\josephson.conf";
+	//string configFile = string(full) + "config\\josephson.conf";
+	string configFile = string(full) + "config\\inverter_worst.conf";
+
 	Configuration* config = new Configuration(configFile);
 
 	//fft_experiments();

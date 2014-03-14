@@ -16,9 +16,14 @@ class EyeDiagram{
 	double window; // should be 2*period
 	double sampleRate; 
 	int size;	//window/sampleRate
+	
+	int vSize;	//for lebesge integrals dv
+	double dv;
 
 	int voltage;	//the index of the voltage variable that we are tracking
-	
+
+	double* nadir;
+
 	//The eye diagram consists of two palpebra (eyelids)
 	//The supperior palbebra:
 	//     _________
@@ -29,6 +34,12 @@ class EyeDiagram{
 	double* minSuperior;
 	int* maxSuperiorIndex; 
 	int* minSuperiorIndex;
+	double* leftSuperior;
+	double* rightSuperior;
+	int* leftSuperiorIndex;
+	int* rightSuperiorIndex;
+
+		
 
 	//The inferior palbebra:
 	//         _____
@@ -41,18 +52,10 @@ class EyeDiagram{
 	double* minInferior;
 	int* maxInferiorIndex;
 	int* minInferiorIndex;
-
-	//integration values
-	//sum under signal one
-	//sum over signal one
-
-	//sum under signal two
-	//sum over signal two
-
-	//lebesgue 1
-	//lebesgue 2
-	//lebesgue 3
-	//lebesgue 4
+	double* leftInferior;
+	double* rightInferior;
+	int* leftInferiorIndex;
+	int* rightInferiorIndex;
 
 	public:
 		EyeDiagram(Configuration* config);

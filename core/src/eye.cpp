@@ -5,6 +5,10 @@
 EyeDiagram::EyeDiagram(Configuration* c){
 	config = c;
 
+	double unusuallySmallNumber = -9909;
+	double unusuallyBigNumber = +9909;
+	int nonExistentIndex = -1;
+
 	config->getParameter("edu.uiuc.csl.core.simulation.freq", &freq);
 	config->getParameter("edu.uiuc.csl.core.simulation.dt", &sampleRate);
 	config->getParameter("edu.uiuc.csl.core.simulation.window", &window);
@@ -27,14 +31,53 @@ EyeDiagram::EyeDiagram(Configuration* c){
 	minInferiorIndex = new int[size];
 
 	for (int i = 0; i < size; i++){
-		maxSuperior[i] = -9909;
-		minSuperior[i] = 9909;
-		maxSuperiorIndex[i] = -1;
-		minSuperiorIndex[i] = -1;
-		maxInferior[i] = -9909;
-		minInferior[i] = 9909;
-		maxInferiorIndex[i] = -1;
-		minInferiorIndex[i] = -1;
+		maxSuperior[i] = unusuallySmallNumber;
+		minSuperior[i] = unusuallyBigNumber;
+		maxSuperiorIndex[i] = nonExistentIndex;
+		minSuperiorIndex[i] = nonExistentIndex;
+		maxInferior[i] = unusuallySmallNumber;
+		minInferior[i] = unusuallyBigNumber;
+		maxInferiorIndex[i] = nonExistentIndex;
+		minInferiorIndex[i] = nonExistentIndex;
+	}
+		
+	nadir = new double[8];
+
+	nadir[0] = -0.2;	//area inside higher eyelid
+	nadir[1] = 1.2;	//area inside higher eyelid
+	nadir[2] = 4e-11;	//jitter-1
+	nadir[3] = 8e-11;	//jitter-2
+	nadir[4] = 4e-11;	//jitter-2
+	nadir[5] = 8e-11;	//jitter-2
+	nadir[6] = 1.2;	//area outside higher eyelid
+	nadir[7] = -0.2;	//area outside lower eyelid
+
+
+	vSize=20;	//for lebesge integrals dv
+	dv = (0.8 - 0.2) / vSize;
+	
+	leftSuperior = new double[vSize];
+	rightSuperior = new double[vSize];
+	leftSuperiorIndex = new int[vSize];
+	rightSuperiorIndex = new int[vSize];
+	leftInferior = new double[vSize];
+	rightInferior = new double[vSize];
+	leftInferiorIndex = new int[vSize];
+	rightInferiorIndex = new int[vSize];
+
+	for (int i = 0; i < vSize; i++){
+		leftSuperior[i] = unusuallySmallNumber;
+		leftSuperiorIndex[i] = nonExistentIndex;
+		
+		rightSuperior[i] = unusuallyBigNumber;
+		rightSuperiorIndex[i] = nonExistentIndex;
+		
+		leftInferior[i] = unusuallySmallNumber;
+		leftInferiorIndex[i] = nonExistentIndex;
+
+		rightInferior[i] = unusuallyBigNumber;
+		rightInferiorIndex[i] = nonExistentIndex;
+		//real programmer's don't comment!
 	}
 }
 
@@ -47,34 +90,42 @@ EyeDiagram::~EyeDiagram(){
 	delete minSuperiorIndex;
 	delete maxInferiorIndex;
 	delete minInferiorIndex;
+
+	delete leftSuperior;
+	delete rightSuperior;
+	delete leftSuperiorIndex;
+	delete rightSuperiorIndex;
+	delete leftInferior;
+	delete rightInferior;
+	delete leftInferiorIndex;
+	delete rightInferiorIndex;
+
+	delete nadir;
 }
 
 //Perform the initial integration of the eyediagram after applying the 00110 pattern
 void EyeDiagram::sum(){
-	double palpebraSuperiorInsideIntegral = 0;
-	double palpebraSuperiorOutsideIntegral = 0;
-	double palpebraInferiorInsideIntegral = 0;
-	double palpebraInferiorOutsideIntegral = 0;
-
-	//todo: these should be a vector, not a fixed value
-	double NadirSuperiorHigh = 1.1;
-	double NadirSuperiorLow = -0.2;
-	double NadirInferiorHigh = 1.1;
-	double NadirInferiorLow = -0.2;
-
+	double* g = new double[8]();
+	double dt = sampleRate;
 	for (int i = 0; i < size; i++){
-		palpebraSuperiorInsideIntegral += (minSuperior[i] - NadirSuperiorLow )* sampleRate;
-		palpebraSuperiorOutsideIntegral += (NadirSuperiorHigh - maxSuperior[i] ) * sampleRate;
-		palpebraInferiorInsideIntegral += (NadirInferiorHigh - maxInferior[i])* sampleRate;
-		palpebraInferiorOutsideIntegral += (minInferior[i] - NadirInferiorLow) * sampleRate;
+		g[0] += (minSuperior[i] - nadir[0])* dt;
+		g[1] += (nadir[1] - maxSuperior[i]) * dt;
+		g[6] += (nadir[6] - maxInferior[i])* dt;
+		g[7] += (minInferior[i] - nadir[7]) * dt;
 	}
 
+	//Computing the lebesgue integrals
+	for (int i = 0; i < vSize; i++){
+		g[2] += (nadir[2] - leftSuperior[i])*dv;
+		g[3] += (rightSuperior[i] - nadir[3])*dv;
+		g[4] += (nadir[4]- leftInferior[i])*dv;
+		g[5] += (rightInferior[i]-nadir[5])*dv;
+	}
 	cout << "Result" << endl << endl;
-	cout << "palpebraSuperiorInsideIntegral=" << palpebraSuperiorInsideIntegral << endl;
-	cout << "palpebraSuperiorOutsideIntegral=" << palpebraSuperiorOutsideIntegral << endl;
-	cout << "palpebraInferiorInsideIntegral=" << palpebraInferiorInsideIntegral << endl;
-	cout << "palpebraInferiorOutsideIntegral=" << palpebraInferiorOutsideIntegral << endl;
-	cout << "========" << endl << endl;
+	for (int i = 0; i < 8; i++){
+		cout << "g_" << i << " = " << g[i] << endl;
+	}
+	delete g;
 }
 
 void EyeDiagram::push(node* v){
@@ -141,11 +192,18 @@ void EyeDiagram::push(node* v, Transition tran){
 		transition = tran;
 	}
 	
+
+
 	int fullWindow = 2* (period / sampleRate);
+	double volt = v->get(voltage);
+	
+	int cycles = ceilf(t / period) - 1;
+	double t1 = t - period*cycles;
+	double t2 = t1 + period;
 
 	int i = int( round(t / sampleRate) ) % fullWindow;
 	int j = int( round((t + period) / sampleRate)) % fullWindow;
-	double volt = v->get(voltage);
+	int k = floor((volt - 0.2) / dv);
 
 	switch (transition){
 	case t00:
@@ -183,6 +241,12 @@ void EyeDiagram::push(node* v, Transition tran){
 				minSuperior[i] = volt;
 				minSuperiorIndex[i] = palpebraSuperior[i].size() - 1;
 			}
+			if (volt >= 0.2 && volt <= 0.8){
+				if (t1 > leftSuperior[k]){
+					leftSuperior[k] = t1;	
+					leftSuperiorIndex[k] = palpebraSuperior[i].size() - 1;
+				}
+			}
 		}
 		if (j < size){
 			(palpebraInferior[j]).push_back(v);
@@ -193,6 +257,12 @@ void EyeDiagram::push(node* v, Transition tran){
 			if (volt < minInferior[j]){
 				minInferior[j] = volt;
 				minInferiorIndex[j] = palpebraInferior[j].size() - 1;
+			}
+			if (volt >= 0.2 && volt <= 0.8){
+				if (t2 < rightInferior[k]){
+					rightInferior[k] = t2;
+					rightInferiorIndex[k] = palpebraInferior[j].size() - 1;
+				}
 			}
 		}
 		break;
@@ -207,6 +277,12 @@ void EyeDiagram::push(node* v, Transition tran){
 				minInferior[i] = volt;
 				minInferiorIndex[i] = palpebraInferior[i].size() - 1;
 			}
+			if (volt >= 0.2 && volt <= 0.8){
+				if (t1 > leftInferior[k]){
+					leftInferior[k] = t1; 
+					leftInferiorIndex[k] = palpebraInferior[i].size() - 1;
+				}
+			}
 		}
 		if (j < size){
 			(palpebraSuperior[j]).push_back(v);
@@ -217,6 +293,12 @@ void EyeDiagram::push(node* v, Transition tran){
 			if (volt < minSuperior[j]){
 				minSuperior[j] = volt;
 				minSuperiorIndex[j] = palpebraSuperior[j].size() - 1;
+			}
+			if (volt >= 0.2 && volt <= 0.8){
+				if (t2 < rightSuperior[k]){
+					rightSuperior[k] = t2;
+					rightSuperiorIndex[k] = palpebraSuperior[j].size() - 1;
+				}
 			}
 		}
 		break;
@@ -301,7 +383,7 @@ string EyeDiagram::toString(){
 
 	str << "plot [ " << tmin << ":" << tmax << "][" << vmin << ":" << vmax << "] 0 with linespoints lt \"white\" pt 0.01";
 	str << " title \"" << " " << "\"  \n";
-	/*
+	
 	//draw palpebra inferior
 	for (int i = 0; i < size; i++){
 		for (int j = 0; j < palpebraInferior[i].size(); j++){
@@ -315,7 +397,7 @@ string EyeDiagram::toString(){
 				str << " set arrow from " << iFromX << "," << iFromY << "   to     " << iToX << "," << iToY << "  nohead lc rgb \"grey\" lw 2 \n";
 			}
 		}
-	}*/
+	}
 
 	for (int i = 1; i < size; i++){
 		double iToX = i*sampleRate;
@@ -337,7 +419,7 @@ string EyeDiagram::toString(){
 
 
 	//draw palpebra Superior
-/*	for (int i = 0; i < size; i++){
+	for (int i = 0; i < size; i++){
 		for (int j = 0; j < palpebraSuperior[i].size(); j++){
 			if (!palpebraSuperior[i][j]->isRoot()){
 				//double iToX = palpebraSuperior[i][j]->getTime();
@@ -350,7 +432,7 @@ string EyeDiagram::toString(){
 				
 			}
 		}
-	}*/
+	}
 
 	for (int i = 1; i < size; i++){
 		double iToX = i*sampleRate;
@@ -374,7 +456,9 @@ string EyeDiagram::toString(){
 	return str.str();
 }
 
+enum EYE_FUNCTIONALS {G1, G2, G3, G4, G5, G7, G8};
 node* EyeDiagram::getNode(int i){
+	//todo: fix this
 	return palpebraSuperior[i][minSuperiorIndex[i]];
 }
 
