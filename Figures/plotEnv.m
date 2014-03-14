@@ -1,8 +1,8 @@
-function plotEnv(upper,lower,index)
+function plotEnv(upper,lower,index,t)
 
 hold on;
-plot(upper(5,1:400),upper(index,1:400));
-plot(lower(5,1:400),lower(index,1:400),'g');
+plot(upper(t-2,:),upper(index,:));
+plot(lower(t-2,:),lower(index,:),'g');
 hold off;
 
 

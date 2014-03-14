@@ -1,33 +1,64 @@
-function [upper,lower,sorted]=getEnv(data)
+function [upper,lower,sorted]=getEnv(Dev_t)
 
-c=(sortrows(data',7))'; %%sort data w.r.t. time
-k=2;
-[x,y]=size(data)
-upper=c(3:7,1);
-lower=c(3:7,1);
-
+c=(sortrows(Dev_t,16))'; %%sort data w.r.t. time
+k=1;
+[x,y]=size(c);
+upper=c(3:16,k);
+lower=c(3:16,k);
 sorted=c;
-while (k<20001)
-    newarray=c(3:7,k);
+while (k<3001)
+    temp_start=k%%pointing at the start of a time 
     
-    if(upper(end,end)~=newarray(end,1))               
-        upper=[upper,newarray];
-    else     
-        upper(1,end)=max(upper(1,end),newarray(1,1));
-        upper(2,end)=max(upper(2,end),newarray(2,1));
-        upper(3,end)=max(upper(3,end),newarray(3,1));
-        upper(4,end)=max(upper(4,end),newarray(4,1));
+    if k<y
+   while (c(end,k+1)==c(end,k)) && (k<y-1)
+            k=k+1;
+   end;    
+    end;
+    if (c(end,k)==c(end,y))
+            k=k+1;
     end;
         
-     if(lower(end,end)~=newarray(end,1))               
-        lower=[lower,newarray];
-    else
-        lower(1,end)=min(upper(1,end),newarray(1,1));
-        lower(2,end)=min(upper(2,end),newarray(2,1));
-        lower(3,end)=min(upper(3,end),newarray(3,1));
-        lower(4,end)=min(upper(4,end),newarray(4,1));
-     end;
-    k=k+1
+    new_upper_column= [max(c(3,temp_start:k));
+                       max(c(4,temp_start:k));
+                       max(c(5,temp_start:k));
+                       max(c(6,temp_start:k));
+                       max(c(7,temp_start:k));
+                       max(c(8,temp_start:k));
+                       max(c(9,temp_start:k));
+                       max(c(10,temp_start:k));
+                       max(c(11,temp_start:k));
+                       max(c(12,temp_start:k));
+                       max(c(13,temp_start:k));
+                       max(c(14,temp_start:k));
+                       max(c(15,temp_start:k));
+                       max(c(16,temp_start:k))];
+                   
+    if(upper(end,end)~=new_upper_column(end,1))               
+        upper=[upper,new_upper_column];
+    end;
+    
+    new_lower_column= [min(c(3,temp_start:k));
+                       min(c(4,temp_start:k));
+                       min(c(5,temp_start:k));
+                       min(c(6,temp_start:k));
+                       min(c(7,temp_start:k));
+                       min(c(8,temp_start:k));
+                       min(c(9,temp_start:k));
+                       min(c(10,temp_start:k));
+                       min(c(11,temp_start:k));
+                       min(c(12,temp_start:k));
+                       min(c(13,temp_start:k));
+                       min(c(14,temp_start:k));
+                       min(c(15,temp_start:k));
+                       min(c(16,temp_start:k))];
+    if(lower(end,end)~=new_lower_column(end,1))               
+        lower=[lower,new_lower_column];
+    
+    end
+   t=new_upper_column
+   g=new_lower_column
+    k
+    k=k+1;
     
 end
 end
