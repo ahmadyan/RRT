@@ -57,6 +57,19 @@ class EyeDiagram{
 	int* leftInferiorIndex;
 	int* rightInferiorIndex;
 
+
+	double maxOne;
+	double minOne;
+	double maxZero;
+	double minZero;
+
+	//these two sets contains the nodes that we can initiate a jitter from, usually nodes with t<t_jitter_max
+	vector<node*> jitterFrontierSet10; 
+	vector<node*> jitterFrontierSet01;
+
+	double tJitterMax; 
+	double tTransitionMax;
+
 	public:
 		EyeDiagram(Configuration* config);
 		~EyeDiagram();

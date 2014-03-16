@@ -1,5 +1,8 @@
 #include "TimedRRT.h"
 #include <stdio.h>
+#include <chrono>
+#include <ctime>
+#include <random>
 
 TimedRRT::TimedRRT(Configuration* c, string fileName): RRT(c, fileName){
 }
@@ -13,6 +16,12 @@ TimedRRT::TimedRRT(Configuration* c, int _d, int _k, int _var, string nam) : RRT
     sim_time = 1 ; //default
     setBound(_d, 0, sim_time); //maximum time for sim, minimum is 0 and it is assigned in RRT constructor
 }
+/*
+TimedRRT::~TimedRRT(){
+	delete bits;
+	delete jitter;
+	delete transition;
+}*/
 
 vector<double> TimedRRT::generateSimulationParameters(node* q_near){
 	vector<double> param;	//variation or input to the system 
@@ -122,8 +131,40 @@ vector<double> TimedRRT::generateSimulationParameters(node* q_near){
 			//cout << "tnow=" << tnow << endl;
 			//cout << "v->" << vin << endl;
 			param.push_back(vin);
-		}
-		else if (config->checkParameter("edu.uiuc.csl.system.param.type", j, "dc")){
+		}else if (config->checkParameter("edu.uiuc.csl.system.param.type", j, "mc")){		
+			double max = 0; config->getParameter("edu.uiuc.csl.system.param.max", j, &max);
+			double min = 0; config->getParameter("edu.uiuc.csl.system.param.min", j, &min);
+			double freq = 0; config->getParameter("edu.uiuc.csl.system.param.freq", j, &freq);
+			double period = 1 / freq;
+			double t = q_near->getTime();
+			int cycles = floorf(t / period);
+			double t1 = t - period*cycles;
+
+			int bit = -1;	//the next bit
+			double v=0;
+			//modeling jitter
+			if ( (t1 >= jitter[cycles]) || (cycles==0)){
+				bit = bits[cycles];
+			}else{
+				bit = bits[cycles - 1];
+			}
+
+			//modeling transition
+			//double tTran = jitter[cycles] 
+			if ((cycles!=0)&&(t1 > jitter[cycles]) && (t1 < jitter[cycles] + transition[cycles])){
+				double tTran = t1 - jitter[cycles];
+				double transitionScale = tTran / transition[cycles];
+				v = min + max*(transitionScale*bits[cycles] + (1 - transitionScale)*bits[cycles - 1]);
+			}
+			else{
+				v = min + bit*max;
+			}
+			double dv = 0; config->getParameter("edu.uiuc.csl.system.param.dv", j, &dv);
+			double noise = generateUniformSample(-dv, dv);
+
+			param.push_back(bit + noise);
+
+		}else if (config->checkParameter("edu.uiuc.csl.system.param.type", j, "dc")){
 			if (config->checkParameter("edu.uiuc.csl.system.param.dist.type", j, "gaussian") || config->checkParameter("edu.uiuc.csl.system.param.dist.type", j, "normal")){
 				double mean = 0; config->getParameter("edu.uiuc.csl.system.param.dist.mean", j, &mean);
 				double var = 1; config->getParameter("edu.uiuc.csl.system.param.dist.variance", j, &var);
@@ -311,9 +352,66 @@ void TimedRRT::build(){
 				simulationFinished = true;
 			}
 		}
-
-
 	}
+}
+
+
+// We will only use this function for MC simulation of Inverter for now. 
+// 1st: we determine the actual number of bits that should be applied in this simulation
+// 2nd: we generate the boot sequence for getting initial eye diagram
+// 3rd: we generate a random bit sequence
+// 4th: we generate jitter and rise/fall time data
+void TimedRRT::generateMonteCarloInputSequence(){
+	double freq = 0; config->getParameter("edu.uiuc.csl.core.simulation.freq", &freq);
+	double period = 1 / freq;
+	int IterationsPerBit = period/dt;
+	int size = k/IterationsPerBit;
+
+	bits = new int[size];
+	jitter = new double[size];
+	transition = new double[size];
+
+	double jitterMean = 0; config->getParameter("edu.uiuc.csl.system.param.jitter.mean", &jitterMean); 
+	double jitterStdDev = 0; config->getParameter("edu.uiuc.csl.system.param.jitter.stddev", &jitterStdDev);
+	double jitterMax = 0; config->getParameter("edu.uiuc.csl.system.param.jitter.max", &jitterMax);
+	double transitionMean = 0; config->getParameter("edu.uiuc.csl.system.param.transition.mean", &transitionMean);
+	double transitionStdDev = 0; config->getParameter("edu.uiuc.csl.system.param.transition.stddev", &transitionStdDev);
+	double transitionMax = 0; config->getParameter("edu.uiuc.csl.system.param.transition.max", &transitionMax);
+
+	unsigned seed1 = std::chrono::system_clock::now().time_since_epoch().count();
+	std::mt19937 generator(seed1);
+	std::normal_distribution<double> jitter_generator(jitterMean, jitterStdDev);
+	std::normal_distribution<double> transition_generator(transitionMean, transitionStdDev);
+
+	bits[0] = 0;		jitter[0] = 0;		transition[0] = 0;
+	bits[1] = 0;		jitter[1] = 0;		transition[1] = 0;
+	bits[2] = 1;		jitter[2] = 0;		transition[2] = 0;
+	bits[3] = 1;		jitter[3] = 0;		transition[3] = 0;
+	bits[4] = 0;		jitter[4] = 0;		transition[4] = 0;
+
+	for (int i = 5; i < size; i++){
+		bits[i] = rand() % 2;
+
+		double x = jitter_generator(generator);
+		if (x<0) x = 0;
+		if (x>jitterMax) x = jitterMax;
+		jitter[i] = x*1e-12;
+
+		double y = transition_generator(generator);
+		if (y<0) y = 0;
+		if (y>transitionMax) y = transitionMax;
+		transition[i] = y*1e-12;
+	}
+
+	ofstream file;
+	file.open(config->get("edu.uiuc.crhc.core.options.mc.simdata"), std::ofstream::out);
+
+	for (int i = 0; i < size; i++){
+		cout << i << " " << bits[i] << " " << jitter[i] << " " << transition[i] << endl;
+		file << i << " " << bits[i] << " " << jitter[i] << " " << transition[i] << endl;
+	}
+
+	file.close();
 }
 
 void TimedRRT::simulate(double* initialState){
@@ -326,19 +424,24 @@ void TimedRRT::simulate(double* initialState){
 	for (int i = 0; i < var; i++)
 		p.push_back(0);
 	root->setInputVector(p);
-	for(int i=1;i<k; i++){
-    	cout <<"[s] #### " << i << endl ;
-		node* q_near = nodes[ nodes.size()-1 ]; //last inserted node for the linear simulation
-        double* state_near = q_near->get() ;
-        double* state = new double[d];
-        for(int j=0;j<d;j++){
-			state[j]=state_near[j];
+	simulate(k, root);
+}
+
+//simulate the circuit for iter numbers from q_start
+void TimedRRT::simulate(int iter, node* q_start){
+	int i = 0;
+	node* q_near = q_start;
+	while (i < iter){
+		double* state_near = q_near->get();
+		double* state = new double[d];
+		for (int j = 0; j<d; j++){
+			state[j] = state_near[j];
 		}
 		vector<double> param = generateSimulationParameters(q_near);
-		
+
 		vector<string> settings;
 		stringstream icInputFileName; icInputFileName << "ic_" << q_near->getIndex() << ".ic0";
-		stringstream icOutputFileName; icOutputFileName << "ic_" << i << ".ic";
+		stringstream icOutputFileName; icOutputFileName << "ic_" << nodes.size() << ".ic";
 		settings.push_back(icOutputFileName.str());
 		settings.push_back(icInputFileName.str());
 		settings.push_back("transient");
@@ -349,20 +452,22 @@ void TimedRRT::simulate(double* initialState){
 
 		node* q_new = new node(d);
 
-        q_new->set(result);
-        q_near->addChildren(q_new);		//add the new node to the tree
+		q_new->set(result);
+		q_near->addChildren(q_new);		//add the new node to the tree
 		q_new->setParent(q_near);		//We only make the parent-child releation ship during the tree build
 		q_new->setIndex(i);
 		q_new->setInputVector(param);
-		
+
 		Transition transition = tboot;
 		nodes.push_back(q_new);
 		eye->push(q_new, transition);
 
-		for(int i=0;i<monitors.size();i++){
+		for (int i = 0; i<monitors.size(); i++){
 			monitors[i]->check(q_new);
-		}	
-    }
+		}
+		q_near = q_new;
+		i++;
+	}
 }
 
 void TimedRRT::addMonitor(Monitor* m){

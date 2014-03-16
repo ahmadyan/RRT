@@ -261,6 +261,8 @@ void kernel_RRT(Configuration* config){
 
 	cout << "config->get(\"edu.uiuc.crhc.core.mode\") = " << config->get("edu.uiuc.crhc.core.mode") << config->checkParameter("edu.uiuc.crhc.core.mode", "load") << endl;
 	if (config->checkParameter("edu.uiuc.crhc.core.mode", "mc")){
+		if (config->checkParameter("edu.uiuc.csl.core.sampling.digital", "1"))
+			rrt.generateMonteCarloInputSequence();
 		rrt.simulate(initialState);  //for just simulating the circuit
 	}else if (config->checkParameter("edu.uiuc.crhc.core.mode", "rrt")){
 		rrt.build(initialState);
@@ -269,7 +271,13 @@ void kernel_RRT(Configuration* config){
 	}else if (config->checkParameter("edu.uiuc.crhc.core.mode", "load+rrt")){
 		rrt.load(config->get("edu.uiuc.crhc.core.options.inputFileName"));
 		rrt.build();
-	}else if (config->checkParameter("edu.uiuc.crhc.core.mode", "mc+rrt")){
+	}
+	else if (config->checkParameter("edu.uiuc.crhc.core.mode", "load+mc")){
+		rrt.load(config->get("edu.uiuc.crhc.core.options.inputFileName"));//overwrites k
+		rrt.setIterations(iter);
+		rrt.simulate();
+	}
+	else if (config->checkParameter("edu.uiuc.crhc.core.mode", "mc+rrt")){
 		rrt.simulate(initialState);
 		rrt.build();
 	}else{
@@ -429,7 +437,7 @@ int main (int argc, const char * argv[]){
 	//string configFile = string(full) + "config\\half-wave-limiter.conf";
 	//string configFile = string(full) + "config\\half-wave-limiter-75.conf";
 	//string configFile = string(full) + "config\\josephson.conf";
-	string configFile = string(full) + "config\\inverter_worst.conf";
+	string configFile = string(full) + "config\\inverter_rrt_final.conf";
 
 	Configuration* config = new Configuration(configFile);
 

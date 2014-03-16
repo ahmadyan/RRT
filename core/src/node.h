@@ -22,6 +22,7 @@ class node{
     static int objectCount ;
 	int index; //this node index in the nodes array
 	int counter; //a variable that we use to hold a counter for generating signal value
+	int jitter;	//Indicates whether this node has been used in a jitter transision yet. 
 public:
 	node(int n);
 	node(const node&);
@@ -80,6 +81,9 @@ public:
 	void setInputVector(vector<double>);
 	vector<double> getInputVector();
 	double getInput(int i);
+
+	void setJitter(int x);
+	int getJitter();
 };
 
 

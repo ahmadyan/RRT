@@ -73,4 +73,6 @@ public:
 	void setConfig(Configuration*); 
 
 	EyeDiagram* getEyeDiagram();
+
+	void setIterations(int);
 };

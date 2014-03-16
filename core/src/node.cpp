@@ -6,6 +6,7 @@
 using namespace std;
 
 node::node(int _n){
+	jitter = 0;
 	id = generateID();
 	root=false; 
 	n=_n;
@@ -31,6 +32,7 @@ node::node(const node& Node){
 	for(int i=0;i<n;i++){
 		data[i] = Node.data[i];
 	}
+	jitter = 0;
 }
 
 //This piece of code causes unknown problems with visual studio 2012.
@@ -358,4 +360,12 @@ vector<double> node::getInputVector(){
 
 double node::getInput(int i){
 	return input[i];
+}
+
+void node::setJitter(int x){
+	jitter = x;
+}
+
+int node::getJitter(){
+	return jitter;
 }

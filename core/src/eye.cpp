@@ -1,4 +1,5 @@
 #include "eye.h"
+#include <fstream>
 
 //The constructor for the EyeDiagram classes, 
 //this constructor will get the initial parameter from the config file, then allocate the eyelids and sets the initial values for max/min
@@ -13,6 +14,10 @@ EyeDiagram::EyeDiagram(Configuration* c){
 	config->getParameter("edu.uiuc.csl.core.simulation.dt", &sampleRate);
 	config->getParameter("edu.uiuc.csl.core.simulation.window", &window);
 	config->getParameter("edu.uiuc.crhc.core.options.eyediagram.var", &voltage);
+	config->getParameter("edu.uiuc.csl.system.param.jitter.max", &tJitterMax);
+	config->getParameter("edu.uiuc.csl.system.param.transition.max", &tTransitionMax);
+
+
 	period = 1 / freq;
 
 	size = window / sampleRate;
@@ -79,6 +84,12 @@ EyeDiagram::EyeDiagram(Configuration* c){
 		rightInferiorIndex[i] = nonExistentIndex;
 		//real programmer's don't comment!
 	}
+
+
+	maxOne = unusuallySmallNumber;
+	minOne = unusuallyBigNumber;
+	maxZero = unusuallySmallNumber;
+	minZero = unusuallyBigNumber;
 }
 
 EyeDiagram::~EyeDiagram(){
@@ -121,15 +132,60 @@ void EyeDiagram::sum(){
 		g[4] += (nadir[4]- leftInferior[i])*dv;
 		g[5] += (rightInferior[i]-nadir[5])*dv;
 	}
-	cout << "Result" << endl << endl;
-	for (int i = 0; i < 8; i++){
-		cout << "g_" << i << " = " << g[i] << endl;
+	//cout << "Result" << endl << endl;
+	//for (int i = 0; i < 8; i++){
+	//	cout << "g_" << i << " = " << g[i] << endl;
+	//}
+
+
+	//cout << "Classic measurements:" << endl;
+	double noiseMargin = minSuperior[size / 2] - maxInferior[size / 2];
+	double jitterMargin1 = rightInferior[vSize / 2] - leftInferior[vSize / 2];
+	double jitterMargin2 = rightInferior[vSize / 2] - leftInferior[vSize / 2];
+	double zeroCrossingRight = leftSuperior[vSize / 2] - rightInferior[vSize / 2] + period;
+	double zeroCrossingLeft = leftInferior[vSize / 2] - rightSuperior[vSize / 2] + period;
+	/*
+	double maxsup = -1;
+	for (int i = 0; i < size; i++){
+		if ((maxSuperior[i] - minSuperior[i])>maxsup){
+			maxsup = maxSuperior[i] - minSuperior[i];
+		}
+		if ((maxInf))
+	}*/
+
+	//cout << "Noise margin= " << noiseMargin << endl;
+	//cout << "jitterMargin(1) = " << jitterMargin1 << endl;
+	//cout << "jitterMargin(2) = " << jitterMargin2 << endl;
+	//cout << "zeroCrossingRight = " << zeroCrossingRight << endl;
+	//cout << "zeroCrossingLeft = " << zeroCrossingLeft << endl;
+
+	if (config->checkParameter("edu.uiuc.crhc.core.options.eyediagram.dump", "1")){
+		//print the current stat for the eye diagram
+		ofstream file;
+		file.open(config->get("edu.uiuc.crhc.core.options.eyediagram.dump.filename"), std::ofstream::app);
+
+		for (int i = 0; i < 8; i++){
+			file << g[i] << " " ;
+		}
+
+		file << noiseMargin << " ";
+		file << jitterMargin1 << " ";
+		file << jitterMargin2 << " ";
+		file << zeroCrossingRight << " ";
+		file << zeroCrossingLeft;
+		file << endl;
+
+		file.close();
 	}
+
+
 	delete g;
 }
 
 void EyeDiagram::push(node* v){
 	push(v, tboot);
+	if (config->checkParameter("edu.uiuc.crhc.core.options.eyediagram.dump", "1"))
+		sum();
 }
 
 void EyeDiagram::push(node* v, Transition tran){
@@ -207,6 +263,8 @@ void EyeDiagram::push(node* v, Transition tran){
 
 	switch (transition){
 	case t00:
+		if (volt > maxZero) maxZero = volt;
+		if (volt < minZero) minZero = volt;
 		if (i < size){
 			(palpebraInferior[i]).push_back(v);
 			if (volt > maxInferior[i]){
@@ -231,6 +289,9 @@ void EyeDiagram::push(node* v, Transition tran){
 		}
 		break;
 	case t01:
+		if ((t1 < tJitterMax)&&(v->getJitter()==0)){
+			jitterFrontierSet01.push_back(v);
+		}
 		if (i < size){
 			(palpebraSuperior[i]).push_back(v);
 			if (volt > maxSuperior[i]){
@@ -267,13 +328,16 @@ void EyeDiagram::push(node* v, Transition tran){
 		}
 		break;
 	case t10:
+		if ((t1 < tJitterMax) && (v->getJitter() == 0)){
+			jitterFrontierSet10.push_back(v);
+		}
 		if (i < size){
 			(palpebraInferior[i]).push_back(v);
 			if (volt > maxInferior[i]){
 				maxInferior[i] = volt;
 				maxInferiorIndex[i] = palpebraInferior[i].size() - 1;
 			}
-			if (volt < minInferior[j]){
+			if (volt < minInferior[i]){
 				minInferior[i] = volt;
 				minInferiorIndex[i] = palpebraInferior[i].size() - 1;
 			}
@@ -303,6 +367,8 @@ void EyeDiagram::push(node* v, Transition tran){
 		}
 		break;
 	case t11:
+		if (volt>maxOne) maxOne = volt;
+		if (volt < minOne) minOne = volt;
 		if (i < size){
 			(palpebraSuperior[i]).push_back(v);
 			if (volt > maxSuperior[i]){
@@ -394,29 +460,10 @@ string EyeDiagram::toString(){
 				//double iFromX = palpebraSuperior[i][j]->getParent()->getTime();
 				double iFromX = (i - 1)*sampleRate;
 				double iFromY = palpebraInferior[i][j]->getParent()->get(voltage);
-				str << " set arrow from " << iFromX << "," << iFromY << "   to     " << iToX << "," << iToY << "  nohead lc rgb \"grey\" lw 2 \n";
+				str << " set arrow from " << iFromX << "," << iFromY << "   to     " << iToX << "," << iToY << "  nohead lc rgb \"blue\" lw 2 \n";
 			}
 		}
 	}
-
-	for (int i = 1; i < size; i++){
-		double iToX = i*sampleRate;
-		double iToY = minInferior[i];
-		double iFromX = (i - 1)*sampleRate;
-		double iFromY = minInferior[i - 1];
-		str << " set arrow from " << iFromX << "," << iFromY << "   to     " << iToX << "," << iToY << "  nohead  lc rgb \"blue\" lw 2 \n";
-	}
-
-	for (int i = 1; i < size; i++){
-		double iToX = i*sampleRate;
-		double iToY = maxInferior[i];
-		double iFromX = (i - 1)*sampleRate;
-		double iFromY = maxInferior[i - 1];
-		str << " set arrow from " << iFromX << "," << iFromY << "   to     " << iToX << "," << iToY << "  nohead  lc rgb \"blue\" lw 2 \n";
-	}
-
-
-
 
 	//draw palpebra Superior
 	for (int i = 0; i < size; i++){
@@ -429,10 +476,27 @@ string EyeDiagram::toString(){
 				double iFromX = (i - 1)*sampleRate;
 				double iFromY = palpebraSuperior[i][j]->getParent()->get(voltage);
 				str << " set arrow from " << iFromX << "," << iFromY << "   to     " << iToX << "," << iToY << "  nohead  lc rgb \"blue\" lw 2 \n";
-				
+
 			}
 		}
 	}
+
+	for (int i = 1; i < size; i++){
+		double iToX = i*sampleRate;
+		double iToY = minInferior[i];
+		double iFromX = (i - 1)*sampleRate;
+		double iFromY = minInferior[i - 1];
+		str << " set arrow from " << iFromX << "," << iFromY << "   to     " << iToX << "," << iToY << "  nohead  lc rgb \"red\" lw 2 \n";
+	}
+
+	for (int i = 1; i < size; i++){
+		double iToX = i*sampleRate;
+		double iToY = maxInferior[i];
+		double iFromX = (i - 1)*sampleRate;
+		double iFromY = maxInferior[i - 1];
+		str << " set arrow from " << iFromX << "," << iFromY << "   to     " << iToX << "," << iToY << "  nohead  lc rgb \"red\" lw 2 \n";
+	}
+
 
 	for (int i = 1; i < size; i++){
 		double iToX = i*sampleRate;

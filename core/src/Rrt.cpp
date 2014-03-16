@@ -5,6 +5,7 @@
 #include <iostream>
 #include <limits>
 #include <stack>
+#include <chrono>
 using namespace std;
 
 RRT::RRT(Configuration* c, int _d, int _k, int _var, string nam){
@@ -42,7 +43,8 @@ RRT::~RRT(){
 
 double RRT::generateNormalSample(double mean, double std){
 	//A Mersenne Twister pseudo-random generator of 32-bit numbers with a state size of 19937 bits.
-	std::mt19937 generator((unsigned int)time(0));
+	unsigned seed1 = std::chrono::system_clock::now().time_since_epoch().count();
+	std::mt19937 generator(seed1);
 	std::normal_distribution<double> normal(mean, std);
 	return normal(generator);
 
@@ -504,4 +506,8 @@ void RRT::setConfig(Configuration* c){
 
 EyeDiagram* RRT::getEyeDiagram(){
 	return eye;
+}
+
+void RRT::setIterations(int _k){
+	k = _k;
 }
