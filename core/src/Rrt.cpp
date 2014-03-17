@@ -268,8 +268,6 @@ void RRT::load(string fileName){
 			//If this node is a root node (i.e. the parent_id is -1), sets this as root, otherwise
 			//this node has a parent. Find the parent and add this as children. 
 			//I'm reading/writing nodes in a monotonic manner, so I can directly access nodes via nodes[id]
-
-			cout << i << " " <<  id << " " << parent_id << endl;
 			if (parent_id == -1){
 				newNode->setRoot();
 				root = newNode;

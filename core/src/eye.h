@@ -38,6 +38,8 @@ class EyeDiagram{
 	double* rightSuperior;
 	int* leftSuperiorIndex;
 	int* rightSuperiorIndex;
+	node** leftSuperiorNodes;
+	node** rightSuperiorNodes;
 
 		
 
@@ -56,7 +58,8 @@ class EyeDiagram{
 	double* rightInferior;
 	int* leftInferiorIndex;
 	int* rightInferiorIndex;
-
+	node** leftInferiorNodes;
+	node** rightInferiorNodes;
 
 	double maxOne;
 	double minOne;

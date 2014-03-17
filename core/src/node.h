@@ -24,6 +24,7 @@ class node{
 	int counter; //a variable that we use to hold a counter for generating signal value
 	int jitter;	//Indicates whether this node has been used in a jitter transision yet. 
 public:
+	node();
 	node(int n);
 	node(const node&);
 	node::node(int _n, int _id, double* _data);

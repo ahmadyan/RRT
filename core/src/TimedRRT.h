@@ -24,7 +24,7 @@ public:
 	void build();
 	void simulate(int iter, node* q_start);
 	void generateMonteCarloInputSequence();
-	void worstCaseJitter();
+	int worstCaseJitter(node* q_near);
 	void deltaSimulation(node* q_near);
 	void worstCaseEyeDiagram();
 };

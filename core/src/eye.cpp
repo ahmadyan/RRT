@@ -1,6 +1,6 @@
 #include "eye.h"
 #include <fstream>
-
+#include "node.h"
 //The constructor for the EyeDiagram classes, 
 //this constructor will get the initial parameter from the config file, then allocate the eyelids and sets the initial values for max/min
 EyeDiagram::EyeDiagram(Configuration* c){
@@ -26,13 +26,14 @@ EyeDiagram::EyeDiagram(Configuration* c){
 	minSuperior = new double[size];
 	maxSuperiorIndex = new int[size];
 	minSuperiorIndex = new int[size];
+	
 
 	palpebraInferior = vector< vector<node*> >(size);
 	maxInferior = new double[size];
 	minInferior = new double[size];
 	maxInferiorIndex = new int[size];
 	minInferiorIndex = new int[size];
-
+	
 	for (int i = 0; i < size; i++){
 		maxSuperior[i] = unusuallySmallNumber;
 		minSuperior[i] = unusuallyBigNumber;
@@ -56,7 +57,7 @@ EyeDiagram::EyeDiagram(Configuration* c){
 	nadir[7] = -0.2;	//area outside lower eyelid
 
 
-	vSize=20;	//for lebesge integrals dv
+	vSize=10;	//for lebesge integrals dv
 	dv = (0.8 - 0.2) / vSize;
 	
 	leftSuperior = new double[vSize];
@@ -67,6 +68,10 @@ EyeDiagram::EyeDiagram(Configuration* c){
 	rightInferior = new double[vSize];
 	leftInferiorIndex = new int[vSize];
 	rightInferiorIndex = new int[vSize];
+	leftSuperiorNodes = new node*[vSize];
+	rightSuperiorNodes = new node*[vSize];
+	leftInferiorNodes = new node*[vSize];
+	rightInferiorNodes = new node*[vSize];
 
 	for (int i = 0; i < vSize; i++){
 		leftSuperior[i] = unusuallySmallNumber;
@@ -194,7 +199,7 @@ void EyeDiagram::push(node* v, Transition tran){
 	//for MC result only
 		double t = v->getTime();
 
-		if (t <= 2e-10){
+		if (t < 2e-10){
 			Transition boot[5] = { t01, t11};
 			int cycles = floor(t / period);
 			transition = boot[cycles];
@@ -303,6 +308,7 @@ void EyeDiagram::push(node* v, Transition tran){
 				if (t1 > leftSuperior[k]){
 					leftSuperior[k] = t1;	
 					leftSuperiorIndex[k] = palpebraSuperior[i].size() - 1;
+					leftSuperiorNodes[k] = v;
 				}
 			}
 		}
@@ -320,6 +326,7 @@ void EyeDiagram::push(node* v, Transition tran){
 				if (t2 < rightInferior[k]){
 					rightInferior[k] = t2;
 					rightInferiorIndex[k] = palpebraInferior[j].size() - 1;
+					rightInferiorNodes[k] = v;
 				}
 			}
 		}
@@ -342,6 +349,7 @@ void EyeDiagram::push(node* v, Transition tran){
 				if (t1 > leftInferior[k]){
 					leftInferior[k] = t1; 
 					leftInferiorIndex[k] = palpebraInferior[i].size() - 1;
+					leftInferiorNodes[k] = v;
 				}
 			}
 		}
@@ -359,6 +367,7 @@ void EyeDiagram::push(node* v, Transition tran){
 				if (t2 < rightSuperior[k]){
 					rightSuperior[k] = t2;
 					rightSuperiorIndex[k] = palpebraSuperior[j].size() - 1;
+					rightSuperiorNodes[k] = v;
 				}
 			}
 		}
@@ -395,6 +404,29 @@ void EyeDiagram::push(node* v, Transition tran){
 }
 
 void EyeDiagram::test(){
+	for (int i = 1; i < vSize; i++){
+		if (leftSuperiorIndex[i] == -1){
+			leftSuperiorIndex[i] = leftSuperiorIndex[i - 1];
+			leftSuperior[i] = leftSuperior[i - 1];
+			leftSuperiorNodes[i] = leftSuperiorNodes[i - 1];
+		}
+		if (rightSuperiorIndex[i] == -1){
+			rightSuperiorIndex[i] = rightSuperiorIndex[i - 1];
+			rightSuperior[i] = rightSuperior[i - 1];
+			rightSuperiorNodes[i] = rightSuperiorNodes[i - 1];
+		}
+		if (leftInferiorIndex[i] == -1){
+			leftInferiorIndex[i] = leftInferiorIndex[i - 1];
+			leftInferior[i] = leftInferior[i - 1];
+			leftInferiorNodes[i] = leftInferiorNodes[i - 1];
+		}
+		if (rightInferiorIndex[i] == -1){
+			rightInferiorIndex[i] = rightInferiorIndex[i - 1];
+			leftInferiorNodes[i] = leftInferiorNodes[i - 1];
+			rightInferior[i] = rightInferior[i - 1];
+		}
+	}
+
 	//recompute the maxSuperior
 	for (int i = 0; i < size; i++){
 		double max = -100000;
@@ -407,7 +439,6 @@ void EyeDiagram::test(){
 		}
 		cout << "Max @" << i << " = " << max << " @" << index << "     == " << maxSuperior[i] << " @" << maxSuperiorIndex[i] << endl;
 	}
-
 
 	for (int i = 0; i < size; i++){
 		if (palpebraSuperior[i].size() == 0){
@@ -434,6 +465,13 @@ void EyeDiagram::test(){
 
 	}
 
+
+	for (int i = 0; i < vSize; i++){
+		if (leftSuperiorIndex[i] == -1) cout << "leftSuperiorIndex " << i << " is empty "<< endl;
+		if (rightSuperiorIndex[i] == -1) cout << "rightSuperiorIndex!" << i << " is empty " << endl;
+		if (leftInferiorIndex[i] == -1) cout << "leftInferiorIndex!" << i << " is empty " << endl;
+		if (rightInferiorIndex[i] == -1) cout << "rightInferiorIndex!" << i << " is empty " << endl;
+	}
 }
 
 string EyeDiagram::toString(){
@@ -513,23 +551,56 @@ string EyeDiagram::toString(){
 	return str.str();
 }
 
-enum EYE_FUNCTIONALS {G1, G2, G3, G4, G5, G7, G8};
+//	Input determines which objective
+//	0: jitter (0->1)
+//	1: jitter (1->0)
+//	2: inside 1
+//	3: inside 0
+//	4: outside 1
+//	5: outside 0
+//	6: any of the lebesgue
 node* EyeDiagram::getNode(int i){
-	int p = rand() % 2; 
-	if (p == 0){
-		int q = rand() % jitterFrontierSet01.size();
+	int x = -1, y=-1;
+	switch (i){
+	case 0:
+		//int q = rand() % jitterFrontierSet01.size();
+		//return jitterFrontierSet01[q];
 		return jitterFrontierSet01[jitterFrontierSet01.size() - 1];
-		return jitterFrontierSet01[q];
-
-	}else{
-		int q = rand() % jitterFrontierSet10.size();
+	case 1:
+		//int q = rand() % jitterFrontierSet10.size();
+		//return jitterFrontierSet10[q];
 		return jitterFrontierSet10[jitterFrontierSet10.size() - 1];
-		return jitterFrontierSet10[q];
+	case 2:
+		x = rand() % palpebraSuperior.size();
+		return palpebraSuperior[x][minSuperiorIndex[x]];
+		break;
+	case 3:
+		x = rand() % palpebraInferior.size();
+		return palpebraInferior[x][maxInferiorIndex[x]];
+		break;
+	case 4:
+		x = rand() % palpebraSuperior.size();
+		return palpebraSuperior[x][maxSuperiorIndex[x]];
+		break;
+	case 5:
+		x = rand() % palpebraSuperior.size();
+		return palpebraInferior[x][minInferiorIndex[x]];
+		break;
+	case 6:
+		x = rand() % 4;
+		y = rand() % vSize;
+		
+		if (x == 0){
+			return leftInferiorNodes[y];
+		}else if (x == 1){
+			return rightInferiorNodes[y];
+		}else if (x == 2){
+			return leftSuperiorNodes[y];
+		}else{
+			return rightSuperiorNodes[y];
+		}
+		break;
 	}
-
-	
-	//todo: fix this
-	return palpebraSuperior[i][minSuperiorIndex[i]];
 }
 
 int EyeDiagram::getWindowSize(){

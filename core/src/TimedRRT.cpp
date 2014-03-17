@@ -435,16 +435,24 @@ void TimedRRT::build(){
 
 void TimedRRT::worstCaseEyeDiagram(){
 	generateMonteCarloInputSequence();
+	eye->test();
 	config->getParameter("edu.uiuc.csl.core.sampling.iteration", &k);
 	int i = nodes.size();
+	node* q_near;
 	while (i < k){
-		GammaSimMode = false;
-		node* q_near = eye->getNode(0);
-		deltaSimulation(q_near);
-		i++;
+		cout << "Iteration #" << i << endl;
+		double p = generateUniformSample(0, 1);
+		if (p < 0.05){
+			//	0: jitter (0->1), 	//	1: jitter (1->0)
+			q_near = eye->getNode(rand() % 2);
+			i+=worstCaseJitter(q_near);
+		}else{
+			//	2: inside 1	//	3: inside 0	//	4: outside 1	//	5: outside 0	//	6: any of the lebesgue
+			q_near = eye->getNode(2+rand()%5);
+			deltaSimulation(q_near);
+			i++;
+		}
 	}
-
-	//worstCaseJitter();
 }
 
 
@@ -483,10 +491,7 @@ void TimedRRT::deltaSimulation(node* q_near){
 	delete ic;
 }
 
-void TimedRRT::worstCaseJitter(){
-	for (int i = 0; i < 3;i++){
-		cout << "jitter simulation #" << i << endl;
-		node* q_near = eye->getNode(0);
+int TimedRRT::worstCaseJitter(node* q_near){
 		//generate a jitter data and transition data
 		GammaSimMode = 1;
 		//GammaJitter = generateUniformSample(0, 1e-11);
@@ -512,7 +517,7 @@ void TimedRRT::worstCaseJitter(){
 		eta = 2e-11;
 		int gammaIterations = 2*ceil(eta / dt);
 		simulate(gammaIterations, q_near);
-	}
+		return gammaIterations;
 }
 
 void TimedRRT::simulate(double* initialState){
@@ -564,8 +569,6 @@ void TimedRRT::simulate(int iter, node* q_start){
 		nodes.push_back(q_new);
 
 		if (GammaSimMode == 1){
-
-
 			cout << "Sim#" << i << " " << q_new->getTime() << " vout=" << q_new->get(2) << endl;
 			double freq = 0; config->getParameter("edu.uiuc.csl.core.simulation.freq", &freq);
 			double period = 1 / freq;

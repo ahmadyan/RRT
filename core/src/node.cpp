@@ -5,6 +5,12 @@
 #include <cstdlib>
 using namespace std;
 
+
+node::node(){
+	id = -1;
+	root = false;
+}
+
 node::node(int _n){
 	jitter = 0;
 	id = generateID();
