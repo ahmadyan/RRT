@@ -21,6 +21,7 @@ node::node(int _n, int _id, double* _data){
 	data=_data;
 	if(id>=objectCount)
 		objectCount=id+1;
+	jitter = 0;
 }
 
 //copy constructor
@@ -32,7 +33,7 @@ node::node(const node& Node){
 	for(int i=0;i<n;i++){
 		data[i] = Node.data[i];
 	}
-	jitter = 0;
+	jitter = Node.jitter;
 }
 
 //This piece of code causes unknown problems with visual studio 2012.

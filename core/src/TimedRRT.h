@@ -9,6 +9,9 @@ class TimedRRT : public RRT {
 	double* jitter;
 	double* transition;
 
+	int GammaSimMode;
+	double GammaJitter;
+	double GammaTransition;
 public:
 	TimedRRT(Configuration* c, int _d, int _k, int, double _simTime, string);
 	TimedRRT(Configuration* c, int, int, int, string);
@@ -19,6 +22,9 @@ public:
 	void simulate(double* initialState );
 	double getSimTime();
 	void build();
-	void simulate();
+	void simulate(int iter, node* q_start);
 	void generateMonteCarloInputSequence();
+	void worstCaseJitter();
+	void deltaSimulation(node* q_near);
+	void worstCaseEyeDiagram();
 };

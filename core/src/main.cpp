@@ -272,10 +272,13 @@ void kernel_RRT(Configuration* config){
 		rrt.load(config->get("edu.uiuc.crhc.core.options.inputFileName"));
 		rrt.build();
 	}
+	else if (config->checkParameter("edu.uiuc.crhc.core.mode", "load+wca")){
+		rrt.load(config->get("edu.uiuc.crhc.core.options.inputFileName"));
+		rrt.worstCaseEyeDiagram();
+	}
 	else if (config->checkParameter("edu.uiuc.crhc.core.mode", "load+mc")){
-		rrt.load(config->get("edu.uiuc.crhc.core.options.inputFileName"));//overwrites k
-		rrt.setIterations(iter);
-		rrt.simulate();
+		rrt.load(config->get("edu.uiuc.crhc.core.options.inputFileName"));
+		rrt.simulate(iter, rrt.getRoot());
 	}
 	else if (config->checkParameter("edu.uiuc.crhc.core.mode", "mc+rrt")){
 		rrt.simulate(initialState);

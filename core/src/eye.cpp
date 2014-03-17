@@ -14,8 +14,6 @@ EyeDiagram::EyeDiagram(Configuration* c){
 	config->getParameter("edu.uiuc.csl.core.simulation.dt", &sampleRate);
 	config->getParameter("edu.uiuc.csl.core.simulation.window", &window);
 	config->getParameter("edu.uiuc.crhc.core.options.eyediagram.var", &voltage);
-	config->getParameter("edu.uiuc.csl.system.param.jitter.max", &tJitterMax);
-	config->getParameter("edu.uiuc.csl.system.param.transition.max", &tTransitionMax);
 
 
 	period = 1 / freq;
@@ -242,7 +240,6 @@ void EyeDiagram::push(node* v, Transition tran){
 
 		*/
 
-		cout << t << " " << transition << endl;
 	}
 	else{
 		transition = tran;
@@ -289,7 +286,7 @@ void EyeDiagram::push(node* v, Transition tran){
 		}
 		break;
 	case t01:
-		if ((t1 < tJitterMax)&&(v->getJitter()==0)){
+		if (v->getJitter()==1){
 			jitterFrontierSet01.push_back(v);
 		}
 		if (i < size){
@@ -328,7 +325,7 @@ void EyeDiagram::push(node* v, Transition tran){
 		}
 		break;
 	case t10:
-		if ((t1 < tJitterMax) && (v->getJitter() == 0)){
+		if (v->getJitter() == 1){
 			jitterFrontierSet10.push_back(v);
 		}
 		if (i < size){
@@ -480,7 +477,7 @@ string EyeDiagram::toString(){
 			}
 		}
 	}
-
+	/*
 	for (int i = 1; i < size; i++){
 		double iToX = i*sampleRate;
 		double iToY = minInferior[i];
@@ -512,16 +509,25 @@ string EyeDiagram::toString(){
 		double iFromX = (i - 1)*sampleRate;
 		double iFromY = maxSuperior[i - 1];
 		str << " set arrow from " << iFromX << "," << iFromY << "   to     " << iToX << "," << iToY << "  nohead  lc rgb \"red\" lw 2 \n";
-	}
-
-
-	
-
+	}*/
 	return str.str();
 }
 
 enum EYE_FUNCTIONALS {G1, G2, G3, G4, G5, G7, G8};
 node* EyeDiagram::getNode(int i){
+	int p = rand() % 2; 
+	if (p == 0){
+		int q = rand() % jitterFrontierSet01.size();
+		return jitterFrontierSet01[jitterFrontierSet01.size() - 1];
+		return jitterFrontierSet01[q];
+
+	}else{
+		int q = rand() % jitterFrontierSet10.size();
+		return jitterFrontierSet10[jitterFrontierSet10.size() - 1];
+		return jitterFrontierSet10[q];
+	}
+
+	
 	//todo: fix this
 	return palpebraSuperior[i][minSuperiorIndex[i]];
 }

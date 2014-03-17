@@ -67,9 +67,6 @@ class EyeDiagram{
 	vector<node*> jitterFrontierSet10; 
 	vector<node*> jitterFrontierSet01;
 
-	double tJitterMax; 
-	double tTransitionMax;
-
 	public:
 		EyeDiagram(Configuration* config);
 		~EyeDiagram();

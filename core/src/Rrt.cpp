@@ -277,6 +277,12 @@ void RRT::load(string fileName){
 				newNode->setParent(nodes[parent_id]);
 				nodes[parent_id]->addChildren(newNode);
 			}
+			if (i==201 || i==401){
+				newNode->setJitter(1);
+			}
+			else{
+				newNode->setJitter(0);
+			}
 			newNode->setIndex(id);	//This is unnecessary, because currently nodes are constructed with their id
 			nodes.push_back(newNode);
 			if (config->checkParameter("edu.uiuc.crhc.core.options.eyediagram", "1"))
