@@ -332,14 +332,16 @@ node* TimedRRT::findNearestNodeWithTimeIndex(node* q_sample, int v){
 
 void TimedRRT::buildUniform(){
 	double w = 2500;
-	double k = 10;
+	double k = 12;
 
 	for (int i = 0; i < w; i++){
 		vector<node*> v;
 		for (int j = 0; j < k; j++){
+			cout << "%%" << i << " , " << j << endl;
 			node* q_sample = new node(d); q_sample->randomize(min, max);
 			q_sample->set(d - 1, i*dt);
 			node* q_near = findNearestNodeWithTimeIndex(q_sample, i);
+			cout << "q-near->index=" << q_near->getIndex() << endl;
 			double* state_near = q_near->get();
 			double* ic = new double[d];
 			for (int j = 0; j<d; j++){
@@ -362,7 +364,7 @@ void TimedRRT::buildUniform(){
 			q_new->set(result);
 			q_near->addChildren(q_new);		//add the new node to the tree
 			q_new->setParent(q_near);		//We only make the parent-child releation ship during the tree build
-			q_new->setIndex(i);
+			q_new->setIndex(nodes.size());
 			q_new->setInputVector(param);
 			nodes.push_back(q_new);
 			v.push_back(q_new);
