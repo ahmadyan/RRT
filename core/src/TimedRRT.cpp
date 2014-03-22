@@ -307,9 +307,70 @@ void TimedRRT::build(double* initialState){
 	for (int i = 0; i < var; i++)
 		p.push_back(0);
 	root->setInputVector(p);
-	build();
+
+	vector<node*> v;
+	v.push_back(root);
+	nodeset.push_back(v);
+
+	//build();
+	buildUniform();
 }
 
+node* TimedRRT::findNearestNodeWithTimeIndex(node* q_sample, int v){
+	node* q_near;
+	double min_distance=99999; 
+	cout << nodeset[v].size() << endl;
+	for (int i = 0; i < nodeset[v].size(); i++){
+		double distance = q_sample->distance(nodeset[v][i], max, min);
+		if (distance < min_distance){
+			min_distance = distance;
+			q_near = nodeset[v][i];
+		}
+	}
+	return q_near;
+}
+
+void TimedRRT::buildUniform(){
+	double w = 2500;
+	double k = 10;
+
+	for (int i = 0; i < w; i++){
+		vector<node*> v;
+		for (int j = 0; j < k; j++){
+			node* q_sample = new node(d); q_sample->randomize(min, max);
+			q_sample->set(d - 1, i*dt);
+			node* q_near = findNearestNodeWithTimeIndex(q_sample, i);
+			double* state_near = q_near->get();
+			double* ic = new double[d];
+			for (int j = 0; j<d; j++){
+				ic[j] = state_near[j];
+			}
+
+			vector<string> settings;
+			stringstream icInputFileName; icInputFileName << "ic_" << q_near->getIndex() << ".ic0";
+			stringstream icOutputFileName; icOutputFileName << "ic_" << nodes.size() << ".ic";
+			settings.push_back(icOutputFileName.str());
+			settings.push_back(icInputFileName.str());
+			settings.push_back("transient");
+
+			vector<double> param = generateSimulationParameters(q_near);
+			double t_init = ic[d - 1];
+			vector<double> result = system->simulate(ic, param, settings, 0, dt);
+			result[0] += t_init;		//result[0] contains the time-stamp, in the simulation it is stamped as dt, however we have to add the time of the parrent node as well.
+
+			node* q_new = new node(d);
+			q_new->set(result);
+			q_near->addChildren(q_new);		//add the new node to the tree
+			q_new->setParent(q_near);		//We only make the parent-child releation ship during the tree build
+			q_new->setIndex(i);
+			q_new->setInputVector(param);
+			nodes.push_back(q_new);
+			v.push_back(q_new);
+
+		}
+		nodeset.push_back(v);
+	}
+}
 
 void TimedRRT::build(){
 	double timeEnvlope = dt;		//time_envlope is the latest sampled discovered so far
@@ -346,7 +407,6 @@ void TimedRRT::build(){
 			ic[j] = state_near[j];
 		}
 
-
 		vector<string> settings;
 		stringstream icInputFileName; icInputFileName << "ic_" << q_near->getIndex() << ".ic0";
 		stringstream icOutputFileName; icOutputFileName << "ic_" << i << ".ic";
@@ -376,34 +436,12 @@ void TimedRRT::build(){
 		q_new->setIndex(i);
 		q_new->setInputVector(param);
 
-
-		
-
-		/*
-		int q_near_digit4;
-		int q_new_digit4;
-
-		if (q_near->getInput(4) > 0.5)
-			q_near_digit4 = 1;
-		else
-			q_near_digit4 = 0;
-
-		if (q_new->getInput(4) > 0.5)
-			q_new_digit4 = 1;
-		else
-			q_new_digit4 = 0;
-
-		if (q_new_digit4 == q_near_digit4){//if the input value is the same as before
-			int cc = q_near->getCounter();
-			q_new->setCounter(cc + 1);
+		if (config->checkParameter("edu.uiuc.crhc.core.options.eyediagram", "1")){
+			Transition transition = tboot;
+			eye->push(q_new, transition);
 		}
-		else{
-			q_new->setCounter(0);
-		}
-		*/
-		Transition transition = tboot;
+
 		nodes.push_back(q_new);
-		eye->push(q_new, transition);
 		//casting
 		//vector<node*> cast = getNearestNode(q_sample, 0.1, true);
 		//cout << endl << "CAST size=" << cast.size() << endl ;
@@ -442,12 +480,15 @@ void TimedRRT::worstCaseEyeDiagram(){
 	while (i < k){
 		cout << "Iteration #" << i << endl;
 		double p = generateUniformSample(0, 1);
-		if (p < 0.05){
+		if (p < 0.01){
 			//	0: jitter (0->1), 	//	1: jitter (1->0)
 			q_near = eye->getNode(rand() % 2);
 			i+=worstCaseJitter(q_near);
 		}else{
 			//	2: inside 1	//	3: inside 0	//	4: outside 1	//	5: outside 0	//	6: any of the lebesgue
+			int y = rand() % 7;
+			if (y == 0) y = 2;
+			if (y == 1) y = 3;
 			q_near = eye->getNode(2+rand()%5);
 			deltaSimulation(q_near);
 			i++;
@@ -511,10 +552,19 @@ int TimedRRT::worstCaseJitter(node* q_near){
 		if (t1 + GammaJitter >= jitterMax){
 			GammaJitter = jitterMax - t1;
 		}
+
+
+		ofstream file;
+		file.open(config->get("edu.uiuc.crhc.core.options.mc.simdata"), std::ofstream::app);
+		file << t0 << " " << GammaJitter << " " << GammaTransition << endl;
+		file.close();
+
+
+
 		
 		//determine how long the transition will take
 		double eta = GammaJitter + GammaTransition;
-		eta = 2e-11;
+		eta += 1e-11;
 		int gammaIterations = 2*ceil(eta / dt);
 		simulate(gammaIterations, q_near);
 		return gammaIterations;
@@ -601,3 +651,5 @@ void TimedRRT::addMonitor(Monitor* m){
 double TimedRRT::getSimTime(){
 	return sim_time;
 }
+
+

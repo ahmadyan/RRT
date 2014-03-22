@@ -224,10 +224,32 @@ void RRT::save(string fileName){
 	file.close();
 }
 
-
+void RRT::loadInput(string fileName){
+	string line;
+	ifstream file(fileName.c_str());
+	int id;
+	int bit;
+	double jitter;
+	double transition;
+	if (file.is_open()){
+		for (int i = 0; i < k; i++){
+		file >> id;
+		file >> bit;
+		file >> jitter;
+		file >> transition;
+		bits.push_back(bit);
+		}
+	}
+}
 
 //Loads the RRT from the text file (default extension is the *.rrt)
 void RRT::load(string fileName){
+	
+	if (config->checkParameter("edu.uiuc.crhc.core.options.eyediagram.bitstream", "1")){
+		loadInput(config->get("edu.uiuc.crhc.core.options.eyediagram.inputfile"));
+		eye->setBits(bits);
+	}
+
 	string line;
 	ifstream file(fileName.c_str());
 
@@ -248,6 +270,7 @@ void RRT::load(string fileName){
 		}
 
 		for (int i = 0; i < k; i++){
+			cout << i << endl;
 			double* data = new double[d];
 			int id = -1;
 			int parent_id = -1;
@@ -285,6 +308,7 @@ void RRT::load(string fileName){
 			nodes.push_back(newNode);
 			if (config->checkParameter("edu.uiuc.crhc.core.options.eyediagram", "1"))
 				eye->push(newNode);
+			cout << i << endl;
 		}
 		file.close();
 	}

@@ -10,6 +10,8 @@ using namespace std;
 enum Transition { tnull, t01, t00, t10, t11, tboot };
 class EyeDiagram{
 	Configuration* config;
+	vector<int> bits;
+	int bitsAreSet;
 
 	double period; 
 	double freq;
@@ -80,6 +82,8 @@ class EyeDiagram{
 		void sum();
 
 		int getWindowSize();
-
+		void setBits(vector<int> b);
 		node* getNode(int i);
+
+		Transition getTransition(node* v);
 };

@@ -28,7 +28,7 @@ protected:
 
 	int var; //number of variation parameters
 	EyeDiagram* eye;
-
+	vector<int> bits;
 	vector<Monitor*> monitors;
 public:
     RRT(Configuration*, int, int, int, string);
@@ -73,6 +73,6 @@ public:
 	void setConfig(Configuration*); 
 
 	EyeDiagram* getEyeDiagram();
-
+	void loadInput(string fileName);
 	void setIterations(int);
 };

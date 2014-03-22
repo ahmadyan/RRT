@@ -1,43 +1,18 @@
 * "simulator" "HSPICE" 
 * "version" "A-2008.03 32-BIT"
 * "format" "HSP"
-* "rundate" "02:03:22 02/09/2014 "
-* "netlist" "inverter_netlist.sp "
-* "runtitle" "cmos inverter"
+* "rundate" "15:01:46 02/17/2014 "
+* "netlist" "c:\code\rrt\runtime-verification\bin\concept\concept1.sp "
+* "runtitle" "* passive half-wave limiter with low pass filter"
 * time =    0.            
 * temperature =   25.0000        
 *** BEGIN: Saved Operating Point ***                     
 .option 
 + gmindc=   1.0000p       
 .ic
-+ vdd =   1.0000        
-+ vin =   1.0000        
-+ vout =  38.3752u       
-+ vss =   0.            
-+ vsubn =   0.            
-+ vsubp =   1.0000        
-+ xinv.n_a_m0_g = 999.9999m       
-+ xinv.n_a_m1_g = 999.9998m       
-+ xinv.n_vdd_m0_s = 999.9999m       
-+ xinv.n_vss_m1_s = 106.3415n       
-+ xinv.n_zn_m0_d =  38.5160u       
-+ xinv.n_zn_m1_d =  38.3057u       
-+ xinv.x_pm_inv_x1%vss_8 =   0.            
-+ xinv.x_pm_inv_x1%vss_29 =  10.0384n       
-+ xinv.x_pm_inv_x1%vdd_31 =   1.0000        
-+ xinv.x_pm_inv_x1%vdd_19 =   1.0000        
-+ xinv.x_pm_inv_x1%vdd_18 =   1.0000        
-+ xinv.x_pm_inv_x1%vdd_12 =   1.0000        
-+ xinv.x_pm_inv_x1%vdd_11 =   1.0000        
-+ xinv.x_pm_inv_x1%vdd_8 =   1.0000        
-+ xinv.x_pm_inv_x1%vdd_28 =   1.0000        
-+ xinv.x_pm_inv_x1%vss_18 =   7.0639n       
-+ xinv.x_pm_inv_x1%vss_17 =   0.            
-+ xinv.x_pm_inv_x1%vss_10 =   0.            
-+ xinv.x_pm_inv_x1%vss_9 =   0.            
-+ xinv.x_pm_inv_x1%a_1 = 999.9999m       
-+ xinv.x_pm_inv_x1%a_11 = 999.9999m       
-+ xinv.x_pm_inv_x1%a_18 = 999.9999m       
-+ xinv.x_pm_inv_x1%a_5 = 999.9999m       
-+ xinv.x_pm_inv_x1%a_9 =   1.0000        
++ 1 =   0.            
++ 2 =   0.            
++ 3 =   0.            
++ 4 =   0.            
++ 5 =   0.            
 ***   END: Saved Operating Point ***                     

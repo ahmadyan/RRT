@@ -439,6 +439,26 @@ Fig_734 = figure(734);
 drawTrace(data73, vout, t, 'v_{out}', -1, -1, 2);
 
 
+
+%rrt with variation, uniform in time
+data76=rrt2mati('limiter76.rrt');
+Fig_761 = figure(761);
+drawTrace(data76, vin, t, 'v_{in}', -1, -3.2, 3.2);
+drawTest(data76, vlim, t, 1600, 'v_{in}', -1, -5, 5, 4e-4)
+
+Fig_762 = figure(762);
+drawTrace(data76, vfilter, t, 'v_{filter}', -1, -3, 3);
+
+Fig_763 = figure(763);
+drawTrace(data76, vlim, t, 'v_{limited}', -1, -1, 3);
+
+Fig_764 = figure(764);
+drawTrace(data76, vout, t, 'v_{out}', -1, -1, 2);
+
+
+
+
+
 for i=1:31,
     figure(i),
     drawTest(data53, i, inv_time, 1600, 'v_{in}', -1, -5, 5, 2.5e-10)
