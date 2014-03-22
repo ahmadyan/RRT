@@ -444,7 +444,6 @@ drawTrace(data73, vout, t, 'v_{out}', -1, -1, 2);
 data76=rrt2mati('limiter76.rrt');
 Fig_761 = figure(761);
 drawTrace(data76, vin, t, 'v_{in}', -1, -3.2, 3.2);
-drawTest(data76, vlim, t, 1600, 'v_{in}', -1, -5, 5, 4e-4)
 
 Fig_762 = figure(762);
 drawTrace(data76, vfilter, t, 'v_{filter}', -1, -3, 3);
@@ -455,7 +454,8 @@ drawTrace(data76, vlim, t, 'v_{limited}', -1, -1, 3);
 Fig_764 = figure(764);
 drawTrace(data76, vout, t, 'v_{out}', -1, -1, 2);
 
-
+Fig_765 = figure(765);
+drawTest(data76, vlim, t, 1600, 'v_{lim}', -1, -5, 5, 4e-4)
 
 
 
