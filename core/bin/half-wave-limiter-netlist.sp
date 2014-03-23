@@ -3,8 +3,8 @@
 .model D1N4148	D 	(Is=0.1pA Rs=16 CJO=2p Tt=12n Bv=100 Ibv=0.1p)
 
 *the main signal without any noise
-v1	1	0	0.0317576
-inoise  3   0   1.4948e-005
+v1	1	0	-0.167785
+inoise  3   0   -3.3491e-005
 
 *passive low pass filter
 r1	1	2	1k
@@ -20,8 +20,8 @@ rl 4  0  5k
 
 
 .tran 2e-008 2e-007 uic
-.load file=ic_29981.ic0
-.save type=ic file=ic_30000.ic level=all time=2e-007
+.load file=ic_89956.ic0
+.save type=ic file=ic_90000.ic level=all time=2e-007
 
 .option post delmax=0.01u interp
 .option  probe acct

@@ -328,7 +328,11 @@ node* TimedRRT::findNearestNodeWithTimeIndex(node* q_sample, int v, int golden){
 	node* q_near;
 	double min_distance=99999; 
 	
-	if (golden == 0)
+	double ddd = q_sample->distance(nodeset[v][0], max, min);
+	cout << " ---> " << ddd << endl;
+	double p = generateUniformSample(0, 1);
+
+	if (golden == 0 || p <= 0.2)
 		return nodeset[v][0];
 
 	for (int i = 0; i < nodeset[v].size(); i++){
@@ -338,12 +342,13 @@ node* TimedRRT::findNearestNodeWithTimeIndex(node* q_sample, int v, int golden){
 			q_near = nodeset[v][i];
 		}
 	}
+	cout << " >>>>>  " << min_distance << endl;
 	return q_near;
 }
 
 void TimedRRT::buildUniform(){
-	double w = 2500;
-	double k = 12;
+	double w = 3000;
+	double k = 30;
 
 	for (int i = 0; i < w; i++){
 		vector<node*> v;
@@ -355,12 +360,6 @@ void TimedRRT::buildUniform(){
 			double* state_near = q_near->get();
 			double* ic = new double[d]; for (int icc = 0; icc<d; icc++) ic[icc] = state_near[icc];
 			vector<double> param = generateSimulationParameters(q_near, j);
-
-
-			for (int kkk = 0; kkk < param.size(); kkk++){
-				cout << param[kkk] << " " << endl;
-			}
-			cout << "*****" << endl;
 			double t_init = ic[d - 1];
 
 			vector<string> settings;
