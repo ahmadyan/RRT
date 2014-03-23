@@ -75,7 +75,7 @@ void TimedRRT::generateMonteCarloInputSequence(){
 	file.close();
 }
 
-vector<double> TimedRRT::generateSimulationParameters(node* q_near){
+vector<double> TimedRRT::generateSimulationParameters(node* q_near, int golden){
 	vector<double> param;	//variation or input to the system 
 	for (int j = 0; j < var; j++){
 		if (config->checkParameter("edu.uiuc.csl.system.param.type", j, "sin")){
@@ -95,6 +95,7 @@ vector<double> TimedRRT::generateSimulationParameters(node* q_near){
 			}else{//uniform
 				noise = generateUniformSample(-dv, +dv);
 			}
+			if (golden == 0) noise = 0;
 
 			cout << "------------" << endl;
 			cout << "TNow=" << tnow << endl;
@@ -110,7 +111,7 @@ vector<double> TimedRRT::generateSimulationParameters(node* q_near){
 		}else if (config->checkParameter("edu.uiuc.csl.system.param.type", j, "digital")){
 			double dv = 0; config->getParameter("edu.uiuc.csl.system.param.dv", j, &dv);
 			double noise = generateUniformSample(-dv, dv);
-
+			if (golden == 0) noise = 0;
 			if (GammaSimMode == 1){
 				double max = 0; config->getParameter("edu.uiuc.csl.system.param.max", j, &max);
 				double min = 0; config->getParameter("edu.uiuc.csl.system.param.min", j, &min);
@@ -142,7 +143,7 @@ vector<double> TimedRRT::generateSimulationParameters(node* q_near){
 				}
 				double dv = 0; config->getParameter("edu.uiuc.csl.system.param.dv", j, &dv);
 				double noise = generateUniformSample(-dv, dv);
-
+				if (golden == 0) noise = 0;
 				param.push_back(v + noise);
 
 
@@ -185,7 +186,8 @@ vector<double> TimedRRT::generateSimulationParameters(node* q_near){
 		else if (config->checkParameter("edu.uiuc.csl.system.param.type", j, "pulse")){
 			//cout << "Generating pulse!" << endl;
 			double dv = 0; config->getParameter("edu.uiuc.csl.system.param.dv", j, &dv);
-			double noise = generateUniformSample(-dv, dv);
+			double noise = generateUniformSample(-dv, dv); 
+			if (golden == 0) noise = 0;
 			double tnow = q_near->getTime() + dt;
 			double tperiod = 100e-12;	//100ps -> 10GHz
 			double freq = 1 / tperiod;
@@ -250,7 +252,7 @@ vector<double> TimedRRT::generateSimulationParameters(node* q_near){
 			}
 			double dv = 0; config->getParameter("edu.uiuc.csl.system.param.dv", j, &dv);
 			double noise = generateUniformSample(-dv, dv);
-
+			if (golden == 0) noise = 0;
 			param.push_back(bit + noise);
 
 		}else if (config->checkParameter("edu.uiuc.csl.system.param.type", j, "dc")){
@@ -259,10 +261,13 @@ vector<double> TimedRRT::generateSimulationParameters(node* q_near){
 				double var = 1; config->getParameter("edu.uiuc.csl.system.param.dist.variance", j, &var);
 				double std = sqrt(var);
 				double v = generateTruncatedNormalSample(mean, std, variationMin[j], variationMax[j]);
+				if (golden == 0) v = mean;
 				param.push_back(v); 
 			}
 			else{
-				param.push_back(generateUniformSample(variationMin[j], variationMax[j]));
+				double v = generateUniformSample(variationMin[j], variationMax[j]);
+				if (golden == 0) v = (variationMin[j] + variationMax[j]) / 2;
+				param.push_back(v);
 			}
 		}else if (config->checkParameter("edu.uiuc.csl.system.param.type", j, "boot")){
 			//We are going to generate the 00110 signal
@@ -281,14 +286,17 @@ vector<double> TimedRRT::generateSimulationParameters(node* q_near){
 				double var = 1; config->getParameter("edu.uiuc.csl.system.param.dist.variance", j, &var);
 				double std = sqrt(var);
 				noise=generateTruncatedNormalSample(mean, std, variationMin[j], variationMax[j]);
+				if (golden == 0) noise = mean;
 			}else{
 				noise = generateUniformSample(-dv, dv);
-
+				if (golden == 0) noise=0;
 			}
 			vin += noise;
 			param.push_back(vin);
 		}else{
-			param.push_back(generateUniformSample(variationMin[j], variationMax[j]));
+			double v = generateUniformSample(variationMin[j], variationMax[j]);
+			if (golden == 0) v = (variationMin[j]+variationMax[j]) / 2;
+			param.push_back(v);
 		}
 	}
 
@@ -316,10 +324,13 @@ void TimedRRT::build(double* initialState){
 	buildUniform();
 }
 
-node* TimedRRT::findNearestNodeWithTimeIndex(node* q_sample, int v){
+node* TimedRRT::findNearestNodeWithTimeIndex(node* q_sample, int v, int golden){
 	node* q_near;
 	double min_distance=99999; 
-	cout << nodeset[v].size() << endl;
+	
+	if (golden == 0)
+		return nodeset[v][0];
+
 	for (int i = 0; i < nodeset[v].size(); i++){
 		double distance = q_sample->distance(nodeset[v][i], max, min);
 		if (distance < min_distance){
@@ -338,25 +349,27 @@ void TimedRRT::buildUniform(){
 		vector<node*> v;
 		for (int j = 0; j < k; j++){
 			cout << "%%" << i << " , " << j << endl;
-			node* q_sample = new node(d); q_sample->randomize(min, max);
-			q_sample->set(d - 1, i*dt);
-			node* q_near = findNearestNodeWithTimeIndex(q_sample, i);
-			cout << "q-near->index=" << q_near->getIndex() << endl;
+			node* q_sample = new node(d); q_sample->randomize(min, max); q_sample->set(d - 1, i*dt);
+			node* q_near = findNearestNodeWithTimeIndex(q_sample, i, j);	
+			cout << "Index is" << q_near->getIndex() << endl;
 			double* state_near = q_near->get();
-			double* ic = new double[d];
-			for (int j = 0; j<d; j++){
-				ic[j] = state_near[j];
+			double* ic = new double[d]; for (int icc = 0; icc<d; icc++) ic[icc] = state_near[icc];
+			vector<double> param = generateSimulationParameters(q_near, j);
+
+
+			for (int kkk = 0; kkk < param.size(); kkk++){
+				cout << param[kkk] << " " << endl;
 			}
+			cout << "*****" << endl;
+			double t_init = ic[d - 1];
 
 			vector<string> settings;
 			stringstream icInputFileName; icInputFileName << "ic_" << q_near->getIndex() << ".ic0";
-			stringstream icOutputFileName; icOutputFileName << "ic_" << nodes.size() << ".ic";
+			stringstream icOutputFileName; icOutputFileName << "ic_" << nodes.size() << ".ic"; 
 			settings.push_back(icOutputFileName.str());
 			settings.push_back(icInputFileName.str());
 			settings.push_back("transient");
 
-			vector<double> param = generateSimulationParameters(q_near);
-			double t_init = ic[d - 1];
 			vector<double> result = system->simulate(ic, param, settings, 0, dt);
 			result[0] += t_init;		//result[0] contains the time-stamp, in the simulation it is stamped as dt, however we have to add the time of the parrent node as well.
 
@@ -368,12 +381,13 @@ void TimedRRT::buildUniform(){
 			q_new->setInputVector(param);
 			nodes.push_back(q_new);
 			v.push_back(q_new);
-
+			delete ic;
 		}
 		nodeset.push_back(v);
 	}
 }
 
+#define NOTGOLDEN	1
 void TimedRRT::build(){
 	double timeEnvlope = dt;		//time_envlope is the latest sampled discovered so far
 	timeEnvlope = 501e-12;
@@ -416,7 +430,7 @@ void TimedRRT::build(){
 		settings.push_back(icInputFileName.str());
 		settings.push_back("transient"); // or settings.push_back("dc");
 
-		vector<double> param = generateSimulationParameters(q_near);
+		vector<double> param = generateSimulationParameters(q_near, NOTGOLDEN);
 		double t_init = ic[d - 1];
 		vector<double> result = system->simulate(ic, param, settings, 0, dt);
 
@@ -515,7 +529,7 @@ void TimedRRT::deltaSimulation(node* q_near){
 	settings.push_back(icInputFileName.str());
 	settings.push_back("transient"); // or settings.push_back("dc");
 
-	vector<double> param = generateSimulationParameters(q_near);
+	vector<double> param = generateSimulationParameters(q_near, NOTGOLDEN);
 	double t_init = ic[d - 1];
 	vector<double> result = system->simulate(ic, param, settings, 0, dt);
 
@@ -595,7 +609,7 @@ void TimedRRT::simulate(int iter, node* q_start){
 		for (int j = 0; j<d; j++){
 			state[j] = state_near[j];
 		}
-		vector<double> param = generateSimulationParameters(q_near);
+		vector<double> param = generateSimulationParameters(q_near, NOTGOLDEN);
 
 		vector<string> settings;
 		stringstream icInputFileName; icInputFileName << "ic_" << q_near->getIndex() << ".ic0";
