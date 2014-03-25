@@ -1,9 +1,8 @@
 
-function Deviation=getDev(theoticalVal, experimentalVal)
-    
-
+function Deviation=getDev(theoticalVal, eV)
 tV=theoticalVal;
-eV=rrt2mat(experimentalVal);
+%eV=rrt2mat(experimentalVal);   %Adel: I've changed this line, now the
+%input is eV, not the text file
 [x,y]=size(eV);
 
 time_interval=2e-7;
@@ -15,9 +14,6 @@ for i=1:y
     i;
     t=eV(end,i);
     index=floor(t/time_interval)+1;
-    if index>2037
-        index=2037;
-    end;
     index;
     newTimeDev=eV(3:6,i)-tV(3:6,index);
     
@@ -35,6 +31,4 @@ timecopy=eV(end,:);
 [e,f]=size(Dev)
 
 Deviation=[nodecopy;Dev;timecopy];
-
-
 end

@@ -1,6 +1,9 @@
-function [T3D,T2D]=findLagData(data,indexarray,nlags,currentTime)
-
-k=10; %default number of data at each time.
+%T3D and T2D are output of 3D and 2D data.     
+%data can be either the raw data or the deviation data. 
+%nlags is the number of lagged data. 
+%currentTime is the time T when we want to obeserve.
+%indexarray is the array of indexes that need to be explored, and Array[end] is the node we are examining and the rest are the nodes surrounding this node.  i.e.  Array=[3,5,4], the output will have a T3D of 10 at each time, nlags lagged data for data row 3 and row 5, and T2D of 10 at each time, nlags lagged data for row 4.
+function [T3D,T2D]=findLagData(data,indexarray,nlags,currentTime, k)
 timeinterval=2e-7;
 A=indexarray;
 T=k*round(currentTime/timeinterval)-k+2
