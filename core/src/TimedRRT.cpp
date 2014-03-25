@@ -347,8 +347,8 @@ node* TimedRRT::findNearestNodeWithTimeIndex(node* q_sample, int v, int golden){
 }
 
 void TimedRRT::buildUniform(){
-	double w = 3000;
-	double k = 30;
+	double w = 2000;
+	double k = 100;
 
 	for (int i = 0; i < w; i++){
 		vector<node*> v;
@@ -595,7 +595,9 @@ void TimedRRT::simulate(double* initialState){
 	for (int i = 0; i < var; i++)
 		p.push_back(0);
 	root->setInputVector(p);
-	simulate(k, root);
+	for (int i = 0; i < 100; i++){
+		simulate(k, root);
+	}
 }
 
 //simulate the circuit for iter numbers from q_start
@@ -652,8 +654,10 @@ void TimedRRT::simulate(int iter, node* q_start){
 		else{
 			q_new->setJitter(0);
 		}
-		eye->push(q_new, transition);
 
+		if (config->checkParameter("edu.uiuc.crhc.core.options.eyediagram", "1")){
+			eye->push(q_new, transition);
+		}
 		q_near = q_new;
 		i++;
 	}
