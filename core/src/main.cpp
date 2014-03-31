@@ -438,9 +438,10 @@ int main (int argc, const char * argv[]){
 	_fullpath(full, ".\\", _MAX_PATH);
 	cout << "Current working directory is:" << full << endl;
 	//string configFile = string(full) + "config\\half-wave-limiter.conf";
-	string configFile = string(full) + "config\\half-wave-limiter-81.conf";
+	//string configFile = string(full) + "config\\half-wave-limiter-81.conf";
 	//string configFile = string(full) + "config\\josephson.conf";
 	//string configFile = string(full) + "config\\inverter_mc_analysis.conf";
+	string configFile = string(full) + "config\\inverter_rrt_analysis.conf";
 
 	Configuration* config = new Configuration(configFile);
 
