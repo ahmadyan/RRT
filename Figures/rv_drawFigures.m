@@ -61,7 +61,7 @@ fig_mc2_3d=figure(16);
 drawTree3D(tdoMCVariationData, tdovcdim, tdoildim, tdotdim, 'v_c(t)', 'i_L(t)', tdovcmin, tdovcmax, tdoilmin, tdoilmax, -1);
 view(-45, 45)
 drawnow
-print ( fig_mc2_3d, '-painters', '-dpdf', '-r600' , 'tdo_mc3d_ok.pdf' );
+print ( fig_mc2_3d, '-painters', '-dpdf', '-r600' , 'tdo_mc3d_bad.pdf' );
 
 
 % Exp 1, Case 3: RRT with deviation 1 (0.05 on vc, 005 on iL), 20,000 samples

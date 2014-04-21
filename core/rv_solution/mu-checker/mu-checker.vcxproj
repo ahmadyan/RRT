@@ -64,13 +64,15 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="model-checker-base.cpp" />
     <ClCompile Include="ParseTree.cpp" />
     <ClCompile Include="ModelSynthesizer.cpp" />
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="ModelChecker.cpp" />
+    <ClCompile Include="mu-calculus.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="ModelChecker.h" />
+    <ClInclude Include="model-checker-base.h" />
+    <ClInclude Include="mu-calculus.h" />
     <ClInclude Include="ParseTree.h" />
     <ClInclude Include="ModelSynthesizer.h" />
   </ItemGroup>

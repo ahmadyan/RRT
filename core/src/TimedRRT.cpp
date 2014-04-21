@@ -320,8 +320,8 @@ void TimedRRT::build(double* initialState){
 	v.push_back(root);
 	nodeset.push_back(v);
 
-	//build();
-	buildUniform();
+	build();
+	//buildUniform();
 }
 
 node* TimedRRT::findNearestNodeWithTimeIndex(node* q_sample, int v, int golden){
@@ -568,14 +568,10 @@ int TimedRRT::worstCaseJitter(node* q_near){
 			GammaJitter = jitterMax - t1;
 		}
 
-
 		ofstream file;
 		file.open(config->get("edu.uiuc.crhc.core.options.mc.simdata"), std::ofstream::app);
 		file << t0 << " " << GammaJitter << " " << GammaTransition << endl;
 		file.close();
-
-
-
 		
 		//determine how long the transition will take
 		double eta = GammaJitter + GammaTransition;

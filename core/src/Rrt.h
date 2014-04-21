@@ -75,4 +75,6 @@ public:
 	EyeDiagram* getEyeDiagram();
 	void loadInput(string fileName);
 	void setIterations(int);
+	vector<node*> getTest(node*);
+	string drawTest(vector<node*> path, int);
 };

@@ -206,12 +206,12 @@ void EyeDiagram::push(node* v, Transition tran){
 	double x = floorf( t1 / sampleRate ); 
 
 	int periodWindow = round(period / sampleRate);
-	int i = round(t1 / sampleRate);
-	int j = i + periodWindow;
+	//int i = round(t1 / sampleRate);
+	//int j = i + periodWindow;
 
-	cout << periodWindow << " " << i << " " << j << endl;
-	//int i = int(floorf(t / sampleRate)) % fullWindow;
-	//int j = int(floorf(t + period) / sampleRate) % fullWindow;
+//	cout << periodWindow << " " << i << " " << j << endl;
+	int i = int(floorf(t / sampleRate)) % fullWindow;
+	int j = int(floorf(t + period) / sampleRate) % fullWindow;
 
 
 
@@ -620,7 +620,30 @@ Transition EyeDiagram::getTransition(node* v){
 			cycles = cycles % 10;
 			transition = boot[cycles];
 		}
+		return transition;
 	}
+}
+
+vector<node*> EyeDiagram::getFrontierSet(int g){
+
+	vector<node*> results;
+	if (g == 0){
+		for (int i = 0; i < size; i++){
+			int index = minSuperiorIndex[i];
+			node* f = palpebraSuperior[i][index];
+			results.push_back(f);
+		}
+	}
+	else if (g == 1){
+		for (int i = 0; i < size; i++){
+			int index = maxInferiorIndex[i];
+			if (index != -1){
+				node* f = palpebraInferior[i][index];
+				results.push_back(f);
+			}
+		}
+	}
+	return results;
 }
 
 //todo

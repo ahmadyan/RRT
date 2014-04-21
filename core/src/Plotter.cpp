@@ -277,8 +277,9 @@ void Plotter::plotTrace(RRT rrt, int v1, int v2, int tdim, double simTime, doubl
 				x0 = xscale*(end[v1]-end[v2]) ;
 				x1 = xscale*(begin[v1]-begin[v2]) ;
 			}
-			double t1 = yscale*begin[tdim] ;
-			double t0 = yscale*end[tdim] ;
+
+			double t1 = yscale*n->getTime();
+			double t0 = yscale*n->getParent()->getTime();
 
 			int it0 = t0/dt; int it1 = t1/dt;
 			if(x1>max[it1]) max[it1]=x1 ;

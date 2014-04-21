@@ -259,7 +259,6 @@ void RRT::load(string fileName){
 		file >> d;
 		file >> var;
 		file >> k;
-
 		min = new double[d];
 		max = new double[d];
 		cout << "d,k=" << d << " " << k << endl;
@@ -272,21 +271,28 @@ void RRT::load(string fileName){
 		for (int i = 0; i < k; i++){
 			cout << i << endl;
 			double* data = new double[d];
-			int id = -1;
-			int parent_id = -1;
+			int id = -2;
+			int parent_id = -2;
 			file >> id;
 			file >> parent_id;
+			cout << "id :" << id << " , pid=" << parent_id << " ";
+			cout << "data: "; 
 			for (int j = 0; j < d; j++){
 				file >> data[j];
+				cout << data[j] << ", ";
 			}
-
+			cout << endl;
 			vector<double> param;
-			for (int j = 0; j < var; j++){
-				double x;
-				file >> x;
-				param.push_back(x);
+			if (config->checkParameter("edu.uiuc.crhc.core.options.input.format", "2")){
+				for (int j = 0; j < var; j++){
+					double x;
+					file >> x;
+					param.push_back(x);
+				}
 			}
+			
 			node* newNode = new node(d, id, data);
+			cout << newNode->toString() << endl;
 			newNode->setInputVector(param);
 			//If this node is a root node (i.e. the parent_id is -1), sets this as root, otherwise
 			//this node has a parent. Find the parent and add this as children. 
@@ -308,7 +314,6 @@ void RRT::load(string fileName){
 			nodes.push_back(newNode);
 			if (config->checkParameter("edu.uiuc.crhc.core.options.eyediagram", "1"))
 				eye->push(newNode);
-			cout << i << endl;
 		}
 		file.close();
 	}
@@ -538,4 +543,55 @@ EyeDiagram* RRT::getEyeDiagram(){
 
 void RRT::setIterations(int _k){
 	k = _k;
+}
+
+vector<node*> RRT::getTest(node* v){
+	vector<node*> results;
+	node* x = v;
+	while (!x->isRoot()){
+		results.push_back(x);
+		x = x->getParent();
+	}
+
+	return results;
+}
+
+string RRT::drawTest(vector<node*> path, int color){
+	if (path.size() == 0) return "";
+	stringstream str;
+
+	
+	for (int i = 0; i < path.size()-1; i++){
+		/*double t = path[i]->getTime();
+		int cycles = ceilf(t / period) - 1;
+		if (cycles == -1)cycles = 0;
+		double t1 = t - period*cycles;
+
+		t = path[i+1]->getTime();
+		cycles = ceilf(t / period) - 1;
+		if (cycles == -1)cycles = 0;
+		double t2 = t - period*cycles;
+		*/
+
+
+		double iToX = path[i]->getTime();
+		double iFromX = path[i + 1]->getTime();
+		double iToY = path[i + 1]->getInput(0); //path[i+1]->get(voltage);
+		double iFromY = path[i]->getInput(0); //path[i]->get(voltage);
+		cout << "[" << iFromX << "," << iFromY << "] --> [" << iToX<< "," << iToY << "]"<<endl;
+		if (path[i]->getInput(0) == 0.9){
+			str << " set arrow from " << iFromX << "," << iFromY << "   to     " << iToX << "," << iToY << "  nohead  lc rgb \"grey\" lw 1 \n";
+		}
+		else{
+			if (color == 1){
+				str << " set arrow from " << iFromX << "," << iFromY << "   to     " << iToX << "," << iToY << "  nohead  lc rgb \"red\" lw 1 \n";
+			}
+			else{
+				str << " set arrow from " << iFromX << "," << iFromY << "   to     " << iToX << "," << iToY << "  nohead  lc rgb \"blue\" lw 1 \n";
+			}
+			
+		}
+		
+	}
+	return str.str();
 }

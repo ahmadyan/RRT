@@ -286,7 +286,11 @@ void kernel_RRT(Configuration* config){
 	}else{
 		cout << "Uknown operation mode: " << config->get("edu.uiuc.crhc.core.mode") << endl;
 	}
-	rrt.save(outputFileName);
+
+
+	cout << "Simulation finished " << endl;
+
+	//rrt.save(outputFileName);
 
 	//unit testing for the eye-diagram, this line can be safely commented or removed
 	//rrt.getEyeDiagram()->test(); 
@@ -303,14 +307,70 @@ void kernel_RRT(Configuration* config){
 			plotter->plotRRT("lines", rrt.getName().c_str(), "test", rrt, "x_1", "x_2", "t");
 		}
 		else if (config->checkParameter("edu.uiuc.crhc.core.options.plot.type", "eye")){
-			plotter->execute(rrt.getEyeDiagram()->toString());
+
+			stringstream str;
+			double vmin = 0.7, vmax = 1.1, tmin = 0, tmax = 5e-10, voltage = 0, window = 0;
+			double freq = 0;
+			config->getParameter("edu.uiuc.csl.core.simulation.freq", &freq);
+			config->getParameter("edu.uiuc.csl.core.simulation.window", &window);
+			config->getParameter("edu.uiuc.crhc.core.options.eyediagram.var", &voltage);
+			//config->getParameter("edu.uiuc.csl.system.var.min", voltage, &vmin);
+			//config->getParameter("edu.uiuc.csl.system.var.max", voltage, &vmax);
+
+			//tmax = window;
+			double period = 1 / freq;
+
+
+			str << "plot [ " << tmin << ":" << tmax << "][" << vmin << ":" << vmax << "] 0 with linespoints lt \"white\" pt 0.01";
+			str << " title \"" << " " << "\"  \n";
+
+			plotter->execute(str.str());
+
+			//plotter->execute(rrt.getEyeDiagram()->toString());
+			ofstream file;
+			file.open("worst-eye-input-sequence");
+			
+			file << "Test Sequence for generating worst-case higher eyelid " << endl;
+			vector<node*> fs = rrt.getEyeDiagram()->getFrontierSet(0);
+			for (int i = 0; i < fs.size(); i++){
+				vector<node*> path = rrt.getTest(fs[i]);
+				for (int j = 0; j < path.size(); j++){
+					file << i << " " << j << " " << path[j]->toString() << " ";
+					for (int k = 0; k < path[j]->getInputVector().size(); k++){
+						file << path[j]->getInput(k) << " ";
+					}
+					file << endl;
+				}
+				plotter->execute(rrt.drawTest(path, 1));
+			}
+
+
+			file << "Test Sequence for generating worst-case higher eyelid " << endl;
+			vector<node*> fs2 = rrt.getEyeDiagram()->getFrontierSet(1);
+			for (int i = 0; i < fs2.size(); i++){
+				vector<node*> path = rrt.getTest(fs2[i]);
+				for (int j = 0; j < path.size(); j++){
+					file << i << " " << j << " " << path[j]->toString() << " ";
+
+					for (int k = 0; k < path[j]->getInputVector().size(); k++){
+						file << path[j]->getInput(k) << " ";
+					}
+					file << endl;
+				}
+				plotter->execute(rrt.drawTest(path, 2));
+			}
+
+
+
+			file.close();
+
 		}
 		else{
 			cout << "Uknown plot command: [edu.uiuc.crhc.core.options.plot.type] " << config->get("edu.uiuc.crhc.core.options.plot.type") << endl;
 		}
 	}
 	cout.flush();
-	rrt.getEyeDiagram()->sum();
+	//rrt.getEyeDiagram()->sum();
 
 
 	/*
@@ -441,8 +501,8 @@ int main (int argc, const char * argv[]){
 	//string configFile = string(full) + "config\\half-wave-limiter-81.conf";
 	//string configFile = string(full) + "config\\josephson.conf";
 	//string configFile = string(full) + "config\\inverter_mc_analysis.conf";
-	string configFile = string(full) + "config\\inverter_rrt_analysis.conf";
-
+	//string configFile = string(full) + "config\\inverter_rrt_analysis.conf";
+	string configFile = string(full) + "config\\tdo-ex1.conf";
 	Configuration* config = new Configuration(configFile);
 
 	//fft_experiments();

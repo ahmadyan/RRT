@@ -86,4 +86,6 @@ class EyeDiagram{
 		node* getNode(int i);
 
 		Transition getTransition(node* v);
+
+		vector<node*> getFrontierSet(int);
 };

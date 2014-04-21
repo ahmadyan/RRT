@@ -24,7 +24,10 @@
     <ClCompile Include="main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="ModelChecker.cpp">
+    <ClCompile Include="mu-calculus.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="model-checker-base.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -35,7 +38,10 @@
     <ClInclude Include="ModelSynthesizer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="ModelChecker.h">
+    <ClInclude Include="mu-calculus.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="model-checker-base.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
