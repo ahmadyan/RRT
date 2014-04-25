@@ -269,7 +269,7 @@ void RRT::load(string fileName){
 		}
 
 		for (int i = 0; i < k; i++){
-			cout << i << endl;
+			cout << "Loading rrt node " << i <<  "   ------------------------------- " << endl;
 			double* data = new double[d];
 			int id = -2;
 			int parent_id = -2;
@@ -314,6 +314,10 @@ void RRT::load(string fileName){
 			nodes.push_back(newNode);
 			if (config->checkParameter("edu.uiuc.crhc.core.options.eyediagram", "1"))
 				eye->push(newNode);
+
+			for (int i = 0; i < monitors.size(); i++){
+				monitors[i]->eval(newNode);
+			}
 		}
 		file.close();
 	}
@@ -531,6 +535,12 @@ vector<node*> RRT::getNearestNode(node* q_sample){
 void RRT::addMonitor(Monitor* m){
 	cout << "Adding a new monitor to the RRT , total monitors=" << monitors.size() << endl;
 	monitors.push_back(m);
+}
+
+void RRT::setMonitor(vector<Monitor*> v){
+	for (int i = 0; i < v.size(); i++){
+		monitors.push_back(v[i]);
+	}
 }
 
 void RRT::setConfig(Configuration* c){

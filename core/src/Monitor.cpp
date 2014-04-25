@@ -1,35 +1,26 @@
 #include "Monitor.h"
+#include "analogprop.h"
 
-Monitor::Monitor(){
+Monitor::Monitor(Property* pt){
+	property = pt;
 	cout << "Monitor has been initialized" << endl ;
 }
 
-Monitor::~Monitor(){
-}
+Monitor::~Monitor(){}
 
-void Monitor::check(node* q){
-	cout << "Checking the monitor execution" << endl ;
+void Monitor::eval(node* v){
+	cout << "Checking the monitor execution" << endl;
+	//step 1: initialize a new copy constructor for the properties
+	Property* p = new Property(property, v);
+	AnalogProperty* ap = (AnalogProperty*)(p->argument);
 
-	//step 1: create a new property instance for q
-	Property* p = new Property(property);
-	p->setNode(q);
 	propertyInstance.push_back(p);
-
-	//step 2: 
-	p->check();
+	cout << "Evaluation of the property is " << p->eval() << endl;
 
 	//step 3: is there any violation?
-	cout << "The evaluation of property " << p->getID() << "  is " <<  p->getResult() << endl ;
+	//Property* propAtInitialState = propertyInstance[0]->eval();
+	//cout << "Property result : " << 
 }
-
-void Monitor::setProperty(Property* pt){
-	property=pt;
-}
-
-Property* Monitor::getProperty(){
-	return property;
-}
-
 
 /*
 

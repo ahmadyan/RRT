@@ -70,6 +70,7 @@ public:
 	node* getRoot();
 	node* getNode(int);
 	void addMonitor(Monitor*);
+	void setMonitor(vector<Monitor*>);
 	void setConfig(Configuration*); 
 
 	EyeDiagram* getEyeDiagram();

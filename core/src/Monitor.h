@@ -12,16 +12,15 @@ using namespace std;
 //There is only one monitor class in the entire program, similar to one RRT
 //The rrt class will execute the monitor after each iteration
 class Monitor{
-	Property* property;						//Every monitor is checking a unique property associated with it during construction
-	vector<Property*> propertyInstance;		//An instance of the property at a given node
 public:
-	Monitor();
+	Property* property;		//Every monitor is checking a unique property associated with it during construction
+	vector<Property*> propertyInstance; 
+
+	Monitor(Property*);
 	~Monitor();
-    
-	//The RRT will call the monitor after each iteration to incrementally check for violation/satisfaction of the property. 
-	void check(node*);
-	void setProperty(Property* pt);
-	Property* getProperty();
+	void setProperty(Property* pt);//after construction, properties are being pushed into monitor, only the root of the property will be pushed here    
+	void eval(node*);//The RRT will call the monitor after each iteration to incrementally check for violation/satisfaction of the property. 
+	
 };
 
 //#define MONITOR_EXCEPTION_DIVISION_BY_ZERO	0x142495E

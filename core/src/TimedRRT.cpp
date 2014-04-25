@@ -467,7 +467,7 @@ void TimedRRT::build(){
 		//}
 
 		for (int j = 0; j<monitors.size(); j++){
-			monitors[j]->check(q_new);
+			monitors[j]->eval(q_new);
 		}
 		delete ic;
 

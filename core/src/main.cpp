@@ -18,6 +18,7 @@
 #include "Monitor.h"
 #include "Frequency.h"
 #include "kdtree.h"
+#include "analogprop.h"
 
 #include "System.h"
 #include "spice.h"
@@ -238,6 +239,18 @@ void kernel_RRT(Configuration* config){
 	cout << "----------------------------------------------" << endl;
 	TimedRRT rrt = TimedRRT(config, dim, iter, param, simulationTime, name);
 
+
+	//runtime monitoring experiments
+	if (config->checkParameter("edu.uiuc.crhc.validation.enable", "1")){
+		vector<Monitor*> monitors;
+		for (int i = 1; i <= 4; i++){//property loop, todo: implement this from a text parser. not hardcoded
+			monitors.push_back(new Monitor(new Property(i)));
+		}
+
+		//AnalogProperty* ap = (AnalogProperty*)(monitors[0]->property->argument);
+		rrt.setMonitor(monitors);
+	}
+	
 	//for (int i = 0; i<(int)(monitors.size()); i++){
 	//	rrt.addMonitor(monitors[i]);
 	//}
@@ -470,28 +483,6 @@ void kdtree_experiment(){
 
 }
 
-#include "ParseTree.h"
-void MonitorExperiment(){
-	vector<Monitor*> monitors;
-	Monitor* monitor = new Monitor();
-	Property* pt = new Property(1);
-	monitor->setProperty(pt);
-	monitors.push_back(monitor);
-
-	Plotter* plotter = new Plotter("C:\\opt\\gnuplot\\bin\\gnuplot.exe -persist");
-	int mode = NEW_RRT_PLL ; // NEW_RRT_TDO // LOAD_RRT // NEW_RRT_PLL, LOAD_RRT_PLL
-	bool generatePlot = true ;//true ;
-	string inputFileName = "test2.rrt";
-	string outputFileName = "test.rrt" ;
-	//kernel_RRT(monitors, mode, generatePlot, inputFileName, outputFileName, plotter);
-	 
-
-	//pt->parseFormula("");
-	//pt->printParseTree(pt->getRoot());
-	//setup an example tree execution to check the monitor
-}
-
-
 int main (int argc, const char * argv[]){
 	srand((unsigned int)time(0));
 	char full[_MAX_PATH];
@@ -505,12 +496,10 @@ int main (int argc, const char * argv[]){
 	string configFile = string(full) + "config\\tdo-ex1.conf";
 	Configuration* config = new Configuration(configFile);
 
-	//fft_experiments();
-	//kdtree_experiment();
-	//MonitorExperiment();
 	kernel_RRT(config);
-	//optimization_experiment();
+
 	system("PAUSE");
 	return 0;
 }
+
 

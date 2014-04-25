@@ -1,5 +1,5 @@
 #include "analogprop.h"
-
+AnalogProperty::AnalogProperty(){}
 
 AnalogProperty::AnalogProperty(AnalogPropertyType t, AnalogProperty* arg1){
 	op = t;
@@ -12,31 +12,31 @@ AnalogProperty::AnalogProperty(AnalogPropertyType t, AnalogProperty* arg1, Analo
 	arguments.push_back(arg2);
 	executed = false;
 }
+
 AnalogProperty::AnalogProperty(AnalogPropertyType t, double d){
 	op = t;
-	if (t == APT_CONST){
-		result = d;
-		executed = true;
-	}
+	result = d;
 }
 
 AnalogProperty::AnalogProperty(AnalogPropertyType t, int d){
 	op = t;
-	if (t == APT_ACCESS){
-		var = d;
-		executed = true;
-	}
+	var = d;
 }
 
-AnalogProperty::AnalogProperty(AnalogProperty* property){
+AnalogProperty::AnalogProperty(AnalogProperty* property, node* nd){
+	cout << "Copy constructing node for " << nd->getID() << endl;
 	op = property->op;
 	var = property->var;
+	deviationID = property->deviationID;
+	cout << " argumentSize = " << property->arguments.size() << endl;
+	v = nd;
 	for (int i = 0; i < property->arguments.size(); i++){
 		//this line will also copy construct every property in the arguments recursively.
 		//so in order for this to work, we have to copy only the root analog property, not every argument seperately. 
-		arguments.push_back(new AnalogProperty(property->arguments[i]));
+		arguments.push_back(new AnalogProperty(property->arguments[i], nd));
 	}
 	executed = false;
+	
 	//we do not copy the node itself
 
 	if (op == APT_CONST){
@@ -86,19 +86,34 @@ double AnalogProperty::eval(){
 
 		//--Distance Operators---------------------------------
 		case APT_NORM: 
-			result = arguments[0]->eval() + arguments[1]->eval();
+			for (int i = 0; i < v->getDimension()-1; i++){
+				result += v->get(i)*v->get(i);
+			}
+			result = sqrt(result);
 			break;  
 		case APT_DIST: 
-			result = arguments[0]->eval() + arguments[1]->eval();
+			//todo: implement this. 
+			for (int i = 0; i < v->getDimension() - 1; i++){
+				result += v->get(i)*v->getParent()->get(i);
+			}
+			result = sqrt(result);
 			break;  
-		case APT_DEV: 
-			result = arguments[0]->eval() + arguments[1]->eval();
+		case APT_DEV:
+			//executed = false;
+			if (var == -1){
+				//compute the deviation of the result
+				result = arguments[0]->eval();
+			}
+			else{
+				result = v->get(var);
+			}
+			deviation->push(v->getTime(), result, 0);
+			result = deviation->get(v->getTime(), 0);
+			 
 			break;  
 	
-		
 		//--Comparison Operators---------------------------------
 		case APT_EQ: 
-			double epsilon = 1e-6;
 			if (abs( arguments[0]->eval() - arguments[1]->eval() ) < epsilon){
 				result = 1;
 			}
@@ -127,5 +142,18 @@ double AnalogProperty::eval(){
 			exit(1);
 			break;
 	}
+	cout << "Evaluation of Property " << op << " is " << result << endl;
 	return result;
+}
+
+void AnalogProperty::registerDeviationClass(Deviation* d){
+	deviation = d;
+}
+
+void AnalogProperty::setDeviationID(int x){
+	deviationID = x;
+}
+
+void AnalogProperty::setVariable(int x){
+	var = x;
 }
