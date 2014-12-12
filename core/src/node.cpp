@@ -7,11 +7,13 @@ using namespace std;
 
 
 node::node(){
+	frontier = false;
 	id = -1;
 	root = false;
 }
 
 node::node(int _n){
+	frontier = false;
 	jitter = 0;
 	id = generateID();
 	root=false; 
@@ -21,6 +23,7 @@ node::node(int _n){
 }
 
 node::node(int _n, int _id, double* _data){
+	frontier = false;
 	id=_id; 
 	root=false;
 	n=_n;
@@ -32,6 +35,7 @@ node::node(int _n, int _id, double* _data){
 
 //copy constructor
 node::node(const node& Node){
+	frontier = Node.frontier;
 	id = generateID() ;
 	root = Node.root ;
 	n = Node.n ;
@@ -375,4 +379,12 @@ void node::setJitter(int x){
 
 int node::getJitter(){
 	return jitter;
+}
+
+void node::setFrontier(bool f){
+	frontier = f;
+}
+
+bool node::getFrontier(){
+	return frontier;
 }

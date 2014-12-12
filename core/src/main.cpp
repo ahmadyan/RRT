@@ -30,143 +30,9 @@
 
 using namespace std;
 
-#define NEW_RRT_TDO		0
-#define LOAD_RRT 		1
-#define NEW_RRT_PLL		2
-#define LOAD_RRT_PLL	3
-#define LOAD_RRT_TDO	4
-#define NEW_RRT_INV		5
-#define LOAD_RRT_INV	6
-#define SIM_TDO			7
-#define SIM_PLL			8
-#define SIM_INV			9
-#define SIM_RING		10
-/*
-void kernel_RRT_TDO(vector<Monitor*> monitors, bool generatePlot, string outputFileName, Plotter* plotter, int iterations, double simulationTime, double dt, bool mc){
-	double* initialState = new double[3];
-	int variations = 2 ;
-	
-	TDO* circuit = new TDO();
-	//For oscillation:
-	initialState[0] = 0.8;			//This initial condition, under low variation parameters are indicator of 
-	initialState[1] = 0.04e-3;		//correct circuit that will start a healty oscillation
-	initialState[2] = 0;
-
-	//For No-Oscillation
-	//initialState[0] = 0.131;			//This initial condition cause the circuit to do not oscillate. 
-	//initialState[1] = 0.055;
-	//initialState[2] = 0;
-	
-	int iter=0;
-	if (mc){
-		iter = simulationTime / dt;
-	}
-	else{
-		iter = iterations;
-	}
-	TimedRRT rrt = TimedRRT(	
-		2, //dimension
-		iter, //k
-		variations,
-		simulationTime, //Simulation Time
-		"Tunnel Diode Oscillator");
-
-	for(int i=0;i<(int)(monitors.size());i++){
-		rrt.addMonitor(monitors[i]);
-	}
-	rrt.setBound(0, -0.2, 1.2 );	//First Dimension = VC
-	rrt.setBound(1, -0.02, 0.08 );  //Second Dimension = IL
-
-	rrt.setVariationBound(0, -0.005, 0.005);	//p0, v = 300mv +- p0
-	rrt.setVariationBound(1, -0.005, 0.0005);//p1, i = id(vc) +- p1
-	rrt.setdt(dt);
-	
-	rrt.setSystem(circuit);
-	if (mc){
-		rrt.simulate(initialState);  //for just simulating the circuit
-	}else{
-		rrt.build(initialState);
-	}
-	rrt.save(outputFileName);
-	if(generatePlot) plotter->plotRRT("lines", rrt.getName().c_str(), "test", rrt, "v_C", "i_L", "t");
-}
-
-void kernel_RRT_PLL(vector<Monitor*> monitors, bool generatePlot, string outputFileName, Plotter* plotter, int iterations, double simulationTime, double dt, bool mc){
-	int dim = 16;
-	int variations = 1; 
-	
-	double* initialState = new double[dim+1];
-	PLL* circuit = new PLL();		// Constructing System S
-	circuit->setInitialPLLState(initialState);
-
-	TimedRRT rrt = TimedRRT(	dim, //dimension
-		iterations, //k
-		variations,
-		simulationTime, //Simulation Time
-		"Phased Locked Loop");
-	
-	for(int i=0;i<(int)(monitors.size());i++){
-		rrt.addMonitor(monitors[i]);
-	}
-	
-	for(int i=0;i<dim-1;i++){
-		rrt.setBound(i, -1, +1);
-	}
-	rrt.setVariationBound(0, -0.001, 0.001);
-	
-	rrt.setdt(dt);
-	rrt.setSystem(circuit);
-	
-	if (mc){
-		rrt.simulate(initialState);  //for just simulating the circuit
-	}
-	else{
-		rrt.build(initialState);
-	}
-	rrt.save(outputFileName);
-	if(generatePlot)  plotter->plotTrace(rrt, pll_e, pll_eb, pll_time, simulationTime, dt);
-}
-
-
-void kernel_RRT(vector<Monitor*> monitors, int mode, bool generatePlot,string inputFileName, string outputFileName, Plotter* plotter){
-	if(mode==NEW_RRT_TDO){
-		int iterations = 10000; 
-		double simTime = 2e-6;
-		double dt = 5e-9; //hard-coded in hspice code
-		bool monteCarlo = false; //true for rrt, false for mc
-		kernel_RRT_TDO(monitors, generatePlot, outputFileName, plotter, iterations, simTime, dt, monteCarlo);
-	}else if(mode == NEW_RRT_PLL){
-		int iterations = 10000;
-		double simTime = 100e-6;
-		double dt = 0.01e-6; //hard-coded in hspice code
-		bool monteCarlo = false; //true for rrt, false for mc
-		kernel_RRT_PLL(monitors, generatePlot, outputFileName, plotter, iterations, simTime, dt, monteCarlo);
-	}else if(mode == LOAD_RRT_PLL){
-		TimedRRT rrt = TimedRRT(inputFileName);
-		if(generatePlot)  plotter->plotTrace(rrt, pll_e, pll_eb, pll_time, 100e-6, 0.01e-6);
-	}else if(mode == LOAD_RRT){
-		TimedRRT rrt = TimedRRT(inputFileName);
-		if(generatePlot) plotter->plotRRT("lines", rrt.getName().c_str(), "test", rrt,  "v_C", "i_L", "t");
-	}else if (mode == NEW_RRT_INV){
-		kernel_RRT_INV(monitors, generatePlot, outputFileName, plotter, 100, 1e-9, 5e-12, false);
-	}else if (mode == SIM_TDO){
-		int iterations = -1;
-		double simTime = 5e-6;
-		double dt = 5e-9; //hard-coded in hspice code
-		bool monteCarlo = true; //true for rrt, false for mc
-		kernel_RRT_TDO(monitors, generatePlot, outputFileName, plotter, iterations, simTime, dt, monteCarlo);
-	}else if (mode == SIM_PLL){
-		double simTime = 1e-4;
-		double dt = 1e-7;
-		int iterations = simTime / dt;
-		bool monteCarlo = true; //true for rrt, false for mc
-		kernel_RRT_PLL(monitors, generatePlot, outputFileName, plotter, iterations, simTime, dt, monteCarlo);
-	}
-}
-*/
-
 System* systemSelector(Configuration* config){
 	System* circuit;
+	cout << config->get("edu.uiuc.csl.system.name") << endl;
 	if (config->checkParameter("edu.uiuc.csl.system.name", "Vanderpol")){
 		circuit = new Vanderpol(config);
 	}else if (config->checkParameter("edu.uiuc.csl.system.name", "Josephson")){
@@ -190,12 +56,12 @@ System* systemSelector(Configuration* config){
 		}
 		
 	}
-	return circuit;
+		return circuit;
 }
 
 void kernel_RRT(Configuration* config){
-	string outputFileName;  config->getParameter("edu.uiuc.crhc.core.options.outputFileName", &outputFileName);
-	string inputFileName;  config->getParameter("edu.uiuc.crhc.core.options.inputFileName", &inputFileName);
+	string outputFileName;  config->getParameter("edu.uiuc.csl.core.options.outputFileName", &outputFileName);
+	string inputFileName;  config->getParameter("edu.uiuc.csl.core.options.inputFileName", &inputFileName);
 
 	double simulationTime; config->getParameter("edu.uiuc.csl.core.simulation.simulationTime", &simulationTime);
 	double dt; config->getParameter("edu.uiuc.csl.core.simulation.dt", &dt);
@@ -221,39 +87,33 @@ void kernel_RRT(Configuration* config){
 			initialState[i] = ic;
 		}
 	}
-	
+
+	// if the mode of operation is Monte Carlo or Test compression, compute the number of iterations by dividing the simulation time over dt. 
+	// In zip mode, the simulation time denote to the length of the test sequence that we wish to minimize
 	int iter = 0;
-	if (config->checkParameter("edu.uiuc.crhc.core.mode", "mc")){
+	if (config->checkParameter("edu.uiuc.csl.core.mode", "mc") || config->checkParameter("edu.uiuc.csl.core.mode", "zip")){
 		iter = simulationTime / dt;
 	}else{
+		//otherwise (if we are loading, using rrt, etc) directly get the number of iteration from the iteration variable.
 		config->getParameter("edu.uiuc.csl.core.sampling.iteration", &iter);
 	}
 
-	//todo: add this throught logbook
 	cout << "----------------------------------------------" << endl;
 	cout << "RRT Options: " << endl;
 	cout << "Iter=" << iter << endl;
 	cout << "sim-time=" << simulationTime << endl;
 	cout << "dt=" << dt << endl;
-
 	cout << "----------------------------------------------" << endl;
+
+	//Construct the timed rrt data structure
 	TimedRRT rrt = TimedRRT(config, dim, iter, param, simulationTime, name);
 
-
-	//runtime monitoring experiments
-	if (config->checkParameter("edu.uiuc.crhc.validation.enable", "1")){
-		vector<Monitor*> monitors;
-		for (int i = 1; i <= 4; i++){//property loop, todo: implement this from a text parser. not hardcoded
-			monitors.push_back(new Monitor(new Property(i)));
-		}
-
-		//AnalogProperty* ap = (AnalogProperty*)(monitors[0]->property->argument);
-		rrt.setMonitor(monitors);
+	//initialize the parameter space and it's boundaries
+	for (int i = 0; i < param; i++){		
+		double min; config->getParameter("edu.uiuc.csl.system.param.min", i, &min);
+		double max; config->getParameter("edu.uiuc.csl.system.param.max", i, &max);
+		rrt.setVariationBound(i, min, max);
 	}
-	
-	//for (int i = 0; i<(int)(monitors.size()); i++){
-	//	rrt.addMonitor(monitors[i]);
-	//}
 
 	for (int i = 0; i < dim; i++){
 		double min; config->getParameter("edu.uiuc.csl.system.var.min", i, &min);
@@ -261,72 +121,100 @@ void kernel_RRT(Configuration* config){
 		rrt.setBound(i, min, max);
 	}
 
-	for (int i = 0; i < param; i++){
-		//rrt.setVariationBound(i, -0.005, 005);
-		double min; config->getParameter("edu.uiuc.csl.system.param.min", i, &min);
-		double max; config->getParameter("edu.uiuc.csl.system.param.max", i, &max);
-		rrt.setVariationBound(i, min, max);
-	}
 
+	//runtime monitoring experiments
+	//the model checking engine will be loaded with the edu.uiuc.csl.validation variable
+	if (config->checkParameter("edu.uiuc.csl.validation.enable", "1")){
+		vector<Monitor*> monitors;
+		for (int i = 1; i <= 4; i++){//property loop, todo: implement this from a text parser. not hardcoded
+			monitors.push_back(new Monitor(new Property(i)));
+		}
+		//AnalogProperty* ap = (AnalogProperty*)(monitors[0]->property->argument);
+		rrt.setMonitor(monitors);
+
+		//for (int i = 0; i<(int)(monitors.size()); i++){
+		//	rrt.addMonitor(monitors[i]);
+		//}
+	}
+	
 	rrt.setConfig(config);
 	rrt.setdt(dt);
 	rrt.setSystem(circuit);
 
-	cout << "config->get(\"edu.uiuc.crhc.core.mode\") = " << config->get("edu.uiuc.crhc.core.mode") << config->checkParameter("edu.uiuc.crhc.core.mode", "load") << endl;
-	if (config->checkParameter("edu.uiuc.crhc.core.mode", "mc")){
+	cout << "config->get(\"edu.uiuc.csl.core.mode\") = " << config->get("edu.uiuc.csl.core.mode") << config->checkParameter("edu.uiuc.csl.core.mode", "load") << endl;
+	if (config->checkParameter("edu.uiuc.csl.core.mode", "mc")){
 		if (config->checkParameter("edu.uiuc.csl.core.sampling.digital", "1"))
 			rrt.generateMonteCarloInputSequence();
-		rrt.simulate(initialState);  //for just simulating the circuit
-	}else if (config->checkParameter("edu.uiuc.crhc.core.mode", "rrt")){
+		rrt.simulate(initialState, vector<vector<double>>());  //for just simulating the circuit
+	}else if (config->checkParameter("edu.uiuc.csl.core.mode", "rrt")){
 		rrt.build(initialState);
-	}else if (config->checkParameter("edu.uiuc.crhc.core.mode", "load")){
-		rrt.load(config->get("edu.uiuc.crhc.core.options.inputFileName"));
-	}else if (config->checkParameter("edu.uiuc.crhc.core.mode", "load+rrt")){
-		rrt.load(config->get("edu.uiuc.crhc.core.options.inputFileName"));
+	}else if (config->checkParameter("edu.uiuc.csl.core.mode", "load")){
+		rrt.load(config->get("edu.uiuc.csl.core.options.inputFileName"));
+	}else if (config->checkParameter("edu.uiuc.csl.core.mode", "load+rrt")){
+		rrt.load(config->get("edu.uiuc.csl.core.options.inputFileName"));
 		rrt.build();
 	}
-	else if (config->checkParameter("edu.uiuc.crhc.core.mode", "load+wca")){
-		rrt.load(config->get("edu.uiuc.crhc.core.options.inputFileName"));
+	else if (config->checkParameter("edu.uiuc.csl.core.mode", "load+wca")){
+		rrt.load(config->get("edu.uiuc.csl.core.options.inputFileName"));
 		rrt.worstCaseEyeDiagram();
 	}
-	else if (config->checkParameter("edu.uiuc.crhc.core.mode", "load+mc")){
-		rrt.load(config->get("edu.uiuc.crhc.core.options.inputFileName"));
-		rrt.simulate(iter, rrt.getRoot());
+	else if (config->checkParameter("edu.uiuc.csl.core.mode", "load+mc")){
+		rrt.load(config->get("edu.uiuc.csl.core.options.inputFileName"));
+		rrt.simulate(iter, rrt.getRoot(), vector<vector<double>>());
 	}
-	else if (config->checkParameter("edu.uiuc.crhc.core.mode", "mc+rrt")){
-		rrt.simulate(initialState);
+	else if (config->checkParameter("edu.uiuc.csl.core.mode", "mc+rrt")){
+		rrt.simulate(initialState, vector<vector<double>>());
 		rrt.build();
+	}
+	else if (config->checkParameter("edu.uiuc.csl.core.mode", "zip")){
+		cout << "Test compression engine..." << endl;
+		//load initial test sequence
+		vector< vector<double> > input_test;
+		for (int i = 0; i < param; i++){
+			if (config->checkParameter("edu.uiuc.csl.system.param.type", i, "file")){
+				string filename; 
+				config->getParameter("edu.uiuc.csl.system.param.file", i, &filename);
+				vector<double> pwl_timeseries = rrt.loadPWLFile(filename, iter, dt);
+				input_test.push_back(pwl_timeseries);
+			}
+		}
+		
+		rrt.simulate(initialState, input_test);
+		rrt.compress_input();
+	}
+	else if (config->checkParameter("edu.uiuc.csl.core.mode", "load+zip")){
+		rrt.load(config->get("edu.uiuc.csl.core.options.inputFileName"));
+		rrt.compress_input();
 	}else{
-		cout << "Uknown operation mode: " << config->get("edu.uiuc.crhc.core.mode") << endl;
+		cout << "Uknown operation mode: " << config->get("edu.uiuc.csl.core.mode") << endl;
 	}
 
 
 	cout << "Simulation finished " << endl;
-
-	//rrt.save(outputFileName);
+	rrt.save(outputFileName);
 
 	//unit testing for the eye-diagram, this line can be safely commented or removed
 	//rrt.getEyeDiagram()->test(); 
 	
-	if (config->checkParameter("edu.uiuc.crhc.core.options.plot", "1")){
-		string plotPath; config->getParameter("edu.uiuc.crhc.core.options.plot.path", &plotPath);
+	if (config->checkParameter("edu.uiuc.csl.core.options.plot", "1")){
+		string plotPath; config->getParameter("edu.uiuc.csl.core.options.plot.path", &plotPath);
 		Plotter* plotter = new Plotter(plotPath);
-		if (config->checkParameter("edu.uiuc.crhc.core.options.plot.type", "trace")){
-			int v1; config->getParameter("edu.uiuc.crhc.core.options.plot.var[0]", &v1);
-			string title = config->get("edu.uiuc.crhc.core.options.plot.title");
+		if (config->checkParameter("edu.uiuc.csl.core.options.plot.type", "trace")){
+			int v1; config->getParameter("edu.uiuc.csl.core.options.plot.var[0]", &v1);
+			string title = config->get("edu.uiuc.csl.core.options.plot.title");
 			plotter->plotTrace(rrt, v1, -1, dim , simulationTime, dt, title);
 		}
-		else if (config->checkParameter("edu.uiuc.crhc.core.options.plot.type", "rrt")){
+		else if (config->checkParameter("edu.uiuc.csl.core.options.plot.type", "rrt")){
 			plotter->plotRRT("lines", rrt.getName().c_str(), "test", rrt, "x_1", "x_2", "t");
 		}
-		else if (config->checkParameter("edu.uiuc.crhc.core.options.plot.type", "eye")){
+		else if (config->checkParameter("edu.uiuc.csl.core.options.plot.type", "eye")){
 
 			stringstream str;
 			double vmin = 0.7, vmax = 1.1, tmin = 0, tmax = 5e-10, voltage = 0, window = 0;
 			double freq = 0;
 			config->getParameter("edu.uiuc.csl.core.simulation.freq", &freq);
 			config->getParameter("edu.uiuc.csl.core.simulation.window", &window);
-			config->getParameter("edu.uiuc.crhc.core.options.eyediagram.var", &voltage);
+			config->getParameter("edu.uiuc.csl.core.options.eyediagram.var", &voltage);
 			//config->getParameter("edu.uiuc.csl.system.var.min", voltage, &vmin);
 			//config->getParameter("edu.uiuc.csl.system.var.max", voltage, &vmax);
 
@@ -337,9 +225,13 @@ void kernel_RRT(Configuration* config){
 			str << "plot [ " << tmin << ":" << tmax << "][" << vmin << ":" << vmax << "] 0 with linespoints lt \"white\" pt 0.01";
 			str << " title \"" << " " << "\"  \n";
 
-			plotter->execute(str.str());
+			//plotter->execute(str.str());
 
 			//plotter->execute(rrt.getEyeDiagram()->toString());
+			//plotter->execute(rrt.getEyeDiagram()->drawContour());
+
+			/*
+			// We used this piece of code for generating worst-case input perturbation sequence that resulted in the worst-case eye diagram
 			ofstream file;
 			file.open("worst-eye-input-sequence");
 			
@@ -372,14 +264,14 @@ void kernel_RRT(Configuration* config){
 				}
 				plotter->execute(rrt.drawTest(path, 2));
 			}
-
-
-
 			file.close();
+			*/
+
+			
 
 		}
 		else{
-			cout << "Uknown plot command: [edu.uiuc.crhc.core.options.plot.type] " << config->get("edu.uiuc.crhc.core.options.plot.type") << endl;
+			cout << "Uknown plot command: [edu.uiuc.csl.core.options.plot.type] " << config->get("edu.uiuc.csl.core.options.plot.type") << endl;
 		}
 	}
 	cout.flush();
@@ -399,9 +291,9 @@ void kernel_RRT(Configuration* config){
 	*/
 }
 
-//	Computing the joint time-frequency space instead of only time-augmented RRT
-//	work-in-progress, todo
+
 void fft_experiments(){
+	//	Computing the joint time-frequency space instead of only time-augmented RRT
 	double f0 = 1; //initial freqency
 	double f1 = 10; //final freq
 	double t = 5; //time interval
@@ -480,7 +372,6 @@ void kdtree_experiment(){
 	//   }else{
 	 //       cout << "[error] 2" << endl ;
 	//   }
-
 }
 
 int main (int argc, const char * argv[]){
@@ -488,18 +379,9 @@ int main (int argc, const char * argv[]){
 	char full[_MAX_PATH];
 	_fullpath(full, ".\\", _MAX_PATH);
 	cout << "Current working directory is:" << full << endl;
-	//string configFile = string(full) + "config\\half-wave-limiter.conf";
-	//string configFile = string(full) + "config\\half-wave-limiter-81.conf";
-	//string configFile = string(full) + "config\\josephson.conf";
-	//string configFile = string(full) + "config\\inverter_mc_analysis.conf";
-	//string configFile = string(full) + "config\\inverter_rrt_analysis.conf";
-	string configFile = string(full) + "config\\tdo-ex1.conf";
+	string configFile = string(full) + "config//Opamp_single_ended_unit_gain.conf";
 	Configuration* config = new Configuration(configFile);
-
 	kernel_RRT(config);
-
 	system("PAUSE");
 	return 0;
 }
-
-

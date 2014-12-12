@@ -78,6 +78,7 @@ class EyeDiagram{
 		void push(node*);
 		void push(node* v, Transition tran);
 		string toString();
+		string drawContour();
 		void test();
 		void sum();
 

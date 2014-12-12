@@ -46,4 +46,6 @@ public:
     void waitForKey();
     void close();
 	void execute(string str);
+	void drawLine(double iFromX, double iFromY, double iToX, double iToY, string color);
+	void test();
 };

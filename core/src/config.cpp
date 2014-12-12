@@ -57,6 +57,13 @@ void Configuration::getParameter(string parameter, string* result){
 	*result = db[parameter];
 }
 
+void Configuration::getParameter(string parameter, int i, string* result){
+	stringstream ss;
+	ss << parameter << "[" << i << "]";
+	*result = db[ss.str()];
+}
+
+
 void Configuration::getParameter(string parameter, int* result){
 	try{
 	    *result = boost::lexical_cast<int>(db[parameter]);

@@ -52,6 +52,13 @@ void Plotter::close(){
 	closed=true;
 }
 
+void Plotter::test(){
+	stringstream cmdstr;
+	cmdstr << "plot sin(x) \n";
+	fprintf(gnuplotPipe, cmdstr.str().c_str());
+	fflush(gnuplotPipe);
+}
+
 string drawLine(const double iFromX, const double iFromY, const double iToX, const double iToY){
 	stringstream cmdstr;
 	cmdstr << " set arrow from " << iFromX << "," << iFromY << " to " << iToX << "," << iToY << " nohead  lc rgb \"blue\" lw 2 \n" ;
@@ -80,8 +87,6 @@ void Plotter::emptyPlot(string title, double xmin, double xmax, double ymin, dou
     fflush(gnuplotPipe);
 }
 
-
-
 void Plotter::drawLine(double iFromX, double iFromY, double iFromZ, double iToX, double iToY, double iToZ){
     stringstream cmdstr;
     cmdstr << " set arrow from " << iFromX << "," << iFromY << "," << iFromZ <<  "     to     " << iToX << "," << iToY  << "," << iToZ << "        nohead  lc rgb \"blue\" lw 2 \n" ;
@@ -89,14 +94,17 @@ void Plotter::drawLine(double iFromX, double iFromY, double iFromZ, double iToX,
     fflush(gnuplotPipe);
 }
 
-void Plotter::drawLine(double iFromX, double iFromY, double iToX, double iToY){
+void Plotter::drawLine(double iFromX, double iFromY, double iToX, double iToY, string color){
     stringstream cmdstr;
-    cmdstr << " set arrow from " << iFromX << "," << iFromY << " to " << iToX << "," << iToY << " nohead  lc rgb \"blue\" lw 2 \n" ;
-    cout << cmdstr.str() << endl ;
+    cmdstr << " set arrow from " << iFromX << "," << iFromY << " to " << iToX << "," << iToY << " nohead  lc rgb \""<< color << "\" lw 2 \n" ;
+    //cout << cmdstr.str() << endl ;
     fprintf(gnuplotPipe, cmdstr.str().c_str());
     fflush(gnuplotPipe);
 }
 
+void Plotter::drawLine(double iFromX, double iFromY, double iToX, double iToY){
+	drawLine(iFromX, iFromY, iToX, iToY, "blue");
+}
 
 void Plotter::drawArray(vector< vector<double> > trace, int index1, int index2){
     if(trace.size()>0){
@@ -286,7 +294,14 @@ void Plotter::plotTrace(RRT rrt, int v1, int v2, int tdim, double simTime, doubl
 			if(x1<min[it1]) min[it1]=x1 ;
 			if(x0>max[it0]) max[it0]=x0 ;
 			if(x0<min[it0]) min[it0]=x0 ;
-			drawLine(t0, x0, t1, x1);
+
+			if (n->getFrontier()){
+				drawLine(t0, x0, t1, x1, "red");
+			}
+			else{
+				drawLine(t0, x0, t1, x1);
+			}
+			
 			fflush(gnuplotPipe);
 		}
 		for(int i=0;i<n->getSize();i++){
@@ -362,7 +377,7 @@ void Plotter::saveToPdf(string path){
 void Plotter::execute(string str){
     fprintf(gnuplotPipe, str.c_str());
     fflush(gnuplotPipe);
-    cout << str << endl ;
+    //cout << str << endl ;
     string buffer = "replot\n";
     fprintf(gnuplotPipe, buffer.c_str());
     fflush(gnuplotPipe);

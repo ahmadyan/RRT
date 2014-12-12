@@ -4,17 +4,17 @@
 #include <ctime>
 #include <random>
 
-TimedRRT::TimedRRT(Configuration* c, string fileName): RRT(c, fileName){
+TimedRRT::TimedRRT(Configuration* c, string fileName) : RRT(c, fileName){
 }
 
 TimedRRT::TimedRRT(Configuration* c, int _d, int _k, int _var, double _simTime, string nam) : RRT(c, _d + 1, _k, _var, nam){ //Add time dimension to the RRT
-    sim_time = _simTime;
-    setBound(_d, 0, sim_time); //maximum time for sim, minimum is 0 and it is assigned in RRT constructor
+	sim_time = _simTime;
+	setBound(_d, 0, sim_time); //maximum time for sim, minimum is 0 and it is assigned in RRT constructor
 }
 
 TimedRRT::TimedRRT(Configuration* c, int _d, int _k, int _var, string nam) : RRT(c, _d + 1, _k, _var, nam){ //Add time dimension to the RRT
-    sim_time = 1 ; //default
-    setBound(_d, 0, sim_time); //maximum time for sim, minimum is 0 and it is assigned in RRT constructor
+	sim_time = 1; //default
+	setBound(_d, 0, sim_time); //maximum time for sim, minimum is 0 and it is assigned in RRT constructor
 }
 
 // We will only use this function for MC simulation of Inverter for now. 
@@ -65,7 +65,7 @@ void TimedRRT::generateMonteCarloInputSequence(){
 	}
 
 	ofstream file;
-	file.open(config->get("edu.uiuc.crhc.core.options.mc.simdata"), std::ofstream::out);
+	file.open(config->get("edu.uiuc.csl.core.options.mc.simdata"), std::ofstream::out);
 
 	for (int i = 0; i < size; i++){
 		cout << i << " " << bits[i] << " " << jitter[i] << " " << transition[i] << endl;
@@ -92,7 +92,8 @@ vector<double> TimedRRT::generateSimulationParameters(node* q_near, int golden){
 				double mean = 0;  config->getParameter("edu.uiuc.csl.system.param.dist.mean", j, &mean);
 				double var = 0;  config->getParameter("edu.uiuc.csl.system.param.dist.var", j, &var);
 				noise = 0;
-			}else{//uniform
+			}
+			else{//uniform
 				noise = generateUniformSample(-dv, +dv);
 			}
 			if (golden == 0) noise = 0;
@@ -108,7 +109,8 @@ vector<double> TimedRRT::generateSimulationParameters(node* q_near, int golden){
 			cout << endl << endl;
 			v += noise;
 			param.push_back(v);
-		}else if (config->checkParameter("edu.uiuc.csl.system.param.type", j, "digital")){
+		}
+		else if (config->checkParameter("edu.uiuc.csl.system.param.type", j, "digital")){
 			double dv = 0; config->getParameter("edu.uiuc.csl.system.param.dv", j, &dv);
 			double noise = generateUniformSample(-dv, dv);
 			if (golden == 0) noise = 0;
@@ -147,8 +149,9 @@ vector<double> TimedRRT::generateSimulationParameters(node* q_near, int golden){
 				param.push_back(v + noise);
 
 
-				cout << t1 << " " << bit << " " << GammaJitter << " " << GammaTransition << " " <<  v << "     ";
-			}else{
+				cout << t1 << " " << bit << " " << GammaJitter << " " << GammaTransition << " " << v << "     ";
+			}
+			else{
 				double currentInputValue = q_near->getInput(j);
 				int currentDigit;
 				int nextDigit = 0;
@@ -186,7 +189,7 @@ vector<double> TimedRRT::generateSimulationParameters(node* q_near, int golden){
 		else if (config->checkParameter("edu.uiuc.csl.system.param.type", j, "pulse")){
 			//cout << "Generating pulse!" << endl;
 			double dv = 0; config->getParameter("edu.uiuc.csl.system.param.dv", j, &dv);
-			double noise = generateUniformSample(-dv, dv); 
+			double noise = generateUniformSample(-dv, dv);
 			if (golden == 0) noise = 0;
 			double tnow = q_near->getTime() + dt;
 			double tperiod = 100e-12;	//100ps -> 10GHz
@@ -222,7 +225,8 @@ vector<double> TimedRRT::generateSimulationParameters(node* q_near, int golden){
 			//cout << "tnow=" << tnow << endl;
 			//cout << "v->" << vin << endl;
 			param.push_back(vin);
-		}else if (config->checkParameter("edu.uiuc.csl.system.param.type", j, "mc")){		
+		}
+		else if (config->checkParameter("edu.uiuc.csl.system.param.type", j, "mc")){
 			double max = 0; config->getParameter("edu.uiuc.csl.system.param.max", j, &max);
 			double min = 0; config->getParameter("edu.uiuc.csl.system.param.min", j, &min);
 			double freq = 0; config->getParameter("edu.uiuc.csl.system.param.freq", j, &freq);
@@ -232,17 +236,18 @@ vector<double> TimedRRT::generateSimulationParameters(node* q_near, int golden){
 			double t1 = t - period*cycles;
 
 			int bit = -1;	//the next bit
-			double v=0;
+			double v = 0;
 			//modeling jitter
-			if ( (t1 >= jitter[cycles]) || (cycles==0)){
+			if ((t1 >= jitter[cycles]) || (cycles == 0)){
 				bit = bits[cycles];
-			}else{
+			}
+			else{
 				bit = bits[cycles - 1];
 			}
 
 			//modeling transition
 			//double tTran = jitter[cycles] 
-			if ((cycles!=0)&&(t1 > jitter[cycles]) && (t1 < jitter[cycles] + transition[cycles])){
+			if ((cycles != 0) && (t1 > jitter[cycles]) && (t1 < jitter[cycles] + transition[cycles])){
 				double tTran = t1 - jitter[cycles];
 				double transitionScale = tTran / transition[cycles];
 				v = min + max*(transitionScale*bits[cycles] + (1 - transitionScale)*bits[cycles - 1]);
@@ -255,47 +260,51 @@ vector<double> TimedRRT::generateSimulationParameters(node* q_near, int golden){
 			if (golden == 0) noise = 0;
 			param.push_back(bit + noise);
 
-		}else if (config->checkParameter("edu.uiuc.csl.system.param.type", j, "dc")){
+		}
+		else if (config->checkParameter("edu.uiuc.csl.system.param.type", j, "dc")){
 			if (config->checkParameter("edu.uiuc.csl.system.param.dist.type", j, "gaussian") || config->checkParameter("edu.uiuc.csl.system.param.dist.type", j, "normal")){
 				double mean = 0; config->getParameter("edu.uiuc.csl.system.param.dist.mean", j, &mean);
 				double var = 1; config->getParameter("edu.uiuc.csl.system.param.dist.variance", j, &var);
 				double std = sqrt(var);
 				double v = generateTruncatedNormalSample(mean, std, variationMin[j], variationMax[j]);
 				if (golden == 0) v = mean;
-				param.push_back(v); 
+				param.push_back(v);
 			}
 			else{
 				double v = generateUniformSample(variationMin[j], variationMax[j]);
 				if (golden == 0) v = (variationMin[j] + variationMax[j]) / 2;
 				param.push_back(v);
 			}
-		}else if (config->checkParameter("edu.uiuc.csl.system.param.type", j, "boot")){
+		}
+		else if (config->checkParameter("edu.uiuc.csl.system.param.type", j, "boot")){
 			//We are going to generate the 00110 signal
 			int boot[5] = { 0, 0, 1, 1, 0 };
 			double tnow = q_near->getTime() + dt;
 			double freq; config->getParameter("edu.uiuc.csl.system.param.freq", j, &freq);
 			double period = 1 / freq;
-			int cycles = ceilf(tnow / period) - 1 ;
+			int cycles = ceilf(tnow / period) - 1;
 			cycles = cycles % 5;
 			double vin = boot[cycles] * 0.9;
 
 			double dv; config->getParameter("edu.uiuc.csl.system.param.dv", j, &dv);
-			double noise=0;
+			double noise = 0;
 			if (config->checkParameter("edu.uiuc.csl.system.param.dist.type", j, "gaussian") || config->checkParameter("edu.uiuc.csl.system.param.dist.type", j, "normal")){
 				double mean = 0; config->getParameter("edu.uiuc.csl.system.param.dist.mean", j, &mean);
 				double var = 1; config->getParameter("edu.uiuc.csl.system.param.dist.variance", j, &var);
 				double std = sqrt(var);
-				noise=generateTruncatedNormalSample(mean, std, variationMin[j], variationMax[j]);
+				noise = generateTruncatedNormalSample(mean, std, variationMin[j], variationMax[j]);
 				if (golden == 0) noise = mean;
-			}else{
+			}
+			else{
 				noise = generateUniformSample(-dv, dv);
-				if (golden == 0) noise=0;
+				if (golden == 0) noise = 0;
 			}
 			vin += noise;
 			param.push_back(vin);
-		}else{
+		}
+		else{
 			double v = generateUniformSample(variationMin[j], variationMax[j]);
-			if (golden == 0) v = (variationMin[j]+variationMax[j]) / 2;
+			if (golden == 0) v = (variationMin[j] + variationMax[j]) / 2;
 			param.push_back(v);
 		}
 	}
@@ -326,8 +335,8 @@ void TimedRRT::build(double* initialState){
 
 node* TimedRRT::findNearestNodeWithTimeIndex(node* q_sample, int v, int golden){
 	node* q_near;
-	double min_distance=99999; 
-	
+	double min_distance = 99999;
+
 	double ddd = q_sample->distance(nodeset[v][0], max, min);
 	cout << " ---> " << ddd << endl;
 	double p = generateUniformSample(0, 1);
@@ -355,7 +364,7 @@ void TimedRRT::buildUniform(){
 		for (int j = 0; j < k; j++){
 			cout << "%%" << i << " , " << j << endl;
 			node* q_sample = new node(d); q_sample->randomize(min, max); q_sample->set(d - 1, i*dt);
-			node* q_near = findNearestNodeWithTimeIndex(q_sample, i, j);	
+			node* q_near = findNearestNodeWithTimeIndex(q_sample, i, j);
 			cout << "Index is" << q_near->getIndex() << endl;
 			double* state_near = q_near->get();
 			double* ic = new double[d]; for (int icc = 0; icc<d; icc++) ic[icc] = state_near[icc];
@@ -364,7 +373,7 @@ void TimedRRT::buildUniform(){
 
 			vector<string> settings;
 			stringstream icInputFileName; icInputFileName << "ic_" << q_near->getIndex() << ".ic0";
-			stringstream icOutputFileName; icOutputFileName << "ic_" << nodes.size() << ".ic"; 
+			stringstream icOutputFileName; icOutputFileName << "ic_" << nodes.size() << ".ic";
 			settings.push_back(icOutputFileName.str());
 			settings.push_back(icInputFileName.str());
 			settings.push_back("transient");
@@ -415,7 +424,7 @@ void TimedRRT::build(){
 		//find nearest node in the tree
 		vector<node*> q_near_vec = getNearestNode(q_sample);
 		node* q_near = q_near_vec[0];
-		
+
 		double* state_near = q_near->get();
 		double* ic = new double[d];
 		for (int j = 0; j<d; j++){
@@ -451,7 +460,7 @@ void TimedRRT::build(){
 		q_new->setIndex(i);
 		q_new->setInputVector(param);
 
-		if (config->checkParameter("edu.uiuc.crhc.core.options.eyediagram", "1")){
+		if (config->checkParameter("edu.uiuc.csl.core.options.eyediagram", "1")){
 			Transition transition = tboot;
 			eye->push(q_new, transition);
 		}
@@ -498,22 +507,22 @@ void TimedRRT::worstCaseEyeDiagram(){
 		if (p < 0.01){
 			//	0: jitter (0->1), 	//	1: jitter (1->0)
 			q_near = eye->getNode(rand() % 2);
-			i+=worstCaseJitter(q_near);
-		}else{
+			i += worstCaseJitter(q_near);
+		}
+		else{
 			//	2: inside 1	//	3: inside 0	//	4: outside 1	//	5: outside 0	//	6: any of the lebesgue
 			int y = rand() % 7;
 			if (y == 0) y = 2;
 			if (y == 1) y = 3;
-			q_near = eye->getNode(2+rand()%5);
-			deltaSimulation(q_near);
+			q_near = eye->getNode(2 + rand() % 5);
+			node* q_new = deltaSimulation(q_near);
+			eye->push(q_new, tboot);
 			i++;
 		}
 	}
 }
 
-
-
-void TimedRRT::deltaSimulation(node* q_near){
+node* TimedRRT::deltaSimulation(node* q_near){
 	GammaSimMode = 0;
 	double* state_near = q_near->get();
 	double* ic = new double[d];
@@ -527,10 +536,12 @@ void TimedRRT::deltaSimulation(node* q_near){
 	settings.push_back(icOutputFileName.str());
 	settings.push_back(icInputFileName.str());
 	settings.push_back("transient"); // or settings.push_back("dc");
+	double delta_multiplication_factor = 1;
+	config->getParameter("edu.uiuc.csl.core.simulation.delta_multiplication_factor", &delta_multiplication_factor);
 
 	vector<double> param = generateSimulationParameters(q_near, NOTGOLDEN);
 	double t_init = ic[d - 1];
-	vector<double> result = system->simulate(ic, param, settings, 0, dt);
+	vector<double> result = system->simulate(ic, param, settings, 0, delta_multiplication_factor*dt);
 
 	result[0] += t_init;		//result[0] contains the time-stamp, in the simulation it is stamped as dt, however we have to add the time of the parrent node as well.
 
@@ -540,64 +551,69 @@ void TimedRRT::deltaSimulation(node* q_near){
 	q_new->setParent(q_near);		//We only make the parent-child releation ship during the tree build
 	q_new->setIndex(nodes.size());
 	q_new->setInputVector(param);
-
-	Transition transition = tboot;
 	nodes.push_back(q_new);
-	eye->push(q_new, transition);
+	k++;
 	delete ic;
+	return q_new;
 }
 
 int TimedRRT::worstCaseJitter(node* q_near){
-		//generate a jitter data and transition data
-		GammaSimMode = 1;
-		//GammaJitter = generateUniformSample(0, 1e-11);
-		//GammaTransition = generateUniformSample(0, 5e-11);
+	//generate a jitter data and transition data
+	GammaSimMode = 1;
 
-		double freq = 0; config->getParameter("edu.uiuc.csl.core.simulation.freq", &freq);
-		double period = 1 / freq;
-		double jitterMax = 0; config->getParameter("edu.uiuc.csl.system.param.jitter.max", &jitterMax);
-		jitterMax = jitterMax*1e-12;
-		GammaJitter = generateUniformSample(0, 1e-11);
-		GammaTransition = generateUniformSample(0, 2e-11);
+	double freq = 0; config->getParameter("edu.uiuc.csl.core.simulation.freq", &freq);
+	double period = 1 / freq;
+	double jitterMax = 0; config->getParameter("edu.uiuc.csl.system.param.jitter.max", &jitterMax);
+	jitterMax = jitterMax*1e-12;
+	//GammaJitter = generateUniformSample(0, 1e-11);
+	//GammaTransition = generateUniformSample(0, 2e-11);
 
-		double t0 = q_near->getTime();
-		int cycles = floorf(t0 / period);
-		double t1 = t0 - period*cycles;
+	GammaJitter = generateUniformSample(0, 2e-12);
+	GammaTransition = generateUniformSample(0, 12e-12);
 
-		if (t1 + GammaJitter >= jitterMax){
-			GammaJitter = jitterMax - t1;
-		}
+	double t0 = q_near->getTime();
+	int cycles = floorf(t0 / period);
+	double t1 = t0 - period*cycles;
 
-		ofstream file;
-		file.open(config->get("edu.uiuc.crhc.core.options.mc.simdata"), std::ofstream::app);
-		file << t0 << " " << GammaJitter << " " << GammaTransition << endl;
-		file.close();
-		
-		//determine how long the transition will take
-		double eta = GammaJitter + GammaTransition;
-		eta += 1e-11;
-		int gammaIterations = 2*ceil(eta / dt);
-		simulate(gammaIterations, q_near);
-		return gammaIterations;
+	if (t1 + GammaJitter >= jitterMax){
+		GammaJitter = jitterMax - t1;
+	}
+
+	ofstream file;
+	file.open(config->get("edu.uiuc.csl.core.options.mc.simdata"), std::ofstream::app);
+	file << t0 << " " << GammaJitter << " " << GammaTransition << endl;
+	file.close();
+
+	//determine how long the transition will take
+	double eta = GammaJitter + GammaTransition;
+	eta += 1e-11;
+	int gammaIterations = 2 * ceil(eta / dt);
+	simulate(gammaIterations, q_near, vector<vector<double>>());
+	return gammaIterations;
 }
 
-void TimedRRT::simulate(double* initialState){
+void TimedRRT::simulate(double* initialState, vector< vector<double> > test_input){
 	root = new node(d);
 	root->set(initialState);
 	root->setRoot();
 	nodes.push_back(root);
 	root->setIndex(0);
 	vector<double> p;
-	for (int i = 0; i < var; i++)
-		p.push_back(0);
-	root->setInputVector(p);
-	for (int i = 0; i < 100; i++){
-		simulate(k, root);
+	if (!test_input.empty()){
+		for (int i = 0; i < var; i++)
+			p.push_back(test_input[i][0]);
+		root->setInputVector(p);
 	}
+	else{
+		for (int i = 0; i < var; i++)
+			p.push_back(0);
+		root->setInputVector(p);
+	}
+	simulate(k, root, test_input);
 }
 
 //simulate the circuit for iter numbers from q_start
-void TimedRRT::simulate(int iter, node* q_start){
+void TimedRRT::simulate(int iter, node* q_start, vector< vector<double> > test_input){
 	int i = 0;
 	node* q_near = q_start;
 	while (i < iter){
@@ -606,11 +622,21 @@ void TimedRRT::simulate(int iter, node* q_start){
 		for (int j = 0; j<d; j++){
 			state[j] = state_near[j];
 		}
-		vector<double> param = generateSimulationParameters(q_near, NOTGOLDEN);
+		vector<double> param;
+		if (test_input.empty())
+			param = generateSimulationParameters(q_near, NOTGOLDEN);
+		else{
+			//todo: [refactor] this code should be moved to generateSimulationParameters
+			for (int j = 0; j < var; j++){
+				cout << i << " " << j << endl;
+				cout << test_input[j][i] << endl;
+				param.push_back(test_input[j][i]);
+			}
+		}
 
 		vector<string> settings;
 		stringstream icInputFileName; icInputFileName << "ic_" << q_near->getIndex() << ".ic0";
-		cout << endl <<  icInputFileName.str() << endl;
+		cout << endl << icInputFileName.str() << endl;
 		stringstream icOutputFileName; icOutputFileName << "ic_" << nodes.size() << ".ic";
 		settings.push_back(icOutputFileName.str());
 		settings.push_back(icInputFileName.str());
@@ -651,7 +677,7 @@ void TimedRRT::simulate(int iter, node* q_start){
 			q_new->setJitter(0);
 		}
 
-		if (config->checkParameter("edu.uiuc.crhc.core.options.eyediagram", "1")){
+		if (config->checkParameter("edu.uiuc.csl.core.options.eyediagram", "1")){
 			eye->push(q_new, transition);
 		}
 		q_near = q_new;
@@ -666,5 +692,131 @@ void TimedRRT::addMonitor(Monitor* m){
 double TimedRRT::getSimTime(){
 	return sim_time;
 }
+
+// loads the input pattern from a pwl file into a vector memory. 
+vector<double> TimedRRT::loadPWLFile(string filename, int iterations, double dt){
+	//the pwl file format:
+	//4					#number of lines in pwl file
+	//0	0.6				# each line is specified using timestamp - voltage pair
+	//1000 0.9			# time-stamps are specified in terms of dt
+	//4000 0.5
+
+	//the pwl file is parse in two steps. First, we bring in the file and dump it in the pwl_data vector which holds every change in the signal.
+	//then we dump that pwl_data vector into a time-series (pwl_timeseries)
+	vector<pair<double, double> > pwl_data;
+	int k;
+	string line;
+	ifstream file(filename.c_str());
+	double time_stamp = 0, signal_value = 0;
+	if (file.is_open()){
+		file >> k;
+		for (int i = 0; i < k; i++){
+			file >> time_stamp >> signal_value;
+			pwl_data.push_back(make_pair(time_stamp*dt, signal_value));
+		}
+	}
+
+	//Now, let's dump the pwl_data into pwl_timeseries
+	vector <double> pwl_timeseries;
+	int current_index = 0;
+	double current_time = pwl_data[current_index].first;
+	double current_voltage = pwl_data[current_index].second;
+
+	for (int i = 0; i < iterations; i++){
+		double now = i*dt;
+		if ((current_index<k - 1) && (now >= pwl_data[current_index + 1].first)){
+			current_index++;
+			current_time = pwl_data[current_index].first;
+			current_voltage = pwl_data[current_index].second;
+		}
+		pwl_timeseries.push_back(current_voltage);
+	}
+
+	return pwl_timeseries;
+}
+
+//constructs initial frontier set from pwl signal
+//for single dimension, this is super easy.
+//for higher dimension, we should use convex hull. 
+void TimedRRT::construct_initial_frontier_set(int frontier_size, double frontier_set_min, double frontier_set_max){
+	frontier_set = vector<node*>(frontier_size);
+	for (int i = 0; i < nodes.size(); i++){
+		node* current_node = nodes[i];
+		update_frontier_set(nodes[i], frontier_size, frontier_set_min, frontier_set_max);
+	}
+}
+
+void TimedRRT::update_frontier_set(node* q, int frontier_size, double frontier_set_min, double frontier_set_max){
+	int voltage_index = 0;		config->getParameter("edu.uiuc.csl.core.compress.variable", &voltage_index);
+	auto t = q->getTime();
+	auto v = q->get(voltage_index);
+	auto v_index = [](double v, int size, double min, double max){
+		double l = max - min;
+		double seg = l / size;
+		double vp = v - min;
+		double i = vp / seg;
+
+		int result = floor(i);
+		if (result >= size) result = size - 1;
+		if (result < 0) result = 0;
+		cout << v << " " << size << " " << min << " " << max << " ---> " << result << endl;
+		return result;
+	};
+
+	int i = v_index(v, frontier_size, frontier_set_min, frontier_set_max);
+	if (frontier_set[i] == NULL){
+		frontier_set[i] = q;
+		q->setFrontier(true);
+	}
+	else{
+		if (t < frontier_set[i]->getTime()){			//compare this node with the frontier
+			frontier_set[i]->setFrontier(false);
+			frontier_set[i] = q;
+			q->setFrontier(true);
+		}
+	}
+}
+
+//Compress the given RRT.
+void TimedRRT::compress_input(){
+	int		max_iteration	= 1000;		config->getParameter("edu.uiuc.csl.core.compress.iterations", &max_iteration);
+	double	v_min			= -1;		config->getParameter("edu.uiuc.csl.core.compress.vmin", &v_min);
+	double	v_max			= +1;		config->getParameter("edu.uiuc.csl.core.compress.vmax", &v_max);
+	int		frontier_size	= 100;		config->getParameter("edu.uiuc.csl.core.compress.frontier.size", &frontier_size);
+	construct_initial_frontier_set(frontier_size, v_min, v_max);
+
+	for (int i = 0; i < frontier_set.size(); i++){
+		if (frontier_set[i] == NULL){
+			cout << "Frontier set has not been updated " << i << endl;
+		}
+	}
+	for (int i = 0; i < max_iteration; i++){
+		cout << "Iteration " << i << endl;
+
+		bool pick_a_node = false;																// todo: replace this code with a convex-hull
+		node* v;
+		while (!pick_a_node){
+			int r = rand() % frontier_size;
+			if (frontier_set[r] != NULL){
+				pick_a_node = true;
+				v = frontier_set[r];
+			}
+		}										//pick a node from frontier set
+		cout << "Node " << v->getID() << " selected" << endl;
+		node* q = deltaSimulation(v);															//generate a random input and simulate the circuit
+		cout << "Simulation finished" << endl;
+		update_frontier_set(q, frontier_size, v_min, v_max);									//update the frontier set accordingly
+		cout << "Frontier set updated" << endl;
+
+		//use integral trajectory selection to apply an input to that node
+		//simulate the circuit with the new input
+		//does the new input reduces the objective integral, y: update the frontier set accordingly. otherwise drop the node. 
+
+	}
+}
+
+
+
+
 
 

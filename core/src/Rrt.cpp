@@ -245,8 +245,8 @@ void RRT::loadInput(string fileName){
 //Loads the RRT from the text file (default extension is the *.rrt)
 void RRT::load(string fileName){
 	
-	if (config->checkParameter("edu.uiuc.crhc.core.options.eyediagram.bitstream", "1")){
-		loadInput(config->get("edu.uiuc.crhc.core.options.eyediagram.inputfile"));
+	if (config->checkParameter("edu.uiuc.csl.core.options.eyediagram.bitstream", "1")){
+		loadInput(config->get("edu.uiuc.csl.core.options.eyediagram.inputfile"));
 		eye->setBits(bits);
 	}
 
@@ -265,25 +265,30 @@ void RRT::load(string fileName){
 		for (int i = 0; i < d; i++){
 			file >> min[i];
 			file >> max[i];
-			cout << min[i] << " " << max[i] << endl;
+			//cout << min[i] << " " << max[i] << endl;
 		}
-
 		for (int i = 0; i < k; i++){
-			cout << "Loading rrt node " << i <<  "   ------------------------------- " << endl;
+			//cout << "Loading rrt node " << i <<  "   ------------------------------- " << endl;
 			double* data = new double[d];
 			int id = -2;
-			int parent_id = -2;
+			int parent_id = -2;			
 			file >> id;
 			file >> parent_id;
-			cout << "id :" << id << " , pid=" << parent_id << " ";
-			cout << "data: "; 
+			//cout << "id :" << id << " , pid=" << parent_id << " ";
+			//cout << "data: "; 
 			for (int j = 0; j < d; j++){
 				file >> data[j];
-				cout << data[j] << ", ";
+				//cout << data[j] << ", ";
 			}
-			cout << endl;
+			//cout << endl;
+
+
+
+			// Updated for the mu-calculus project
+			// Now, we store the input data into the rrt save file as well. The input file format is indicated by choosing 
+			// 2 for the edu.uiuc.csl.core.options.input.format options. Some of the old config file may lack this option
 			vector<double> param;
-			if (config->checkParameter("edu.uiuc.crhc.core.options.input.format", "2")){
+			if (config->checkParameter("edu.uiuc.csl.core.options.input.format", "2")){
 				for (int j = 0; j < var; j++){
 					double x;
 					file >> x;
@@ -292,7 +297,7 @@ void RRT::load(string fileName){
 			}
 			
 			node* newNode = new node(d, id, data);
-			cout << newNode->toString() << endl;
+			//cout << newNode->toString() << endl;
 			newNode->setInputVector(param);
 			//If this node is a root node (i.e. the parent_id is -1), sets this as root, otherwise
 			//this node has a parent. Find the parent and add this as children. 
@@ -301,6 +306,9 @@ void RRT::load(string fileName){
 				newNode->setRoot();
 				root = newNode;
 			}else{
+				cout << i << endl;
+				cout << endl << endl;
+				cout << parent_id << endl;
 				newNode->setParent(nodes[parent_id]);
 				nodes[parent_id]->addChildren(newNode);
 			}
@@ -312,7 +320,7 @@ void RRT::load(string fileName){
 			}
 			newNode->setIndex(id);	//This is unnecessary, because currently nodes are constructed with their id
 			nodes.push_back(newNode);
-			if (config->checkParameter("edu.uiuc.crhc.core.options.eyediagram", "1"))
+			if (config->checkParameter("edu.uiuc.csl.core.options.eyediagram", "1"))
 				eye->push(newNode);
 
 			for (int i = 0; i < monitors.size(); i++){

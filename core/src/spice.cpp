@@ -12,13 +12,13 @@ SPICE::SPICE(Configuration* config):System(config){
 vector<double>  SPICE::simulate(double* ic, vector<double> param, vector<string> setting, double t0, double dt){
 	vector<double> result;
 	
-	bool dcSimulation = false;
+	bool dcSimulation = false; 
 	if (setting[2].compare("dc") == 0){
 		dcSimulation = true;
 	}
 
-	string templateFile = config->get("edu.uiuc.crhc.core.options.template");
-	string netlistFile = config->get("edu.uiuc.crhc.core.options.netlist");
+	string templateFile = config->get("edu.uiuc.csl.core.options.template");
+	string netlistFile = config->get("edu.uiuc.csl.core.options.netlist");
 
 	stringstream sed; 
 	sed << "cat " << templateFile << "  | sed ";

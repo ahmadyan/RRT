@@ -23,6 +23,7 @@ class node{
 	int index; //this node index in the nodes array
 	int counter; //a variable that we use to hold a counter for generating signal value
 	int jitter;	//Indicates whether this node has been used in a jitter transision yet. 
+	bool frontier; //does this node belongs to the frontier set? (used in functional optimization and test compression)
 public:
 	node();
 	node(int n);
@@ -85,6 +86,9 @@ public:
 
 	void setJitter(int x);
 	int getJitter();
+
+	void setFrontier(bool);
+	bool getFrontier();
 };
 
 

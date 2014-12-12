@@ -17,7 +17,7 @@ EyeDiagram::EyeDiagram(Configuration* c){
 	config->getParameter("edu.uiuc.csl.core.simulation.freq", &freq);
 	config->getParameter("edu.uiuc.csl.core.simulation.dt", &sampleRate);
 	config->getParameter("edu.uiuc.csl.core.simulation.window", &window);
-	config->getParameter("edu.uiuc.crhc.core.options.eyediagram.var", &voltage);
+	config->getParameter("edu.uiuc.csl.core.options.eyediagram.var", &voltage);
 
 
 	period = 1 / freq;
@@ -165,10 +165,10 @@ void EyeDiagram::sum(){
 	//cout << "zeroCrossingRight = " << zeroCrossingRight << endl;
 	//cout << "zeroCrossingLeft = " << zeroCrossingLeft << endl;
 
-	if (config->checkParameter("edu.uiuc.crhc.core.options.eyediagram.dump", "1")){
+	if (config->checkParameter("edu.uiuc.csl.core.options.eyediagram.dump", "1")){
 		//print the current stat for the eye diagram
 		ofstream file;
-		file.open(config->get("edu.uiuc.crhc.core.options.eyediagram.dump.filename"), std::ofstream::app);
+		file.open(config->get("edu.uiuc.csl.core.options.eyediagram.dump.filename"), std::ofstream::app);
 
 		for (int i = 0; i < 8; i++){
 			file << g[i] << " ";
@@ -188,7 +188,7 @@ void EyeDiagram::sum(){
 
 void EyeDiagram::push(node* v){
 	push(v, tboot);
-	if (config->checkParameter("edu.uiuc.crhc.core.options.eyediagram.dump", "1"))
+	if (config->checkParameter("edu.uiuc.csl.core.options.eyediagram.dump", "1"))
 		sum();
 }
 
@@ -211,9 +211,7 @@ void EyeDiagram::push(node* v, Transition tran){
 
 //	cout << periodWindow << " " << i << " " << j << endl;
 	int i = int(floorf(t / sampleRate)) % fullWindow;
-	int j = int(floorf(t + period) / sampleRate) % fullWindow;
-
-
+	int j = int(floorf((t + period) / sampleRate)) % fullWindow;
 
 	int k = floor((volt - 0.2) / dv);
 
@@ -357,7 +355,6 @@ void EyeDiagram::push(node* v, Transition tran){
 	}
 }
 
-
 void EyeDiagram::test(){
 	for (int i = 1; i < vSize; i++){
 		if (leftSuperiorIndex[i] == -1){
@@ -429,6 +426,63 @@ void EyeDiagram::test(){
 	}
 }
 
+string EyeDiagram::drawContour(){
+	stringstream str;
+	double vmin = -0.1, vmax = 1, tmin = 0, tmax = window;
+	config->getParameter("edu.uiuc.csl.system.var.min", voltage, &vmin);
+	config->getParameter("edu.uiuc.csl.system.var.max", voltage, &vmax);
+
+	str << "plot [ " << tmin << ":" << tmax << "][" << vmin << ":" << vmax << "] 0 with linespoints lt \"white\" pt 0.01";
+	str << " title \"" << " " << "\"  \n";
+
+	for (int i = 2; i < size; i++){
+		double iToX = i*sampleRate;
+		double iToY = minInferior[i];
+		double iFromX = (i - 1)*sampleRate;
+		double iFromY = minInferior[i - 1];
+		str << " set arrow from " << iFromX << "," << iFromY << "   to     " << iToX << "," << iToY << "  nohead  lc rgb \"red\" lw 2 \n";
+	}
+
+	for (int i = 2; i < size; i++){
+		double iToX = i*sampleRate;
+		double iToY = maxInferior[i];
+		double iFromX = (i - 1)*sampleRate;
+		double iFromY = maxInferior[i - 1];
+		str << " set arrow from " << iFromX << "," << iFromY << "   to     " << iToX << "," << iToY << "  nohead  lc rgb \"black\" lw 2 \n";
+	}
+
+
+	for (int i = 2; i < size; i++){
+		double iToX = i*sampleRate;
+		double iToY = minSuperior[i];
+		double iFromX = (i - 1)*sampleRate;
+		double iFromY = minSuperior[i - 1];
+		str << " set arrow from " << iFromX << "," << iFromY << "   to     " << iToX << "," << iToY << "  nohead  lc rgb \"green\" lw 2 \n";
+	}
+
+	for (int i = 2; i < size; i++){
+		double iToX = i*sampleRate;
+		double iToY = maxSuperior[i];
+		double iFromX = (i - 1)*sampleRate;
+		double iFromY = maxSuperior[i - 1];
+		str << " set arrow from " << iFromX << "," << iFromY << "   to     " << iToX << "," << iToY << "  nohead  lc rgb \"yellow\" lw 2 \n";
+	}
+	/*
+	for (int i = 2; i < size; i++){
+		double iToX = i*sampleRate;
+		double iFromX = (i - 1)*sampleRate;
+		double iToYInf = maxInferior[i];
+		double iFromYInf = maxInferior[i - 1];
+		double iToYSup = minSuperior[i];
+		double iFromYSup = minSuperior[i - 1];
+		if (iToYSup >= iToYInf){
+			str << " set arrow from " << iFromX << "," << iFromYInf << "   to     " << iToX << "," << iToYInf << "  nohead  lc rgb \"red\" lw 2 \n";
+			str << " set arrow from " << iFromX << "," << iFromYSup << "   to     " << iToX << "," << iToYSup << "  nohead  lc rgb \"red\" lw 2 \n";
+		}
+	}*/
+	return str.str();
+}
+
 string EyeDiagram::toString(){
 	stringstream str;
 
@@ -470,7 +524,7 @@ string EyeDiagram::toString(){
 			}
 		}
 	}
-
+	/*
 	for (int i = 2; i < size; i++){
 		double iToX = i*sampleRate;
 		double iToY = minInferior[i];
@@ -487,7 +541,6 @@ string EyeDiagram::toString(){
 		str << " set arrow from " << iFromX << "," << iFromY << "   to     " << iToX << "," << iToY << "  nohead  lc rgb \"black\" lw 2 \n";
 	}
 
-
 	for (int i = 2; i < size; i++){
 		double iToX = i*sampleRate;
 		double iToY = minSuperior[i];
@@ -503,6 +556,7 @@ string EyeDiagram::toString(){
 		double iFromY = maxSuperior[i - 1];
 		str << " set arrow from " << iFromX << "," << iFromY << "   to     " << iToX << "," << iToY << "  nohead  lc rgb \"yellow\" lw 2 \n";
 	}
+	*/
 	return str.str();
 }
 
