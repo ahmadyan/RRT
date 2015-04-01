@@ -36,7 +36,6 @@ public:
 	void plotTrace(RRT rrt, int v1, int v2, int, double, double, string);
     void wait_for_key();
     void drawTrace(vector<double>, double t);
-
 	void drawArray(vector< vector<double> > trace, int, int);
     //void drawTrace(Trace* trace, int, int);
     //void drawTrace(Trace* trace, double t_max, int index);

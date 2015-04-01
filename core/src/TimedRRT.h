@@ -21,12 +21,18 @@ public:
 	TimedRRT(Configuration* c, string fileName);
 	node* findNearestNodeWithTimeIndex(node* q_sample, int, int);
 	vector<double> generateSimulationParameters(node*, int);
-	void addMonitor(Monitor* m);
-    void build(double* initialState);
-	void TimedRRT::simulate(double* initialState, vector< vector<double> > input_test);
-	double getSimTime();
+	
+	//generic methods
+	void build(double* initialState);
 	void build();
 	void buildUniform();
+	node* add_node(double*, int, int);
+
+	//sample generation and search methods
+	node* biasedSampling(double);
+
+	void TimedRRT::simulate(double* initialState, vector< vector<double> > input_test);
+	double getSimTime();
 	void simulate(int iter, node* q_start, vector< vector<double> > test_input);
 	void generateMonteCarloInputSequence();
 	int worstCaseJitter(node* q_near);
@@ -36,4 +42,11 @@ public:
 	void compress_input();
 	void construct_initial_frontier_set(int frontier_size, double frontier_set_min, double frontier_set_max);
 	void update_frontier_set(node* q, int frontier_size, double frontier_set_min, double frontier_set_max);
+
+	// --- model checking methods ---
+	void addMonitor(Monitor* m);
+
+	// --- test extraction methods ---
+	vector<node*> computeGoalStates();
+	vector<double> getTest(node*);
 };

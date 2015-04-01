@@ -17,6 +17,8 @@ class node{
 	int n ; // n=node-dimension
 	double* data;  // this array holds the state-time space, n-1 double for holding x and last double for holding time
 	vector<double> input; 
+	vector<double> parameters;
+	vector<double> objectives;
 	bool root ;
 	int id;
     static int objectCount ;

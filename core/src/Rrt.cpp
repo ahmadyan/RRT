@@ -380,8 +380,8 @@ vector<node*> RRT::NearestNodeInProjectiveSpace(node* q_sample){
 	for (int i = 0; i < nodes.size(); i++){
 		//Compute distance from an abstraction, not an entire model, 
 		//I don't really care about every variable in the circuits, some are more important than the others (weighted distance model???).
-		/*int projectiveDimension = 1; config->getParameter("edu.uiuc.csl.core.search.space.subset", &projectiveDimension);
-		double distance = 0;
+		
+		/*double distance = 0;
 		for (int j = 0; j < projectiveDimension; j++){
 			distance += (nodes[i]->get(j) - q_sample->get(j))*(nodes[i]->get(j) - q_sample->get(j));
 		}
@@ -390,14 +390,25 @@ vector<node*> RRT::NearestNodeInProjectiveSpace(node* q_sample){
 			closestDistance = distance;
 			closestNodeIndex = i;
 		}*/
-		double iv = 2;
-		double d = abs(nodes[i]->get(iv) - q_sample->get(iv));
+
+
+		int projectiveDimension = 1; config->getParameter("edu.uiuc.csl.core.search.space.subset", &projectiveDimension);
+		double d = abs(nodes[i]->get(projectiveDimension) - q_sample->get(projectiveDimension));
+
+		//double d1 = 0; d1 = (nodes[i]->get(5) - q_sample->get(5))*(nodes[i]->get(5) - q_sample->get(5));
+		//double d2 = 0; d2 = (nodes[i]->get(9) - q_sample->get(9))*(nodes[i]->get(9) - q_sample->get(9));
+		//double d = sqrt(d1 + d2);
+
 		if (d<closestDistance){
 			closestDistance = d;
 			closestNodeIndex = i;
 		}
+
 	}
 	results.push_back(nodes[closestNodeIndex]);
+	cout << "Closest node is " << closestNodeIndex << endl;
+	cout << "Closest distance is " << closestDistance << endl;
+	cout << " ***** " << nodes[closestNodeIndex]->get(5) << " " << q_sample->get(5) << endl;
 	return results;
 }
 
@@ -532,6 +543,7 @@ vector<node*> RRT::getNearestNode(node* q_sample){
 		}
 	}
 	else if (config->checkParameter("edu.uiuc.csl.core.search.space", "subset")){
+		cout << "searching the sub-space for nearest node" << endl;
 		return NearestNodeInProjectiveSpace(q_sample);
 	}
 	else{
@@ -613,3 +625,15 @@ string RRT::drawTest(vector<node*> path, int color){
 	}
 	return str.str();
 }
+
+/*void RRT::design_space_exploration(){
+	for (int i = 0; i < 1000; i++){
+		//pick-a-best-objective
+		for (int j = 0; j < nodes.size(); j++){
+
+		}
+		//modify-the-parameters-slightly-
+		//simulate
+		//update
+	}
+}*/

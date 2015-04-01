@@ -303,34 +303,51 @@ vector<double> TimedRRT::generateSimulationParameters(node* q_near, int golden){
 			param.push_back(vin);
 		}
 		else{
-			double v = generateUniformSample(variationMin[j], variationMax[j]);
-			if (golden == 0) v = (variationMin[j] + variationMax[j]) / 2;
-			param.push_back(v);
+			double sampled_trajectories = 0; config->getParameter("edu.uiuc.csl.system.param.sampled_trajectories", j, &sampled_trajectories);
+			//choosing an optimum trajectory
+			//double optimum_input = 9909;
+			//for (int k = 0; k < (int)(sampled_trajectories); k++){
+			//	double v = generateUniformSample(variationMin[j], variationMax[j]);
+			//	//todo: need to use Jacobian here
+			//	if (v<optimum_input) optimum_input = v;
+			//}
+			double optimum_input = generateUniformSample(variationMin[j], variationMax[j]);
+			if (golden == 0) optimum_input = (variationMin[j] + variationMax[j]) / 2;
+			//todo: fix this
+			//optimum_input = -2;
+			param.push_back(optimum_input);
+			cout << "The generated input is " << optimum_input << endl;
 		}
 	}
 
 	return param;
 }
 
-void TimedRRT::build(double* initialState){
-	//first, we construct the root from the given initial state
-	root = new node(d);
-	root->set(initialState);
-	root->setRoot();
-	nodes.push_back(root);
-	root->setIndex(0);
-	root->setCounter(0);
+
+node* TimedRRT::add_node(double* state, int id, int counter){
+	node* v = new node(d);
+	v->set(state);
+	nodes.push_back(v);
+	v->setIndex(id);
+	v->setCounter(counter);
 	vector<double> p;
 	for (int i = 0; i < var; i++)
 		p.push_back(0);
-	root->setInputVector(p);
+	v->setInputVector(p);
 
-	vector<node*> v;
-	v.push_back(root);
-	nodeset.push_back(v);
+	vector<node*> ns;
+	ns.push_back(v);
+	nodeset.push_back(ns);
+	return v;
+}
 
-	build();
-	//buildUniform();
+//this function is a wrapper for the standard build method. 
+//The standard method doens't take an initial state (it assume that a simulation has already begun). So we
+// compute the root here and then call the standard build.
+void TimedRRT::build(double* initialState){
+	root = add_node(initialState, 0, 0);	//construct the root from the given initial state
+	root->setRoot();  
+	build();								//just call build
 }
 
 node* TimedRRT::findNearestNodeWithTimeIndex(node* q_sample, int v, int golden){
@@ -353,6 +370,58 @@ node* TimedRRT::findNearestNodeWithTimeIndex(node* q_sample, int v, int golden){
 	}
 	cout << " >>>>>  " << min_distance << endl;
 	return q_near;
+}
+
+//This function will generate a new sample. The generated sample is where we wish to go at the current iteration
+//There are multiple ways, usually dependent on the problem, on
+//how we can generate a new sample
+// type 1: rapidly-exploring random trees: 
+//		   just generate a random sample uniformly over the state space
+//		   this is the basis for the RRT algorithm
+// type2: similar to type 1, but with added time-bias to ensure that the simulation
+//		  progress forwards in time-augmented random trees.
+node* TimedRRT::biasedSampling(double timeEnvlope){
+	node* sample = new node(d);
+	if (config->checkParameter("edu.uiuc.csl.core.sampling.bias", "rrt")){
+		sample->randomize(min, max);
+	}else if (config->checkParameter("edu.uiuc.csl.core.sampling.bias", "time")){
+		sample->randomize(min, max);
+		//ensuring forward progress, initially we push the timeEnvlope to the simTime to gain depth, 
+		//when we reached that time, we use it normally to ensure breath. 
+		if (timeEnvlope >= sim_time){
+			//double t = q_sample->unifRand(0, sim_time);
+			sample->set(d - 1, -1);
+		}else{
+			sample->set(d - 1, timeEnvlope);
+		}
+
+	}else if(config->checkParameter("edu.uiuc.csl.core.sampling.bias", "directed")){
+			/*sample->randomize(min, max);
+			int biased_dim_variable = 5;					config->getParameter("edu.uiuc.csl.core.sampling.bias.var", &biased_dim_variable);
+			double biased_dim_mean = 0;			config->getParameter("edu.uiuc.csl.core.sampling.bias.var.mean", &biased_dim_mean);
+			double biased_dim_std_dev = 0;		config->getParameter("edu.uiuc.csl.core.sampling.bias.var.stdvar", &biased_dim_std_dev);
+			std::tr1::mt19937 eng;
+			eng.seed(nodes.size());
+			std::tr1::normal_distribution<double> normal(biased_dim_mean, biased_dim_std_dev);
+			sample->set(biased_dim_variable, normal(eng));
+			cout << "goal-oriented sample = " << sample->get(biased_dim_variable) << endl;
+			*/
+			sample->randomize(min, max);
+			std::tr1::mt19937 eng;
+			eng.seed(nodes.size());
+			int VO = 5;
+			int VY = 9;
+			std::tr1::normal_distribution<double> normal_vo(0.2, 0.05);
+			std::tr1::normal_distribution<double> normal_vy(-0.2, 0.05);
+			sample->set(VO, normal_vo(eng));
+			sample->set(VY, normal_vy(eng));
+
+
+	}else{
+		cout << "Sampling bias not defined in configuration file" << endl;
+		sample->randomize(min, max);
+	}
+	return sample;
 }
 
 void TimedRRT::buildUniform(){
@@ -397,6 +466,7 @@ void TimedRRT::buildUniform(){
 
 #define NOTGOLDEN	1
 void TimedRRT::build(){
+	// simulation initialization
 	double timeEnvlope = dt;		//time_envlope is the latest sampled discovered so far
 	timeEnvlope = 501e-12;
 	bool forceIteration = false;
@@ -405,22 +475,16 @@ void TimedRRT::build(){
 	}
 	config->getParameter("edu.uiuc.csl.core.sampling.iteration", &k);
 	int i = nodes.size();
+
+	// #######################
+	//	Main simulation loop
+	// #######################
 	bool simulationFinished = false;
 	while (!simulationFinished){
 		cout << "#################################################  Iteration  " << i << endl;
 		//create a new sample
-		node* q_sample = new node(d);
-		q_sample->randomize(min, max);
-		//ensuring forward progress, initially we push the timeEnvlope to the simTime to gain depth, 
-		//when we reached that time, we use it normally to ensure breath. 
-		if (timeEnvlope >= sim_time){
-			//double t = q_sample->unifRand(0, sim_time);
-			q_sample->set(d - 1, -1);
-		}
-		else{
-			q_sample->set(d - 1, timeEnvlope);
-		}
-
+		node* q_sample = biasedSampling(timeEnvlope);
+		
 		//find nearest node in the tree
 		vector<node*> q_near_vec = getNearestNode(q_sample);
 		node* q_near = q_near_vec[0];
@@ -493,7 +557,6 @@ void TimedRRT::build(){
 		}
 	}
 }
-
 
 void TimedRRT::worstCaseEyeDiagram(){
 	generateMonteCarloInputSequence();
@@ -819,4 +882,32 @@ void TimedRRT::compress_input(){
 
 
 
+//returns the list of the nodes that satisfy given (hard-coded) boundary conditions.
+vector<node*> TimedRRT::computeGoalStates(){
+	cout << "computing goal states: ";
+	//int v = 5;; config->getParameter("edu.uiuc.csl.core.options.plot.var[0]", &v);
+	int v = 5;
+	vector<node*> goalStates;
+	
+	for (int i = 0; i < nodes.size(); i++){
+		if (nodes[i]->get(v) >= 0.1){ //boundary condition goes here
+			goalStates.push_back(nodes[i]);
+		}
+	}
+	cout << goalStates.size() << " goal states found." << endl;
+	return goalStates;
+}
 
+vector<double> TimedRRT::getTest(node* state){
+	int outputVariable = 5;; config->getParameter("edu.uiuc.csl.core.options.plot.var[0]", &outputVariable);
+	vector<double> test, test_reverse;
+	node* v = state;
+	while (!(v->isRoot())){
+		test_reverse.push_back(v->get(outputVariable));
+		v = v->getParent();
+	}
+	for (int i = test_reverse.size() - 1; i >= 0; i--){
+		test.push_back(test_reverse[i]); 
+	}
+	return test;
+}

@@ -126,7 +126,7 @@ void kernel_RRT(Configuration* config){
 	//the model checking engine will be loaded with the edu.uiuc.csl.validation variable
 	if (config->checkParameter("edu.uiuc.csl.validation.enable", "1")){
 		vector<Monitor*> monitors;
-		for (int i = 1; i <= 4; i++){//property loop, todo: implement this from a text parser. not hardcoded
+		for (int i = 1; i <= 4; i++){//property loop, t		odo: implement this from a text parser. not hardcoded
 			monitors.push_back(new Monitor(new Property(i)));
 		}
 		//AnalogProperty* ap = (AnalogProperty*)(monitors[0]->property->argument);
@@ -203,12 +203,23 @@ void kernel_RRT(Configuration* config){
 			int v1; config->getParameter("edu.uiuc.csl.core.options.plot.var[0]", &v1);
 			string title = config->get("edu.uiuc.csl.core.options.plot.title");
 			plotter->plotTrace(rrt, v1, -1, dim , simulationTime, dt, title);
-		}
-		else if (config->checkParameter("edu.uiuc.csl.core.options.plot.type", "rrt")){
+		}else if (config->checkParameter("edu.uiuc.csl.core.options.plot.type", "test")){
+			//drawing tests (that terminates in the goal region, such as saturating output) requires three steps
+			//step 1: find which nodes in the random tree satisfies the goal conditions
+			//step 2: compute the test (i.e. a path from the root to the terminating state found in step 1)
+			//step 3: draw the trace
+			int v1; config->getParameter("edu.uiuc.csl.core.options.plot.var[0]", &v1);
+			string title = config->get("edu.uiuc.csl.core.options.plot.title");
+			vector<node*> terminating_goal_states = rrt.computeGoalStates();
+			plotter->emptyPlot(title, 0, simulationTime, rrt.getMin(v1), rrt.getMax(v1));
+			for (int i = 0; i < terminating_goal_states.size(); i++){
+				vector<double> signal = rrt.getTest(terminating_goal_states[i]);
+				plotter->drawTrace(signal, simulationTime);
+			}
+			plotter->waitForKey();
+		}else if (config->checkParameter("edu.uiuc.csl.core.options.plot.type", "rrt")){
 			plotter->plotRRT("lines", rrt.getName().c_str(), "test", rrt, "x_1", "x_2", "t");
-		}
-		else if (config->checkParameter("edu.uiuc.csl.core.options.plot.type", "eye")){
-
+		}else if (config->checkParameter("edu.uiuc.csl.core.options.plot.type", "eye")){
 			stringstream str;
 			double vmin = 0.7, vmax = 1.1, tmin = 0, tmax = 5e-10, voltage = 0, window = 0;
 			double freq = 0;
@@ -379,7 +390,7 @@ int main (int argc, const char * argv[]){
 	char full[_MAX_PATH];
 	_fullpath(full, ".\\", _MAX_PATH);
 	cout << "Current working directory is:" << full << endl;
-	string configFile = string(full) + "config//Opamp_single_ended_unit_gain.conf";
+	string configFile = string(full) + "config//opamp_directed_vw.conf";
 	Configuration* config = new Configuration(configFile);
 	kernel_RRT(config);
 	system("PAUSE");
