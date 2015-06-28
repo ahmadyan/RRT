@@ -1,0 +1,6 @@
+*.eye
+/mc_simdata_20k.txt
+/mc_simdata_50k.txt
+/models18
+/null
+/vco_dump.rrt`

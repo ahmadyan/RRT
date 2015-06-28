@@ -1,0 +1,142 @@
+
+################################################################
+###		General options:
+### 		edu.uiuc.crhc.core.mode={mc | rrt | load | load+rrt | mc+rrt}
+###				defines the mode of operation for the algorithm, MC implies random walk whereas RRT select the random tree algorithm
+###				load will reload the RRT from file, defined by core.options.inputFileName
+###				load+rrt will first load the rrt, then builds it, goof for skipping the initial iterations or pausing/resuming the simulation
+### 		edu.uiuc.crhc.core.options.eyediagram=1
+###			edu.uiuc.crhc.core.options.eyediagram.var=2
+###				Eyediagram enables the eyeDiagram class in order to analyze the worst case eye diagram, 
+###				This class will only work with time-augmented rrt mode and Monte carlo mode, not the basic RRT.
+###				the eyediagram.var indicates which dimension is the output voltage. 
+################################################################
+
+### edu.uiuc.crhc.core.options.nameEn=0
+### edu.uiuc.crhc.core.options.timeAugmented=1
+edu.uiuc.crhc.core.options.eyediagram=1
+edu.uiuc.crhc.core.options.eyediagram.var=2
+
+################################################################
+###		Plotting options
+################################################################
+
+
+### edu.uiuc.crhc.core.options.plot=1
+### edu.uiuc.crhc.core.options.plot.path=C:\\opt\\gnuplot\\bin\\gnuplot.exe -persist
+### edu.uiuc.crhc.core.options.plot.type=trace
+
+Plot type can be either {trace, rrt, eye}. The RRT only works for circuit with lower dimension than 2, otherwise we have to draw it w.r.t. time (i.e. the trace)
+
+### edu.uiuc.crhc.core.options.plot.title=inverter_vout
+### edu.uiuc.crhc.core.options.plot.var[0]=2
+
+################################################################
+###		parameters:
+################################################################
+
+edu.uiuc.crhc.core.options.outputFileName=inverter.base.rrt
+edu.uiuc.crhc.core.options.inputFileName=inverter_in.rrt
+
+################################################################
+###		parameters:
+################################################################
+
+edu.uiuc.csl.core.sampling.iteration=500
+edu.uiuc.csl.core.sampling.iteration.force=1
+edu.uiuc.csl.core.sampling.shoots=1
+edu.uiuc.csl.core.sampling.progressFactor=0.1
+
+#these options are used for goal-oriented (directed) sampling in RRT
+#the newly generated samples will have a guassian bias in them
+#corresponding code can be located at TimedRRT::biasedSampling
+# warning: some hard-coded options for combining different tests
+edu.uiuc.csl.core.sampling.bias=directed
+edu.uiuc.csl.core.sampling.bias.var=2
+edu.uiuc.csl.core.sampling.bias.var.mean=1.4
+edu.uiuc.csl.core.sampling.bias.var.stdvar=0.05
+
+################################################################
+###		parameters:
+###     these configs are used in RRT::getNearestNode
+################################################################
+
+edu.uiuc.csl.core.search.time-progress=1
+#edu.uiuc.csl.core.search.space=total
+edu.uiuc.csl.core.search.space=subset			--> RRT::NearestNodeInProjectiveSpace
+edu.uiuc.csl.core.search.space.subset=1
+edu.uiuc.csl.core.search.distance=timed
+edu.uiuc.csl.core.search.randomized=1
+edu.uiuc.csl.core.search.tol=1e-6
+
+################################################################
+###		Simulation parameters:
+###		core.simulation.dt=1e-12
+###			
+###		core.simulation.simulationTime=501e-12
+###
+###		core.simulation.freq=1e10
+###		core.simulation.window=1.5e10
+###			freq and window are used for the eye diagram analysis. 
+###			freq indicates the freq of the output signal and the window (usually 1.5-2*freq)
+###			denotes to the length of the eye diagram
+################################################################
+edu.uiuc.csl.core.simulation.dt=1e-12
+edu.uiuc.csl.core.simulation.simulationTime=501e-12
+edu.uiuc.csl.core.simulation.freq=1e10
+edu.uiuc.csl.core.simulation.window=1.5e10
+
+
+################################################################
+###		parameters:
+################################################################
+
+#system specification:
+edu.uiuc.csl.system=1
+edu.uiuc.csl.system.name=Inverter
+edu.uiuc.csl.system.dimension=28
+edu.uiuc.csl.system.ic=file
+edu.uiuc.csl.system.ic.file=ic_0.ic0
+
+################################################################
+###		parameters:
+################################################################
+
+#Variations
+edu.uiuc.csl.system.parameters=5
+edu.uiuc.csl.system.param.min[0]=0.9
+edu.uiuc.csl.system.param.max[0]=0.9
+edu.uiuc.csl.system.param.type[0]=dc
+edu.uiuc.csl.system.param.name[0]=vdd
+
+edu.uiuc.csl.system.param.min[1]=0
+edu.uiuc.csl.system.param.max[1]=0
+edu.uiuc.csl.system.param.type[1]=dc
+edu.uiuc.csl.system.param.name[1]=gnd
+
+edu.uiuc.csl.system.param.min[2]=0.9
+edu.uiuc.csl.system.param.max[2]=0.9
+edu.uiuc.csl.system.param.type[2]=dc
+edu.uiuc.csl.system.param.name[2]=vsubn
+
+edu.uiuc.csl.system.param.min[3]=0
+edu.uiuc.csl.system.param.max[3]=0
+edu.uiuc.csl.system.param.type[3]=dc
+edu.uiuc.csl.system.param.name[3]=vsubp
+
+edu.uiuc.csl.system.param.min[4]=0
+edu.uiuc.csl.system.param.max[4]=0.9
+edu.uiuc.csl.system.param.type[4]=boot
+edu.uiuc.csl.system.param.freq[4]=1e10
+edu.uiuc.csl.system.param.dv[4]=0
+edu.uiuc.csl.system.param.dist.type[4]=uniform
+
+################################################################
+###		parameters:
+################################################################
+
+#Variables
+edu.uiuc.csl.system.var.ic[0]=0
+edu.uiuc.csl.system.var.min[0]=0.000000
+edu.uiuc.csl.system.var.max[0]=1.319880
+edu.uiuc.csl.system.var.name[0]=v0
