@@ -387,10 +387,17 @@ void kdtree_experiment(){
 
 int main (int argc, const char * argv[]){
 	srand((unsigned int)time(0));
+	string configFile;
 	char full[_MAX_PATH];
 	_fullpath(full, ".\\", _MAX_PATH);
 	cout << "Current working directory is:" << full << endl;
-	string configFile = string(full) + "config//opamp_directed_vw.conf";
+	if (argc > 2){
+		cout << "loading configuration file " << argv[1] << endl;
+		configFile = string(full) + "config//" + argv[1];
+	}else{
+		//hard-coded configuration file
+		configFile = string(full) + "config//vco.conf";
+	}
 	Configuration* config = new Configuration(configFile);
 	kernel_RRT(config);
 	system("PAUSE");

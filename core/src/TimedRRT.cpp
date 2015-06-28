@@ -396,7 +396,7 @@ node* TimedRRT::biasedSampling(double timeEnvlope){
 		}
 
 	}else if(config->checkParameter("edu.uiuc.csl.core.sampling.bias", "directed")){
-			/*sample->randomize(min, max);
+			sample->randomize(min, max);
 			int biased_dim_variable = 5;					config->getParameter("edu.uiuc.csl.core.sampling.bias.var", &biased_dim_variable);
 			double biased_dim_mean = 0;			config->getParameter("edu.uiuc.csl.core.sampling.bias.var.mean", &biased_dim_mean);
 			double biased_dim_std_dev = 0;		config->getParameter("edu.uiuc.csl.core.sampling.bias.var.stdvar", &biased_dim_std_dev);
@@ -405,7 +405,9 @@ node* TimedRRT::biasedSampling(double timeEnvlope){
 			std::tr1::normal_distribution<double> normal(biased_dim_mean, biased_dim_std_dev);
 			sample->set(biased_dim_variable, normal(eng));
 			cout << "goal-oriented sample = " << sample->get(biased_dim_variable) << endl;
-			*/
+			
+			/*
+			//code for combining tests in op-amp
 			sample->randomize(min, max);
 			std::tr1::mt19937 eng;
 			eng.seed(nodes.size());
@@ -415,7 +417,7 @@ node* TimedRRT::biasedSampling(double timeEnvlope){
 			std::tr1::normal_distribution<double> normal_vy(-0.2, 0.05);
 			sample->set(VO, normal_vo(eng));
 			sample->set(VY, normal_vy(eng));
-
+			*/
 
 	}else{
 		cout << "Sampling bias not defined in configuration file" << endl;
@@ -439,10 +441,10 @@ void TimedRRT::buildUniform(){
 			double* ic = new double[d]; for (int icc = 0; icc<d; icc++) ic[icc] = state_near[icc];
 			vector<double> param = generateSimulationParameters(q_near, j);
 			double t_init = ic[d - 1];
-
+			
 			vector<string> settings;
-			stringstream icInputFileName; icInputFileName << "ic_" << q_near->getIndex() << ".ic0";
-			stringstream icOutputFileName; icOutputFileName << "ic_" << nodes.size() << ".ic";
+			stringstream icInputFileName; icInputFileName << config->get("edu.uiuc.csl.core.options.ic_prefix") << "ic_" << q_near->getIndex() << ".ic0";
+			stringstream icOutputFileName; icOutputFileName << config->get("edu.uiuc.csl.core.options.ic_prefix") << "ic_" << nodes.size() << ".ic";
 			settings.push_back(icOutputFileName.str());
 			settings.push_back(icInputFileName.str());
 			settings.push_back("transient");
@@ -496,8 +498,8 @@ void TimedRRT::build(){
 		}
 
 		vector<string> settings;
-		stringstream icInputFileName; icInputFileName << "ic_" << q_near->getIndex() << ".ic0";
-		stringstream icOutputFileName; icOutputFileName << "ic_" << i << ".ic";
+		stringstream icInputFileName; icInputFileName << config->get("edu.uiuc.csl.core.options.ic_prefix") << "ic_" << q_near->getIndex() << ".ic0";
+		stringstream icOutputFileName; icOutputFileName << config->get("edu.uiuc.csl.core.options.ic_prefix") << "ic_" << i << ".ic";
 		settings.push_back(icOutputFileName.str());
 		settings.push_back(icInputFileName.str());
 		settings.push_back("transient"); // or settings.push_back("dc");
@@ -594,8 +596,8 @@ node* TimedRRT::deltaSimulation(node* q_near){
 	}
 
 	vector<string> settings;
-	stringstream icInputFileName; icInputFileName << "ic_" << q_near->getIndex() << ".ic0";
-	stringstream icOutputFileName; icOutputFileName << "ic_" << nodes.size() << ".ic";
+	stringstream icInputFileName; icInputFileName << config->get("edu.uiuc.csl.core.options.ic_prefix") << "ic_" << q_near->getIndex() << ".ic0";
+	stringstream icOutputFileName; icOutputFileName << config->get("edu.uiuc.csl.core.options.ic_prefix") << "ic_" << nodes.size() << ".ic";
 	settings.push_back(icOutputFileName.str());
 	settings.push_back(icInputFileName.str());
 	settings.push_back("transient"); // or settings.push_back("dc");
@@ -698,9 +700,9 @@ void TimedRRT::simulate(int iter, node* q_start, vector< vector<double> > test_i
 		}
 
 		vector<string> settings;
-		stringstream icInputFileName; icInputFileName << "ic_" << q_near->getIndex() << ".ic0";
+		stringstream icInputFileName; icInputFileName << config->get("edu.uiuc.csl.core.options.ic_prefix") << "ic_" << q_near->getIndex() << ".ic0";
 		cout << endl << icInputFileName.str() << endl;
-		stringstream icOutputFileName; icOutputFileName << "ic_" << nodes.size() << ".ic";
+		stringstream icOutputFileName; icOutputFileName << config->get("edu.uiuc.csl.core.options.ic_prefix") << "ic_" << nodes.size() << ".ic";
 		settings.push_back(icOutputFileName.str());
 		settings.push_back(icInputFileName.str());
 		settings.push_back("transient");
