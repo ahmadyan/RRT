@@ -302,7 +302,6 @@ void kernel_RRT(Configuration* config){
 	*/
 }
 
-
 void fft_experiments(){
 	//	Computing the joint time-frequency space instead of only time-augmented RRT
 	double f0 = 1; //initial freqency
@@ -396,7 +395,7 @@ int main (int argc, const char * argv[]){
 		configFile = string(full) + "config//" + argv[1];
 	}else{
 		//hard-coded configuration file
-		configFile = string(full) + "config//vco.conf";
+		configFile = string(full) + "config//opamp_buggy.conf";
 	}
 	Configuration* config = new Configuration(configFile);
 	kernel_RRT(config);

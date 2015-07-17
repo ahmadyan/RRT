@@ -248,6 +248,79 @@ void Plotter::plotRRT(string name, string title, string output, RRT rrt, string 
 //Usage drawTrace(rrt, v1, v2, ...) draws v1-v2 w.r.t. time
 //		drawTrace(rrt, v1, -1, ...) draws v1    w.r.t. time
 void Plotter::plotTrace(RRT rrt, int v1, int v2, int tdim, double simTime, double dt, string title){
+	/*for (int i = 0; i < 1000; i++){
+		double x = rrt.getNode(i)->get()[5];
+		double t = rrt.getNode(i)->getTime();
+
+		if (x>0.4)
+			cout << "*************************************   " << i << "      " << t << endl;
+	} // 982
+
+	return;*/
+	ofstream out("plot.txt");
+	FILE *gnuplotPipe = _popen(gnuPlotPath.c_str(), "w");
+	string buffer;
+	fflush(gnuplotPipe);
+	//double simTime = ((TimedRRT)(rrt)).getSimTime();
+	int n = (int)(simTime / dt);
+	double* min = new double[n + 1];
+	double* max = new double[n + 1];
+	for (int i = 0; i < n; i++){
+		min[i] = +1;
+		max[i] = -1;
+	}
+
+	emptyPlot(title, 0, simTime, rrt.getMin(v1), rrt.getMax(v1));
+
+	queue<node*> q;
+	q.push(rrt.getNode(981));
+	while (!q.empty()){
+		node* n = q.front();
+		q.pop();
+		if (!n->isRoot()){
+			double* begin = n->get();
+			double* end = n->getParent()->get();
+			int xscale = 1, yscale = 1, zscale = 1;
+			double x0 = 0, x1 = 1;
+			if (v2 < 0){
+				x0 = xscale*(end[v1]);
+				x1 = xscale*(begin[v1]);
+			}
+			else{
+				x0 = xscale*(end[v1] - end[v2]);
+				x1 = xscale*(begin[v1] - begin[v2]);
+			}
+
+			double t1 = yscale*n->getTime();
+			double t0 = yscale*n->getParent()->getTime();
+
+			int it0 = t0 / dt; int it1 = t1 / dt;
+			if (x1 > max[it1]) max[it1] = x1;
+			if (x1 < min[it1]) min[it1] = x1;
+			if (x0 > max[it0]) max[it0] = x0;
+			if (x0 < min[it0]) min[it0] = x0;
+
+			if (n->getFrontier()){
+				drawLine(t0, x0, t1, x1, "red");
+			}
+			else{
+				drawLine(t0, x0, t1, x1);
+			}
+
+			fflush(gnuplotPipe);
+			q.push(n->getParent());
+		}
+		
+		
+	}
+	buffer = "replot\n";
+	fprintf(gnuplotPipe, buffer.c_str());
+	fflush(gnuplotPipe);
+	waitForKey();
+
+	_pclose(gnuplotPipe);
+	out.close();
+	/*
 	ofstream out("plot.txt");
 	FILE *gnuplotPipe = _popen(gnuPlotPath.c_str(), "w");
 	string buffer;
@@ -310,7 +383,7 @@ void Plotter::plotTrace(RRT rrt, int v1, int v2, int tdim, double simTime, doubl
 	waitForKey();
 
 	_pclose(gnuplotPipe);
-	out.close();
+	out.close();*/
 
 }
 

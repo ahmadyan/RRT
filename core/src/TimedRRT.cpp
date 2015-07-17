@@ -491,6 +491,9 @@ void TimedRRT::build(){
 		vector<node*> q_near_vec = getNearestNode(q_sample);
 		node* q_near = q_near_vec[0];
 
+		cout << "***************************" << endl;
+		cout << q_near->getIndex() << endl;
+		cout << "***************************" << endl;
 		double* state_near = q_near->get();
 		double* ic = new double[d];
 		for (int j = 0; j<d; j++){

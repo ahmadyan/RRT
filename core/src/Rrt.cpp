@@ -134,11 +134,11 @@ void RRT::setVariationBound(int i, double _min, double _max){
 	variationMin[i] = _min;
 	variationMax[i] = _max;
 }
-
-/*
-node RRT::getNode(int i){
-return nodes[i].second;
+node* RRT::getNode(int i){
+	return nodes[i];
 }
+/*
+
 
 int RRT::getNodeParentId(int i){
 return nodes[ nodes[i].first ].first;
